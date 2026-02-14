@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Test</title>
+    <style>
+        body { background: #1a1a2e; color: #fff; font-family: Arial; padding: 20px; }
+        .card { background: #16213e; padding: 15px; margin: 10px; border-radius: 8px; }
+        .btn { background: #00ff88; color: #000; padding: 10px 20px; border: none; border-radius: 5px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🎴 Pokemon Tracker - Minimal Test</h1>
+    <div id="status"></div>
+    <button class="btn" onclick="loadData()">Load Cards</button>
+    <div id="cards"></div>
+
+    <script>
+        const status = document.getElementById('status');
+        const cardsDiv = document.getElementById('cards');
+        
+        status.innerHTML = '<p>Ready. Click button to load.</p>';
+        
+        async function loadData() {
+            status.innerHTML = '<p>Loading...</p>';
+            
+            try {
+                const response = await fetch('./card-data.json');
+                const data = await response.json();
+                
+                status.innerHTML = '<p>✓ Loaded ' + Object.keys(data.sets).length + ' sets</p>';
+                
+                // Show Journey Together cards
+                const jt = data.sets['journey-together'];
+                cardsDiv.innerHTML = '<h2>' + jt.name + ' (' + jt.totalCards + ' cards)</h2>';
+                
+                for (let i = 1; i <= 20; i++) {  // Show first 20 cards
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <strong>Card #${i}</strong><br>
+                        <label><input type="checkbox"> Regular</label>
+                        <label><input type="checkbox"> Reverse Holo</label>
+                    `;
+                    cardsDiv.appendChild(card);
+                }
+                
+                status.innerHTML += '<p>✓ Showing first 20 cards</p>';
+                
+            } catch (error) {
+                status.innerHTML = '<p style="color:red;">✗ Error: ' + error.message + '</p>';
+            }
+        }
+    </script>
+</body>
+</html>
