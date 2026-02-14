@@ -1,1 +1,125 @@
-{"version":"2.0.0","lastUpdated":"2026-02-14","note":"Card data uses smart detection - EX/Secret cards are listed, others are generated with proper rarities","sets":{"journey-together":{"name":"Journey Together","displayName":"Journey Together","totalCards":190,"mainSet":159,"setCode":"sv09","hasPokeBallVariant":false,"hasMasterBallVariant":false,"exCards":{"11":"Amoonguss ex","24":"Blaziken ex","30":"Reshiram ex","31":"Volcanion ex","43":"Veluza ex","51":"Tapu Koko ex","53":"Iono's Bellibolt ex","56":"Lillie's Clefairy ex","69":"Mimikyu ex","75":"Alcremie ex","79":"Mamoswine ex","94":"Paldean Clodsire ex","98":"N's Zoroark ex","111":"Hop's Zacian ex","114":"Salamence ex","121":"Dudunsparce ex"},"trainerRange":[142,158],"energyCards":{"159":"Spiky Energy"},"secretRareStart":160},"destined-rivals":{"name":"Destined Rivals","displayName":"Destined Rivals","totalCards":244,"mainSet":182,"setCode":"sv10","hasPokeBallVariant":false,"hasMasterBallVariant":false,"exCards":{},"trainerRange":[160,182],"energyCards":{},"secretRareStart":183},"prismatic-evolutions":{"name":"Prismatic Evolutions","displayName":"Prismatic Evolutions","totalCards":217,"mainSet":131,"setCode":"sv8pt5","hasPokeBallVariant":true,"hasMasterBallVariant":true,"exCards":{"6":"Leafeon ex","11":"Hydrapple ex","12":"Teal Mask Ogerpon ex","14":"Flareon ex","17":"Hearthflame Mask Ogerpon ex","22":"Vaporeon ex","28":"Wellspring Mask Ogerpon ex","32":"Jolteon ex","37":"Espeon ex","39":"Cornerstone Mask Ogerpon ex","42":"Umbreon ex","48":"Glaceon ex","52":"Sylveon ex","54":"Eevee ex","58":"Wigglytuff ex","62":"Clefable ex","70":"Pidgeot ex","73":"Golem ex","76":"Hitmonchan ex","80":"Tyranitar ex","84":"Aggron ex","88":"Lucario ex","91":"Dragonite ex"},"trainerRange":[92,131],"energyCards":{},"secretRareStart":132},"phantasmal-flames":{"name":"Phantasmal Flames","displayName":"Phantasmal Flames","totalCards":130,"mainSet":94,"setCode":"sv06pt5","hasPokeBallVariant":false,"hasMasterBallVariant":false,"exCards":{"4":"Talonflame ex","13":"Arcanine ex","18":"Fezandipiti ex","29":"Greninja ex","36":"Lapras ex","41":"Dedenne ex","56":"Alolan Sandslash ex","61":"Cofagrigus ex","70":"Melmetal ex","84":"Latias ex"},"trainerRange":[85,94],"energyCards":{},"secretRareStart":95},"ascended-heroes":{"name":"Ascended Heroes","displayName":"Ascended Heroes","totalCards":295,"mainSet":217,"setCode":"ascended","hasPokeBallVariant":false,"hasMasterBallVariant":false,"exCards":{},"trainerRange":[180,217],"energyCards":{},"secretRareStart":218}}}
+{
+  "version": "2.0.0",
+  "lastUpdated": "2026-02-14",
+  "sets": {
+    "journey-together": {
+      "name": "Journey Together",
+      "displayName": "Journey Together",
+      "totalCards": 190,
+      "mainSet": 159,
+      "setCode": "sv09",
+      "hasPokeBallVariant": false,
+      "hasMasterBallVariant": false,
+      "exCards": {
+        "11": "Amoonguss ex",
+        "24": "Blaziken ex",
+        "30": "Reshiram ex",
+        "31": "Volcanion ex",
+        "43": "Veluza ex",
+        "51": "Tapu Koko ex",
+        "53": "Iono's Bellibolt ex",
+        "56": "Lillie's Clefairy ex",
+        "69": "Mimikyu ex",
+        "75": "Alcremie ex",
+        "79": "Mamoswine ex",
+        "94": "Paldean Clodsire ex",
+        "98": "N's Zoroark ex",
+        "111": "Hop's Zacian ex",
+        "114": "Salamence ex",
+        "121": "Dudunsparce ex"
+      },
+      "trainerRange": [142, 158],
+      "energyCards": {
+        "159": "Spiky Energy"
+      },
+      "secretRareStart": 160
+    },
+    "destined-rivals": {
+      "name": "Destined Rivals",
+      "displayName": "Destined Rivals",
+      "totalCards": 244,
+      "mainSet": 182,
+      "setCode": "sv10",
+      "hasPokeBallVariant": false,
+      "hasMasterBallVariant": false,
+      "exCards": {},
+      "trainerRange": [160, 182],
+      "energyCards": {},
+      "secretRareStart": 183
+    },
+    "prismatic-evolutions": {
+      "name": "Prismatic Evolutions",
+      "displayName": "Prismatic Evolutions",
+      "totalCards": 217,
+      "mainSet": 131,
+      "setCode": "sv8pt5",
+      "hasPokeBallVariant": true,
+      "hasMasterBallVariant": true,
+      "exCards": {
+        "6": "Leafeon ex",
+        "11": "Hydrapple ex",
+        "12": "Teal Mask Ogerpon ex",
+        "14": "Flareon ex",
+        "17": "Hearthflame Mask Ogerpon ex",
+        "22": "Vaporeon ex",
+        "28": "Wellspring Mask Ogerpon ex",
+        "32": "Jolteon ex",
+        "37": "Espeon ex",
+        "39": "Cornerstone Mask Ogerpon ex",
+        "42": "Umbreon ex",
+        "48": "Glaceon ex",
+        "52": "Sylveon ex",
+        "54": "Eevee ex",
+        "58": "Wigglytuff ex",
+        "62": "Clefable ex",
+        "70": "Pidgeot ex",
+        "73": "Golem ex",
+        "76": "Hitmonchan ex",
+        "80": "Tyranitar ex",
+        "84": "Aggron ex",
+        "88": "Lucario ex",
+        "91": "Dragonite ex"
+      },
+      "trainerRange": [92, 131],
+      "energyCards": {},
+      "secretRareStart": 132
+    },
+    "phantasmal-flames": {
+      "name": "Phantasmal Flames",
+      "displayName": "Phantasmal Flames",
+      "totalCards": 130,
+      "mainSet": 94,
+      "setCode": "sv06pt5",
+      "hasPokeBallVariant": false,
+      "hasMasterBallVariant": false,
+      "exCards": {
+        "4": "Talonflame ex",
+        "13": "Arcanine ex",
+        "18": "Fezandipiti ex",
+        "29": "Greninja ex",
+        "36": "Lapras ex",
+        "41": "Dedenne ex",
+        "56": "Alolan Sandslash ex",
+        "61": "Cofagrigus ex",
+        "70": "Melmetal ex",
+        "84": "Latias ex"
+      },
+      "trainerRange": [85, 94],
+      "energyCards": {},
+      "secretRareStart": 95
+    },
+    "ascended-heroes": {
+      "name": "Ascended Heroes",
+      "displayName": "Ascended Heroes",
+      "totalCards": 295,
+      "mainSet": 217,
+      "setCode": "ascended",
+      "hasPokeBallVariant": false,
+      "hasMasterBallVariant": false,
+      "exCards": {},
+      "trainerRange": [180, 217],
+      "energyCards": {},
+      "secretRareStart": 218
+    }
+  }
+}
