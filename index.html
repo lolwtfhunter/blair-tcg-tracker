@@ -611,50 +611,38 @@
     </div>
 
     <script>
-        // IMMEDIATE TEST - runs before anything else
-        alert('JavaScript is loading!');
-        
-        // Debug logging to screen for iOS
+        // Debug logging to screen for iOS - SIMPLE VERSION
         window.debugLog = function(msg) {
             const panel = document.getElementById('debugPanel');
             if (panel) {
                 const time = new Date().toLocaleTimeString();
-                panel.innerHTML += `<div style="margin: 2px 0; padding: 2px;">${time}: ${msg}</div>`;
+                panel.innerHTML += `<div style="margin: 2px 0;">${time}: ${msg}</div>`;
                 panel.scrollTop = panel.scrollHeight;
             }
         };
         
-        // Test debug log immediately
+        // Test immediately
         setTimeout(() => {
-            window.debugLog('🚀 Script started!');
-            window.debugLog('Debug panel exists: ' + !!document.getElementById('debugPanel'));
+            window.debugLog('🚀 debugLog working!');
         }, 100);
-        
-        // Override console.log to also show on screen
-        const originalLog = console.log;
-        const originalError = console.error;
-        console.log = function(...args) {
-            originalLog.apply(console, args);
-            window.debugLog('✓ ' + args.join(' '));
-        };
-        console.error = function(...args) {
-            originalError.apply(console, args);
-            window.debugLog('✗ ' + args.join(' '));
-        };
         
         // Wait for Firebase SDK to load
         window.addEventListener('load', async function() {
+            window.debugLog('📍 Load event fired');
+            
             // Test if card-data.json is accessible
-            console.log('Testing card-data.json accessibility...');
+            window.debugLog('Testing card-data.json...');
             try {
                 const testResponse = await fetch('./card-data.json', { method: 'HEAD' });
-                console.log('File exists check:', testResponse.status);
+                window.debugLog('File check: ' + testResponse.status);
             } catch (e) {
-                console.error('File accessibility test failed:', e);
+                window.debugLog('✗ File test failed: ' + e.message);
             }
             
             // STEP 1: Load card data first
+            window.debugLog('Loading card data...');
             const dataLoaded = await loadCardData();
+            window.debugLog('Data loaded: ' + dataLoaded);
             
             if (!dataLoaded) {
                 alert('Failed to load card data. Please refresh the page.');
