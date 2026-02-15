@@ -375,14 +375,18 @@
             width: 100%;
             height: 80px;
             object-fit: contain;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             border-radius: 6px;
-            background: rgba(255, 255, 255, 0.03);
-            padding: 8px;
+            /* No background or padding - cleaner when logo fails to load */
+            display: block;
         }
 
-        .set-btn-logo[style*="display: none"] + .set-btn-name {
-            margin-top: 8px;
+        .set-btn-logo.hidden {
+            display: none !important;
+        }
+
+        .set-btn-logo.hidden + .set-btn-name {
+            margin-top: 0;
         }
 
         .set-btn-name {
@@ -993,6 +997,7 @@
 
             .set-btn-logo {
                 height: 60px;
+                margin-bottom: 8px;
             }
 
             .block-btn {
@@ -2144,18 +2149,21 @@
 
                 const progress = getCustomSetProgress(setKey);
 
+                // Map custom set keys to character logo images
+                const logoMap = {
+                    'its-pikachu': 'Images/header/pikachu.png',
+                    'psyduck': 'Images/header/psyduck.png',
+                    'togepi': 'Images/header/togepi.png'
+                };
+                const logoUrl = logoMap[setKey] || '';
+
                 btn.innerHTML = `
-                    <div class="set-btn-left" style="flex:1;min-width:0;">
-                        <div style="display:flex;align-items:center;justify-content:space-between;">
-                            <span class="set-btn-name">${setData.displayName}</span>
-                            <div class="set-btn-right">
-                                <span class="set-btn-stats">${progress.collected}/${progress.total} (${progress.percentage}%)</span>
-                            </div>
-                        </div>
-                        <span class="set-release-date">${setData.totalCards} cards</span>
-                        <div class="set-btn-progress">
-                            <div class="set-btn-progress-fill" style="width: ${progress.percentage}%"></div>
-                        </div>
+                    ${logoUrl ? `<img src="${logoUrl}" alt="${setData.displayName}" class="set-btn-logo" onerror="this.classList.add('hidden')">` : ''}
+                    <div class="set-btn-name">${setData.displayName}</div>
+                    <div class="set-release-date">${setData.totalCards} cards</div>
+                    <div class="set-btn-stats">${progress.collected}/${progress.total} (${progress.percentage}%)</div>
+                    <div class="set-btn-progress">
+                        <div class="set-btn-progress-fill" style="width: ${progress.percentage}%"></div>
                     </div>
                 `;
                 btn.onclick = () => switchCustomSet(setKey);
@@ -2716,7 +2724,7 @@
                 const logoUrl = `https://images.pokemontcg.io/${apiSetId}/logo.png`;
 
                 btn.innerHTML = `
-                    <img src="${logoUrl}" alt="${setData.displayName}" class="set-btn-logo" onerror="this.style.display='none'">
+                    <img src="${logoUrl}" alt="${setData.displayName}" class="set-btn-logo" onerror="this.classList.add('hidden')">
                     <div class="set-btn-name">${setData.displayName}</div>
                     ${dateStr ? `<div class="set-release-date">${dateStr}</div>` : ''}
                     <div class="set-btn-stats">${progress.collected}/${progress.total} (${progress.percentage}%)</div>
