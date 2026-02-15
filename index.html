@@ -223,12 +223,61 @@
             text-transform: uppercase;
         }
         
+        /* Main set rarities */
         .rarity-common { background: #666; }
         .rarity-uncommon { background: #4a9eff; }
         .rarity-rare { background: #9d4aff; }
+        
+        /* EX and basic special */
         .rarity-ex { background: #ff6b6b; }
-        .rarity-secret { background: linear-gradient(45deg, #ffd700, #ffed4e); color: #000; }
         .rarity-trainer { background: #ff9500; }
+        .rarity-energy { background: #48c774; }
+        
+        /* Secret rare types (all get special styling) */
+        .rarity-secret { background: linear-gradient(45deg, #ffd700, #ffed4e); color: #000; }
+        .rarity-illustration-rare { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+        }
+        .rarity-special-illustration-rare { 
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); 
+        }
+        .rarity-ultra-rare { 
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); 
+        }
+        .rarity-hyper-rare { 
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); 
+            color: #000;
+        }
+        .rarity-double-rare { 
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); 
+        }
+        .rarity-trainer-ultra-rare { 
+            background: linear-gradient(135deg, #ff9a56 0%, #ffecd2 100%); 
+            color: #000;
+        }
+        .rarity-gold-secret { 
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%); 
+        }
+        
+        /* Special mechanic rarities */
+        .rarity-ace-spec { 
+            background: linear-gradient(135deg, #000000 0%, #434343 100%); 
+            border: 2px solid #ffd700;
+        }
+        .rarity-radiant { 
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%); 
+            color: #000;
+        }
+        .rarity-amazing-rare { 
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%); 
+        }
+        .rarity-shiny-rare { 
+            background: linear-gradient(135deg, #c0c0c0 0%, #ffffff 100%); 
+            color: #000;
+        }
+        .rarity-promo { 
+            background: linear-gradient(135deg, #ff512f 0%, #dd2476 100%); 
+        }
         
         .variants-section {
             border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -392,9 +441,6 @@
         
         <div class="progress-section" id="progressSection"></div>
         
-        <!-- Debug output for iOS -->
-        <div id="debugOutput" style="background: rgba(255,0,0,0.2); color: #fff; padding: 10px; margin: 10px 0; border-radius: 5px; font-size: 12px; font-family: monospace; display: none;"></div>
-        
         <div id="journey-together" class="set-section active">
             <div class="card-grid" id="journey-together-grid"></div>
         </div>
@@ -417,16 +463,6 @@
     </div>
 
     <script>
-        // Debug output for iOS (visible on screen)
-        function debugOut(msg) {
-            const debug = document.getElementById('debugOutput');
-            if (debug) {
-                debug.style.display = 'block';
-                debug.innerHTML += msg + '<br>';
-            }
-            console.log(msg);
-        }
-        
         // Global state
         let cardSets = {};
         let collectionProgress = {};
@@ -441,41 +477,88 @@
         const variantLabels = {
             'single': { label: 'Collected', icon: '✓' },
             'regular': { label: 'Regular', icon: '⚪' },
+            'holo': { label: 'Holo', icon: '💎' },
             'reverse-holo': { label: 'Reverse Holo', icon: '✨' },
             'pokeball': { label: 'Poké Ball', icon: '⚾' },
             'masterball': { label: 'Master Ball', icon: '🔮' }
         };
         
+        // All possible rarities in Pokemon TCG (future-proof)
+        const SINGLE_VARIANT_RARITIES = [
+            'ex', 'secret', 'illustration-rare', 'special-illustration-rare',
+            'ultra-rare', 'hyper-rare', 'double-rare', 'ace-spec',
+            'radiant', 'amazing-rare', 'shiny-rare', 'trainer-ultra-rare',
+            'gold-secret', 'promo'
+        ];
+        
+        // Rarity display names
+        const RARITY_DISPLAY_NAMES = {
+            'common': 'COMMON',
+            'uncommon': 'UNCOMMON',
+            'rare': 'RARE',
+            'ex': 'EX',
+            'secret': 'SECRET',
+            'illustration-rare': 'ILLUS RARE',
+            'special-illustration-rare': 'SPECIAL IR',
+            'ultra-rare': 'ULTRA RARE',
+            'hyper-rare': 'HYPER RARE',
+            'double-rare': 'DOUBLE RARE',
+            'trainer-ultra-rare': 'TRAINER UR',
+            'gold-secret': 'GOLD',
+            'ace-spec': 'ACE SPEC',
+            'radiant': 'RADIANT',
+            'amazing-rare': 'AMAZING',
+            'shiny-rare': 'SHINY',
+            'promo': 'PROMO',
+            'trainer': 'TRAINER',
+            'energy': 'ENERGY'
+        };
+        
+        // Get display name for rarity
+        function getRarityDisplay(rarity) {
+            return RARITY_DISPLAY_NAMES[rarity] || rarity.toUpperCase();
+        }
+        
         // Determine variants for a card
         function getVariants(card, setKey) {
             const setData = cardSets[setKey];
+            const rarity = card.rarity.toLowerCase();
             
-            // Journey Together
-            if (setKey === 'journey-together') {
-                if (card.rarity === 'ex' || card.rarity === 'secret') return ['single'];
-                return ['regular', 'reverse-holo'];
+            // Single checkbox rarities (EX, Ultra Rares, Illustration Rares, etc.)
+            if (SINGLE_VARIANT_RARITIES.includes(rarity)) {
+                return ['single'];
             }
             
-            // Prismatic Evolutions
+            // Rare cards get Holo + Reverse Holo (no regular)
+            if (rarity === 'rare') {
+                // Special case: Prismatic Evolutions rares get extra variants
+                if (setKey === 'prismatic-evolutions' && card.type !== 'trainer') {
+                    return ['holo', 'reverse-holo', 'pokeball', 'masterball'];
+                }
+                return ['holo', 'reverse-holo'];
+            }
+            
+            // Prismatic Evolutions special variants for commons/uncommons
             if (setKey === 'prismatic-evolutions') {
-                if (card.rarity === 'ex' || card.rarity === 'secret') return ['single'];
-                if (card.type === 'trainer') return ['regular', 'reverse-holo', 'pokeball'];
+                if (card.type === 'trainer') {
+                    return ['regular', 'reverse-holo', 'pokeball'];
+                }
+                // Regular pokemon get all 4 variants
                 return ['regular', 'reverse-holo', 'pokeball', 'masterball'];
             }
             
-            // All other sets
-            if (card.rarity === 'ex' || card.rarity === 'secret') return ['single'];
+            // All other cards (common, uncommon, trainer, energy): Regular + Reverse Holo
             return ['regular', 'reverse-holo'];
         }
         
         // Load card data from JSON
         async function loadCardData() {
-            debugOut('Loading card-data.json...');
+            console.log('Loading card-data.json...');
             try {
                 const response = await fetch('./card-data.json');
                 const data = await response.json();
                 
-                debugOut(`JSON loaded: ${Object.keys(data.sets).length} sets`);
+                console.log(`JSON loaded: ${Object.keys(data.sets).length} sets`);
                 
                 // Build cardSets from JSON - NEW structure with card objects
                 for (const [setKey, setInfo] of Object.entries(data.sets)) {
@@ -504,13 +587,13 @@
                         cards: cards
                     };
                     
-                    debugOut(`${setKey}: ${cards.length} cards`);
+                    console.log(`${setKey}: ${cards.length} cards`);
                 }
                 
-                debugOut('✓ Card data loaded');
+                console.log('✓ Card data loaded');
                 return true;
             } catch (error) {
-                debugOut('ERROR: ' + error.message);
+                console.log('ERROR: ' + error.message);
                 console.error('Error loading card data:', error);
                 alert('Failed to load card data. Please refresh the page.');
                 return false;
@@ -600,20 +683,20 @@
         
         // Render cards for a set
         function renderCards(setKey) {
-            debugOut(`renderCards: ${setKey}`);
+            console.log(`renderCards: ${setKey}`);
             
             const grid = document.getElementById(setKey + '-grid');
             const setData = cardSets[setKey];
             
-            debugOut(`Grid found: ${!!grid}, Data found: ${!!setData}`);
+            console.log(`Grid found: ${!!grid}, Data found: ${!!setData}`);
             
             if (!grid) {
-                debugOut(`ERROR: No grid for ${setKey}-grid`);
+                console.log(`ERROR: No grid for ${setKey}-grid`);
                 return;
             }
             
             if (!setData) {
-                debugOut(`ERROR: No data for ${setKey}`);
+                console.log(`ERROR: No data for ${setKey}`);
                 return;
             }
             
@@ -623,7 +706,7 @@
                 collectionProgress[setKey] = {};
             }
             
-            debugOut(`Rendering ${setData.cards.length} cards`);
+            console.log(`Rendering ${setData.cards.length} cards`);
             
             setData.cards.forEach((card, index) => {
                 const variants = getVariants(card, setKey);
@@ -666,7 +749,7 @@
                         <div class="card-info">
                             <div class="card-number">#${String(card.number).padStart(3, '0')}${isSecret ? ` / ${setData.mainSet}` : ''}</div>
                             <div class="card-name">${card.name}</div>
-                            <span class="rarity-badge ${rarityClass}">${card.type === 'trainer' ? 'TRAINER' : card.rarity.toUpperCase()}</span>
+                            <span class="rarity-badge ${rarityClass}">${card.type === 'trainer' ? 'TRAINER' : getRarityDisplay(card.rarity)}</span>
                         </div>
                     </div>
                     <div class="variants-section">
@@ -678,7 +761,7 @@
                 grid.appendChild(cardEl);
             });
             
-            debugOut(`✓ Done: ${grid.children.length} cards in grid`);
+            console.log(`✓ Done: ${grid.children.length} cards in grid`);
         }
         
         // Toggle variant
@@ -737,31 +820,31 @@
         
         // Verify sync code
         window.verifySyncCode = function() {
-            debugOut('verifySyncCode called');
+            console.log('verifySyncCode called');
             const input = document.getElementById('syncCodeInput');
             const code = input.value.trim();
             
-            debugOut(`Code entered: "${code}"`);
-            debugOut(`Expected: "${SYNC_CODE}"`);
+            console.log(`Code entered: "${code}"`);
+            console.log(`Expected: "${SYNC_CODE}"`);
             
             if (code === SYNC_CODE) {
-                debugOut('✓ Code valid!');
+                console.log('✓ Code valid!');
                 localStorage.setItem(SYNC_CODE_KEY, code);
                 document.querySelector('.modal').remove();
                 
                 // Render cards immediately BEFORE Firebase
-                debugOut('Rendering cards now...');
+                console.log('Rendering cards now...');
                 Object.keys(cardSets).forEach(setKey => {
-                    debugOut(`Calling renderCards(${setKey})`);
+                    console.log(`Calling renderCards(${setKey})`);
                     renderCards(setKey);
                 });
                 renderProgress();
                 
-                debugOut('Starting Firebase...');
+                console.log('Starting Firebase...');
                 // Then initialize Firebase
                 initializeFirebase();
             } else {
-                debugOut('✗ Invalid code');
+                console.log('✗ Invalid code');
                 document.getElementById('syncError').textContent = 'Invalid sync code. Please try again.';
                 input.value = '';
             }
@@ -831,59 +914,59 @@
         // Initialize app
         window.addEventListener('load', async function() {
             try {
-                debugOut('App loading...');
+                console.log('App loading...');
                 
                 // Load card data
                 const loaded = await loadCardData();
                 if (!loaded) {
-                    debugOut('Failed to load data!');
+                    console.log('Failed to load data!');
                     return;
                 }
                 
-                debugOut('Initializing progress...');
+                console.log('Initializing progress...');
                 // Initialize progress
                 initializeProgress();
                 
-                debugOut('Rendering UI...');
+                console.log('Rendering UI...');
                 
-                debugOut('Calling renderSetButtons...');
+                console.log('Calling renderSetButtons...');
                 try {
                     renderSetButtons();
-                    debugOut('✓ Set buttons rendered');
+                    console.log('✓ Set buttons rendered');
                 } catch (e) {
-                    debugOut('ERROR in renderSetButtons: ' + e.message);
+                    console.log('ERROR in renderSetButtons: ' + e.message);
                 }
                 
-                debugOut('Calling renderProgress...');
+                console.log('Calling renderProgress...');
                 try {
                     renderProgress();
-                    debugOut('✓ Progress rendered');
+                    console.log('✓ Progress rendered');
                 } catch (e) {
-                    debugOut('ERROR in renderProgress: ' + e.message);
+                    console.log('ERROR in renderProgress: ' + e.message);
                 }
                 
-                debugOut('Rendering all cards initially...');
+                console.log('Rendering all cards initially...');
                 Object.keys(cardSets).forEach(setKey => {
                     try {
-                        debugOut(`Initial render: ${setKey}`);
+                        console.log(`Initial render: ${setKey}`);
                         renderCards(setKey);
                     } catch (e) {
-                        debugOut(`ERROR rendering ${setKey}: ` + e.message);
+                        console.log(`ERROR rendering ${setKey}: ` + e.message);
                     }
                 });
                 
-                debugOut('Checking sync code...');
+                console.log('Checking sync code...');
                 // Check for sync code
                 const savedCode = localStorage.getItem(SYNC_CODE_KEY);
                 if (savedCode === SYNC_CODE) {
-                    debugOut('Saved code found, initializing Firebase');
+                    console.log('Saved code found, initializing Firebase');
                     initializeFirebase();
                 } else {
-                    debugOut('No saved code, showing modal');
+                    console.log('No saved code, showing modal');
                     showSyncModal();
                 }
             } catch (error) {
-                debugOut('FATAL ERROR: ' + error.message);
+                console.log('FATAL ERROR: ' + error.message);
                 console.error('Fatal error:', error);
             }
         });

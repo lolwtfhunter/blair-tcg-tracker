@@ -17,27 +17,27 @@
         },
         "2": {
           "name": "Metapod",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "3": {
           "name": "Butterfree",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "4": {
           "name": "Paras",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "5": {
           "name": "Parasect",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "6": {
           "name": "Petilil",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "7": {
           "name": "Lilligant",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "8": {
           "name": "Maractus",
@@ -45,11 +45,11 @@
         },
         "9": {
           "name": "Karrablast",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "10": {
           "name": "Escavalier",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "11": {
           "name": "Amoonguss ex",
@@ -57,11 +57,11 @@
         },
         "12": {
           "name": "Skiddo",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "13": {
           "name": "Gogoat",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "14": {
           "name": "Bounsweet",
@@ -69,19 +69,19 @@
         },
         "15": {
           "name": "Steenee",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "16": {
           "name": "Tsareena",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "17": {
           "name": "Fomantis",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "18": {
           "name": "Lurantis",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "19": {
           "name": "Applin",
@@ -89,19 +89,19 @@
         },
         "20": {
           "name": "Vulpix",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "21": {
           "name": "Ninetales",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "22": {
           "name": "Growlithe",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "23": {
           "name": "Arcanine",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "24": {
           "name": "Blaziken ex",
@@ -109,15 +109,15 @@
         },
         "25": {
           "name": "Torchic",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "26": {
           "name": "Combusken",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "27": {
           "name": "Pansear",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "28": {
           "name": "Simisear",
@@ -125,7 +125,7 @@
         },
         "29": {
           "name": "Darumaka",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "30": {
           "name": "Reshiram ex",
@@ -137,47 +137,47 @@
         },
         "32": {
           "name": "Psyduck",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "33": {
           "name": "Golduck",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "34": {
           "name": "Slowpoke",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "35": {
           "name": "Slowbro",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "36": {
           "name": "Seel",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "37": {
           "name": "Dewgong",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "38": {
           "name": "Shellder",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "39": {
           "name": "Cloyster",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "40": {
           "name": "Wailmer",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "41": {
           "name": "Wailord",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "42": {
           "name": "Panpour",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "43": {
           "name": "Veluza ex",
@@ -185,31 +185,31 @@
         },
         "44": {
           "name": "Pikachu",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "45": {
           "name": "Raichu",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "46": {
           "name": "Voltorb",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "47": {
           "name": "Electrode",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "48": {
           "name": "Electabuzz",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "49": {
           "name": "Electivire",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "50": {
           "name": "Emolga",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "51": {
           "name": "Tapu Koko ex",
@@ -217,7 +217,7 @@
         },
         "52": {
           "name": "Kilowattrel",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "53": {
           "name": "Iono's Bellibolt ex",
@@ -229,7 +229,7 @@
         },
         "55": {
           "name": "Pawmi",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "56": {
           "name": "Lillie's Clefairy ex",
@@ -237,47 +237,47 @@
         },
         "57": {
           "name": "Clefairy",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "58": {
           "name": "Clefable",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "59": {
           "name": "Jigglypuff",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "60": {
           "name": "Wigglytuff",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "61": {
           "name": "Slowpoke",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "62": {
           "name": "Slowking",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "63": {
           "name": "Mew",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "64": {
           "name": "Wooper",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "65": {
           "name": "Quagsire",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "66": {
           "name": "Espeon",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "67": {
           "name": "Wobbuffet",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "68": {
           "name": "Ralts",
@@ -289,23 +289,23 @@
         },
         "70": {
           "name": "Hatenna",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "71": {
           "name": "Hattrem",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "72": {
           "name": "Hatterene",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "73": {
           "name": "Milcery",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "74": {
           "name": "Alcremie",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "75": {
           "name": "Alcremie ex",
@@ -313,15 +313,15 @@
         },
         "76": {
           "name": "Machop",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "77": {
           "name": "Machoke",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "78": {
           "name": "Machamp",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "79": {
           "name": "Mamoswine ex",
@@ -329,43 +329,43 @@
         },
         "80": {
           "name": "Swinub",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "81": {
           "name": "Piloswine",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "82": {
           "name": "Pansage",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "83": {
           "name": "Simisage",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "84": {
           "name": "Throh",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "85": {
           "name": "Sawk",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "86": {
           "name": "Mienfoo",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "87": {
           "name": "Mienshao",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "88": {
           "name": "Clobbopus",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "89": {
           "name": "Grapploct",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "90": {
           "name": "Falinks",
@@ -373,15 +373,15 @@
         },
         "91": {
           "name": "Ekans",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "92": {
           "name": "Arbok",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "93": {
           "name": "Grimer",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "94": {
           "name": "Paldean Clodsire ex",
@@ -389,15 +389,15 @@
         },
         "95": {
           "name": "Wooper",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "96": {
           "name": "Clodsire",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "97": {
           "name": "Sneasel",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "98": {
           "name": "N's Zoroark ex",
@@ -405,43 +405,43 @@
         },
         "99": {
           "name": "Zorua",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "100": {
           "name": "Zoroark",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "101": {
           "name": "Inkay",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "102": {
           "name": "Beldum",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "103": {
           "name": "Metang",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "104": {
           "name": "Metagross",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "105": {
           "name": "Bronzor",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "106": {
           "name": "Bronzong",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "107": {
           "name": "Ferroseed",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "108": {
           "name": "Ferrothorn",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "109": {
           "name": "Togedemaru",
@@ -449,7 +449,7 @@
         },
         "110": {
           "name": "Meltan",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "111": {
           "name": "Hop's Zacian ex",
@@ -457,11 +457,11 @@
         },
         "112": {
           "name": "Dratini",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "113": {
           "name": "Dragonair",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "114": {
           "name": "Salamence ex",
@@ -469,27 +469,27 @@
         },
         "115": {
           "name": "Bagon",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "116": {
           "name": "Shelgon",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "117": {
           "name": "Pidgey",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "118": {
           "name": "Pidgeotto",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "119": {
           "name": "Pidgeot",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "120": {
           "name": "Spearow",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "121": {
           "name": "Dudunsparce ex",
@@ -497,79 +497,79 @@
         },
         "122": {
           "name": "Dunsparce",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "123": {
           "name": "Stantler",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "124": {
           "name": "Smeargle",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "125": {
           "name": "Skitty",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "126": {
           "name": "Delcatty",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "127": {
           "name": "Bidoof",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "128": {
           "name": "Bibarel",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "129": {
           "name": "Bunnelby",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "130": {
           "name": "Diggersby",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "131": {
           "name": "Fletchling",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "132": {
           "name": "Wooloo",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "133": {
           "name": "Dubwool",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "134": {
           "name": "Skwovet",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "135": {
           "name": "Greedent",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "136": {
           "name": "Rookidee",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "137": {
           "name": "Corvisquire",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "138": {
           "name": "Corviknight",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "139": {
           "name": "Lechonk",
-          "rarity": "common"
+          "rarity": "uncommon"
         },
         "140": {
           "name": "Oinkologne",
-          "rarity": "common"
+          "rarity": "rare"
         },
         "141": {
           "name": "Tandemaus",
@@ -667,127 +667,127 @@
         },
         "160": {
           "name": "Maractus",
-          "rarity": "secret"
+          "rarity": "illustration-rare"
         },
         "161": {
           "name": "Articuno",
-          "rarity": "secret"
+          "rarity": "illustration-rare"
         },
         "162": {
           "name": "Wailord",
-          "rarity": "secret"
+          "rarity": "illustration-rare"
         },
         "163": {
           "name": "Iono's Kilowattrel",
-          "rarity": "secret"
+          "rarity": "illustration-rare"
         },
         "164": {
           "name": "Lillie's Ribombee",
-          "rarity": "secret"
+          "rarity": "illustration-rare"
         },
         "165": {
           "name": "Swinub",
-          "rarity": "secret"
+          "rarity": "illustration-rare"
         },
         "166": {
           "name": "Lycanroc",
-          "rarity": "secret"
+          "rarity": "illustration-rare"
         },
         "167": {
           "name": "N's Reshiram",
-          "rarity": "secret"
+          "rarity": "illustration-rare"
         },
         "168": {
           "name": "Furret",
-          "rarity": "secret"
+          "rarity": "illustration-rare"
         },
         "169": {
           "name": "Noibat",
-          "rarity": "secret"
+          "rarity": "illustration-rare"
         },
         "170": {
           "name": "Hop's Wooloo",
-          "rarity": "secret"
+          "rarity": "illustration-rare"
         },
         "171": {
           "name": "Volcanion ex",
-          "rarity": "secret"
+          "rarity": "special-illustration-rare"
         },
         "172": {
           "name": "Iono's Bellibolt ex",
-          "rarity": "secret"
+          "rarity": "special-illustration-rare"
         },
         "173": {
           "name": "Lillie's Clefairy ex",
-          "rarity": "secret"
+          "rarity": "special-illustration-rare"
         },
         "174": {
           "name": "Mamoswine ex",
-          "rarity": "secret"
+          "rarity": "special-illustration-rare"
         },
         "175": {
           "name": "N's Zoroark ex",
-          "rarity": "secret"
+          "rarity": "special-illustration-rare"
         },
         "176": {
           "name": "Hop's Zacian ex",
-          "rarity": "secret"
+          "rarity": "special-illustration-rare"
         },
         "177": {
           "name": "Salamence ex",
-          "rarity": "secret"
+          "rarity": "special-illustration-rare"
         },
         "178": {
           "name": "Dudunsparce ex",
-          "rarity": "secret"
+          "rarity": "special-illustration-rare"
         },
         "179": {
           "name": "Brock's Scouting",
-          "rarity": "secret"
+          "rarity": "trainer-ultra-rare"
         },
         "180": {
           "name": "Iris's Fighting Spirit",
-          "rarity": "secret"
+          "rarity": "trainer-ultra-rare"
         },
         "181": {
           "name": "Ruffian",
-          "rarity": "secret"
+          "rarity": "trainer-ultra-rare"
         },
         "182": {
           "name": "Volcanion ex",
-          "rarity": "secret"
+          "rarity": "ultra-rare"
         },
         "183": {
           "name": "Iono's Bellibolt ex",
-          "rarity": "secret"
+          "rarity": "ultra-rare"
         },
         "184": {
           "name": "N's Zoroark ex",
-          "rarity": "secret"
+          "rarity": "ultra-rare"
         },
         "185": {
           "name": "Hop's Zacian ex",
-          "rarity": "secret"
+          "rarity": "ultra-rare"
         },
         "186": {
           "name": "Brock's Scouting",
-          "rarity": "secret"
+          "rarity": "hyper-rare"
         },
         "187": {
           "name": "Iris's Fighting Spirit",
-          "rarity": "secret"
+          "rarity": "hyper-rare"
         },
         "188": {
           "name": "Ruffian",
-          "rarity": "secret"
+          "rarity": "hyper-rare"
         },
         "189": {
           "name": "Spiky Energy",
-          "rarity": "secret"
+          "rarity": "hyper-rare"
         },
         "190": {
           "name": "Spiky Energy",
-          "rarity": "secret"
+          "rarity": "hyper-rare"
         }
       },
       "exCards": {
@@ -832,12 +832,12 @@
         },
         "2": {
           "name": "Card #002",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "3": {
           "name": "Card #003",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "4": {
@@ -847,7 +847,7 @@
         },
         "5": {
           "name": "Card #005",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "6": {
@@ -862,7 +862,7 @@
         },
         "8": {
           "name": "Card #008",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "9": {
@@ -872,7 +872,7 @@
         },
         "10": {
           "name": "Card #010",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "11": {
@@ -887,7 +887,7 @@
         },
         "13": {
           "name": "Card #013",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "14": {
@@ -902,7 +902,7 @@
         },
         "16": {
           "name": "Card #016",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "17": {
@@ -917,7 +917,7 @@
         },
         "19": {
           "name": "Card #019",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "20": {
@@ -927,7 +927,7 @@
         },
         "21": {
           "name": "Card #021",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "22": {
@@ -942,7 +942,7 @@
         },
         "24": {
           "name": "Card #024",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "25": {
@@ -952,12 +952,12 @@
         },
         "26": {
           "name": "Card #026",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "27": {
           "name": "Card #027",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "28": {
@@ -972,12 +972,12 @@
         },
         "30": {
           "name": "Card #030",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "31": {
           "name": "Card #031",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "32": {
@@ -997,12 +997,12 @@
         },
         "35": {
           "name": "Card #035",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "36": {
           "name": "Card #036",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "37": {
@@ -1022,12 +1022,12 @@
         },
         "40": {
           "name": "Card #040",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "41": {
           "name": "Card #041",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "42": {
@@ -1042,7 +1042,7 @@
         },
         "44": {
           "name": "Card #044",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "45": {
@@ -1052,12 +1052,12 @@
         },
         "46": {
           "name": "Card #046",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "47": {
           "name": "Card #047",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "48": {
@@ -1072,12 +1072,12 @@
         },
         "50": {
           "name": "Card #050",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "51": {
           "name": "Card #051",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "52": {
@@ -1087,7 +1087,7 @@
         },
         "53": {
           "name": "Card #053",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "54": {
@@ -1102,12 +1102,12 @@
         },
         "56": {
           "name": "Card #056",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "57": {
           "name": "Card #057",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "58": {
@@ -1122,12 +1122,12 @@
         },
         "60": {
           "name": "Card #060",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "61": {
           "name": "Card #061",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "62": {
@@ -1142,7 +1142,7 @@
         },
         "64": {
           "name": "Card #064",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "65": {
@@ -1152,7 +1152,7 @@
         },
         "66": {
           "name": "Card #066",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "67": {
@@ -1162,12 +1162,12 @@
         },
         "68": {
           "name": "Card #068",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "69": {
           "name": "Card #069",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "70": {
@@ -1177,12 +1177,12 @@
         },
         "71": {
           "name": "Card #071",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "72": {
           "name": "Card #072",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "73": {
@@ -1197,7 +1197,7 @@
         },
         "75": {
           "name": "Card #075",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "76": {
@@ -1207,17 +1207,17 @@
         },
         "77": {
           "name": "Card #077",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "78": {
           "name": "Card #078",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "79": {
           "name": "Card #079",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "80": {
@@ -1232,12 +1232,12 @@
         },
         "82": {
           "name": "Card #082",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "83": {
           "name": "Card #083",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "84": {
@@ -1247,17 +1247,17 @@
         },
         "85": {
           "name": "Card #085",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "86": {
           "name": "Card #086",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "87": {
           "name": "Card #087",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "88": {
@@ -1267,12 +1267,12 @@
         },
         "89": {
           "name": "Card #089",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "90": {
           "name": "Card #090",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "91": {
@@ -1978,7 +1978,7 @@
         },
         "6": {
           "name": "Card #006",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "7": {
@@ -1993,7 +1993,7 @@
         },
         "9": {
           "name": "Card #009",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "10": {
@@ -2028,7 +2028,7 @@
         },
         "16": {
           "name": "Card #016",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "17": {
@@ -2053,7 +2053,7 @@
         },
         "21": {
           "name": "Card #021",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "22": {
@@ -2078,7 +2078,7 @@
         },
         "26": {
           "name": "Card #026",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "27": {
@@ -2103,7 +2103,7 @@
         },
         "31": {
           "name": "Card #031",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "32": {
@@ -2118,7 +2118,7 @@
         },
         "34": {
           "name": "Card #034",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "35": {
@@ -2138,7 +2138,7 @@
         },
         "38": {
           "name": "Card #038",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "39": {
@@ -2168,7 +2168,7 @@
         },
         "44": {
           "name": "Card #044",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "45": {
@@ -2193,7 +2193,7 @@
         },
         "49": {
           "name": "Card #049",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "50": {
@@ -2213,7 +2213,7 @@
         },
         "53": {
           "name": "Card #053",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "54": {
@@ -2243,7 +2243,7 @@
         },
         "59": {
           "name": "Card #059",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "60": {
@@ -2268,7 +2268,7 @@
         },
         "64": {
           "name": "Card #064",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "65": {
@@ -2288,7 +2288,7 @@
         },
         "68": {
           "name": "Card #068",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "69": {
@@ -2308,7 +2308,7 @@
         },
         "72": {
           "name": "Card #072",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "73": {
@@ -2333,7 +2333,7 @@
         },
         "77": {
           "name": "Card #077",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "78": {
@@ -2353,7 +2353,7 @@
         },
         "81": {
           "name": "Card #081",
-          "rarity": "common",
+          "rarity": "rare",
           "type": "pokemon"
         },
         "82": {
