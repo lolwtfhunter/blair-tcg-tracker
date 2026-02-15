@@ -32,8 +32,12 @@ The app has three top-level tabs:
   | Phantasmal Flames | 130 | Mega Evolution | Nov 2025 |
   | Ascended Heroes | 295 | Mega Evolution | Jan 2026 |
 
+- **Hierarchical block-based navigation** — Sets are organized in a scalable two-level interface:
+  - **Level 1:** Block selection buttons (Scarlet & Violet, Mega Evolution, Sword & Shield) with aggregate progress for all sets in each block
+  - **Level 2:** Set selection grid showing individual sets within the chosen block, each with official set logos, progress bars, and release dates
+  - Provides better organization and scalability as new sets are added
 - **Variant tracking** — Check off each variant (Regular, Holo, Reverse Holo, Poke Ball, Master Ball) independently per card. EX, Ultra Rare, and other special rarities use a single "Collected" checkbox. Custom set cards also get computed variants based on rarity, era, and set type (e.g., modern uncommons get Regular + Reverse Holo).
-- **Inline progress bars** — Each set button shows a progress bar and collected/total count directly inside it, so you can see completion at a glance without a separate section.
+- **Inline progress bars** — Each block and set button shows a progress bar and collected/total count directly inside it, so you can see completion at a glance without a separate section.
 - **Filter & search** — Filter cards by completion status (All/Incomplete/Complete) and search by card name or number. Filters and search work together for quick card location.
 - **Card detail modal** — Tap any card to open a full-detail view with a large image, complete card information, and the ability to toggle variants directly in the modal.
 - **Lazy loading** — Cards render on-demand when you select a set, improving initial page load performance.
@@ -89,12 +93,13 @@ blair-pokemon-tracker/
 
 1. **Open the app** in a browser and enter the family sync code
 2. **Choose a tab** — Pokemon, Custom Sets, or Disney Lorcana
-3. **Select a set** from the buttons (each shows its progress bar inline)
-4. **Filter or search** to quickly find specific cards
-5. **Tap a card** to view full details in a modal with a large image
-6. **Check off variants** as you collect cards — progress saves automatically
-7. Completed cards fade out with a lock icon; unchecking requires confirmation
-8. Data syncs in real-time to Firebase so all family devices stay up to date
+3. **Select a block** — Choose from Scarlet & Violet, Mega Evolution, or Sword & Shield (each shows aggregate progress)
+4. **Select a set** from the grid of sets within the block (each shows its set logo and progress bar inline)
+5. **Filter or search** to quickly find specific cards
+6. **Tap a card** to view full details in a modal with a large image
+7. **Check off variants** as you collect cards — progress saves automatically
+8. Completed cards fade out with a lock icon; unchecking requires confirmation
+9. Data syncs in real-time to Firebase so all family devices stay up to date
 
 ## Card Images
 

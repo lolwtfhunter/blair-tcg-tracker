@@ -270,6 +270,16 @@ Follow these steps in order to add a new official Pokemon TCG set:
    }
    ```
 
+   **Important: Block Information**
+   - The `block` and `blockCode` fields determine how the set appears in the hierarchical UI
+   - Sets are automatically grouped by `blockCode` in the block selection interface
+   - Current block codes:
+     - `sv` - Scarlet & Violet (red/purple gradient)
+     - `me` - Mega Evolution (orange/gold gradient)
+     - `swsh` - Sword & Shield (blue gradient)
+   - If adding a new block, the UI will automatically create a block button for it
+   - Block buttons show aggregate progress across all sets with the same blockCode
+
 4. **Validate the JSON:**
    ```bash
    python3 -m json.tool my-new-set.json > /dev/null && echo "✓ Valid JSON"
@@ -487,8 +497,12 @@ Before committing your changes, verify:
 - [ ] No duplicate set keys
 
 ### Functionality Testing
-- [ ] Set appears in the set buttons list
-- [ ] Set button shows correct name and metadata
+- [ ] Block button appears with correct block name and color
+- [ ] Block button shows aggregate progress for all sets in the block
+- [ ] Clicking block button displays set buttons for that block
+- [ ] Set appears in the correct block's set grid
+- [ ] Set button shows correct name, logo, and metadata
+- [ ] Set logo loads from Pokemon TCG API (or gracefully hides if unavailable)
 - [ ] Clicking set button displays cards
 - [ ] Cards render with correct information
 - [ ] Images load (or placeholders show)
@@ -496,7 +510,7 @@ Before committing your changes, verify:
 - [ ] Search functionality works
 - [ ] Variant checkboxes appear correctly
 - [ ] Checking variants saves progress
-- [ ] Progress bar updates
+- [ ] Progress bars update (both set and block levels)
 - [ ] Card modal opens when clicking cards
 - [ ] TCGPlayer links work
 
@@ -586,8 +600,67 @@ Before committing your changes, verify:
 
 ---
 
+## Understanding the Hierarchical UI
+
+As of February 2026, the Pokemon TCG tab uses a two-level hierarchical navigation system to improve scalability:
+
+### Level 1: Block Selection
+
+- **What it is:** Large, visually distinct buttons for each TCG block/era
+- **Current blocks:**
+  - Scarlet & Violet (blockCode: `sv`) - 4 sets
+  - Mega Evolution (blockCode: `me`) - 3 sets
+  - Sword & Shield (blockCode: `swsh`) - 1 set
+- **What they show:**
+  - Block name (from `block` field in JSON)
+  - Number of sets in the block
+  - Aggregate progress across all sets (total variants collected/total variants)
+  - Visual progress bar
+  - Distinctive color gradient based on blockCode
+
+### Level 2: Set Selection
+
+- **What it is:** Grid of set buttons within the selected block
+- **What they show:**
+  - Official set logo (from `https://images.pokemontcg.io/{setCode}/logo.png`)
+  - Set name (from `displayName` field in JSON)
+  - Release date (from `releaseDate` field in JSON)
+  - Individual set progress (variants collected/total)
+  - Visual progress bar
+
+### How New Sets Integrate
+
+When you add a new set:
+
+1. **Automatic block grouping:** The set is automatically grouped with other sets sharing the same `blockCode`
+2. **Block button updates:** If the block already exists, it updates to show the new set count and aggregate progress
+3. **New block creation:** If you use a new `blockCode`, a new block button is automatically created (though you may want to add CSS styling for the new block's color gradient)
+4. **Set logo display:** The set button will attempt to load the set logo from `https://images.pokemontcg.io/{setCode}/logo.png`. If unavailable, the logo image gracefully hides and only the set name displays.
+
+### Adding a New Block
+
+If you're adding a set from a completely new TCG block (e.g., Sun & Moon):
+
+1. **Set the block fields in JSON:**
+   ```json
+   "block": "Sun & Moon",
+   "blockCode": "sm"
+   ```
+
+2. **Add CSS styling for the block color** in `index.html` (around line 234):
+   ```css
+   .block-btn.block-sm::before {
+       background: linear-gradient(135deg, #your-color1, #your-color2);
+   }
+   ```
+
+3. The block button will automatically appear in the UI
+
+---
+
 ## Version History
 
+- **v1.2** (2026-02-15): Added "Understanding the Hierarchical UI" section documenting the new two-level block/set navigation system. Updated testing checklist to include block-level UI verification. Added block information notes to JSON structure documentation.
 - **v1.1** (2026-02-15): Added comprehensive "Reliable Data Sources" section with official Pokemon resources, research workflow, and data verification procedures. Emphasized using real data only after Mega Evolution set required correction from fictional to accurate card list.
 - **v1.0** (2026-02-15): Initial documentation created alongside Mega Evolution set addition and modular refactoring
 

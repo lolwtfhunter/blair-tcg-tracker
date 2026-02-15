@@ -218,7 +218,15 @@ Validate code → Connect to Firebase
   ↓
 Load saved progress from Firebase
   ↓
-Render all 1,529 cards with variants
+Render block selection buttons with aggregate progress
+  ↓
+Auto-select first block (Scarlet & Violet)
+  ↓
+Render set buttons for selected block
+  ↓
+Auto-select first set in block
+  ↓
+Render cards for selected set on-demand
   ↓
 Ready to use!
 ```
@@ -403,13 +411,32 @@ initializeFirebaseSync();
 ## 🎨 UI COMPONENTS
 
 ### **Key Elements**
-1. **Sync Status Indicator** - Top right, shows connection state
-2. **Set Selector** - 5 buttons to switch between sets
-3. **Search Bar** - Filter cards by number
-4. **Progress Display** - X/Y variants collected
-5. **Card Grid** - Responsive 3-column grid
-6. **Card Items** - Card number, rarity badge, variant checkboxes
-7. **Export Button** - Generate progress report
+1. **Top-Level Tabs** - Pokemon TCG, Custom Sets, Disney Lorcana
+2. **Sync Status Indicator** - Top right, shows connection state
+3. **Block Selector** - Large buttons for Scarlet & Violet, Mega Evolution, Sword & Shield blocks with aggregate progress
+4. **Set Selector** - Grid of set buttons within selected block, showing set logos and individual progress
+5. **Search Bar** - Filter cards by name or number
+6. **Filter Buttons** - All/Incomplete/Complete card filtering
+7. **Progress Display** - X/Y variants collected (shown at both block and set levels)
+8. **Card Grid** - Responsive grid layout
+9. **Card Items** - Card image, number, name, rarity badge, variant checkboxes
+10. **Card Detail Modal** - Full-size card view with all details and variant toggles
+11. **Export Button** - Generate progress report
+
+### **Hierarchical Navigation**
+The Pokemon TCG tab uses a two-level navigation system:
+- **Level 1 (Block Selection):** Choose a block to view its sets. Each block button shows:
+  - Block name (e.g., "Scarlet & Violet")
+  - Number of sets in the block
+  - Aggregate progress across all sets (variants collected/total)
+  - Progress bar reflecting overall block completion
+  - Distinctive color gradient (SV=red/purple, ME=orange/gold, SWSH=blue)
+- **Level 2 (Set Selection):** Select a set within the chosen block. Each set button shows:
+  - Official set logo from Pokemon TCG API
+  - Set name and release date
+  - Individual set progress (variants collected/total)
+  - Progress bar reflecting set completion
+  - Buttons display in a responsive grid (3-5 columns depending on screen size)
 
 ### **Variant Display**
 - **Single Checkbox:** `✓ Collected` (EX/Secret rares)

@@ -477,18 +477,27 @@ https://www.tcgplayer.com/search/pokemon/product?q=Charizard%206%2FBase%20Set%20
 
 ## Block Codes
 
-Block codes are used for styling and organization:
+Block codes are used for hierarchical navigation and styling:
 
-| Block Code | Block Name | Sets |
-|------------|------------|------|
-| `swsh` | Sword & Shield | Celebrations |
-| `sv` | Scarlet & Violet | Surging Sparks, Prismatic Evolutions, Journey Together, Destined Rivals |
-| `me` | Mega Evolution | Mega Evolution, Phantasmal Flames, Ascended Heroes |
+| Block Code | Block Name | Sets | Color Gradient |
+|------------|------------|------|----------------|
+| `swsh` | Sword & Shield | Celebrations | Blue |
+| `sv` | Scarlet & Violet | Surging Sparks, Prismatic Evolutions, Journey Together, Destined Rivals | Red/Purple |
+| `me` | Mega Evolution | Mega Evolution, Phantasmal Flames, Ascended Heroes | Orange/Gold |
 
 **Usage:**
-- CSS class for block badges: `block-{blockCode}`
-- Organizing sets by era/generation
-- Visual distinction in UI
+- **Hierarchical Navigation:** Sets are grouped by blockCode in the two-level UI
+  - Level 1: Block selection buttons (shows aggregate progress for all sets in block)
+  - Level 2: Set selection grid (shows individual sets within selected block)
+- **CSS Styling:** `block-{blockCode}` classes apply distinctive color gradients
+- **Organizing Sets:** Groups sets by TCG era/generation/block
+- **Visual Distinction:** Each block has a unique color scheme in the UI
+
+**Hierarchical UI Behavior:**
+- Block buttons automatically aggregate progress from all sets with matching blockCode
+- Clicking a block reveals set buttons for that block only
+- Set logos load from `https://images.pokemontcg.io/{setCode}/logo.png`
+- New blocks are automatically created when a set with a new blockCode is added
 
 ---
 
