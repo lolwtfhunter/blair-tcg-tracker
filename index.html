@@ -401,7 +401,102 @@
         .set-section.active {
             display: block;
         }
-        
+
+        /* Card controls: filters and search */
+        .card-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+            align-items: center;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            color: #f1f1f1;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-color: rgba(102, 126, 234, 0.4);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .search-container {
+            flex: 1;
+            min-width: 200px;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 36px 8px 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            color: #f1f1f1;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .search-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(102, 126, 234, 0.5);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s;
+        }
+
+        .search-clear:hover {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .search-clear.visible {
+            display: flex;
+        }
+
         .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -907,6 +1002,25 @@
                 width: 12px;
                 height: 12px;
             }
+            .card-controls {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .filter-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+            .filter-btn {
+                padding: 6px 12px;
+                font-size: 0.75rem;
+            }
+            .search-container {
+                max-width: 100%;
+            }
+            .search-input {
+                font-size: 0.8rem;
+                padding: 6px 32px 6px 10px;
+            }
         }
     </style>
 </head>
@@ -975,30 +1089,107 @@
             <div class="set-buttons" id="setButtons"></div>
 
             <div id="celebrations" class="set-section">
+                <div class="card-controls">
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="filterCards('celebrations', 'all')">All</button>
+                        <button class="filter-btn" onclick="filterCards('celebrations', 'incomplete')">Incomplete</button>
+                        <button class="filter-btn" onclick="filterCards('celebrations', 'complete')">Complete</button>
+                    </div>
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Search cards..." oninput="searchCards('celebrations', this.value)" data-set="celebrations">
+                        <button class="search-clear" onclick="clearSearch('celebrations')">×</button>
+                    </div>
+                </div>
                 <div class="card-grid" id="celebrations-grid"></div>
             </div>
 
             <div id="surging-sparks" class="set-section">
+                <div class="card-controls">
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="filterCards('surging-sparks', 'all')">All</button>
+                        <button class="filter-btn" onclick="filterCards('surging-sparks', 'incomplete')">Incomplete</button>
+                        <button class="filter-btn" onclick="filterCards('surging-sparks', 'complete')">Complete</button>
+                    </div>
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Search cards..." oninput="searchCards('surging-sparks', this.value)" data-set="surging-sparks">
+                        <button class="search-clear" onclick="clearSearch('surging-sparks')">×</button>
+                    </div>
+                </div>
                 <div class="card-grid" id="surging-sparks-grid"></div>
             </div>
 
             <div id="prismatic-evolutions" class="set-section active">
+                <div class="card-controls">
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="filterCards('prismatic-evolutions', 'all')">All</button>
+                        <button class="filter-btn" onclick="filterCards('prismatic-evolutions', 'incomplete')">Incomplete</button>
+                        <button class="filter-btn" onclick="filterCards('prismatic-evolutions', 'complete')">Complete</button>
+                    </div>
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Search cards..." oninput="searchCards('prismatic-evolutions', this.value)" data-set="prismatic-evolutions">
+                        <button class="search-clear" onclick="clearSearch('prismatic-evolutions')">×</button>
+                    </div>
+                </div>
                 <div class="card-grid" id="prismatic-evolutions-grid"></div>
             </div>
 
             <div id="journey-together" class="set-section">
+                <div class="card-controls">
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="filterCards('journey-together', 'all')">All</button>
+                        <button class="filter-btn" onclick="filterCards('journey-together', 'incomplete')">Incomplete</button>
+                        <button class="filter-btn" onclick="filterCards('journey-together', 'complete')">Complete</button>
+                    </div>
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Search cards..." oninput="searchCards('journey-together', this.value)" data-set="journey-together">
+                        <button class="search-clear" onclick="clearSearch('journey-together')">×</button>
+                    </div>
+                </div>
                 <div class="card-grid" id="journey-together-grid"></div>
             </div>
 
             <div id="destined-rivals" class="set-section">
+                <div class="card-controls">
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="filterCards('destined-rivals', 'all')">All</button>
+                        <button class="filter-btn" onclick="filterCards('destined-rivals', 'incomplete')">Incomplete</button>
+                        <button class="filter-btn" onclick="filterCards('destined-rivals', 'complete')">Complete</button>
+                    </div>
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Search cards..." oninput="searchCards('destined-rivals', this.value)" data-set="destined-rivals">
+                        <button class="search-clear" onclick="clearSearch('destined-rivals')">×</button>
+                    </div>
+                </div>
                 <div class="card-grid" id="destined-rivals-grid"></div>
             </div>
 
             <div id="phantasmal-flames" class="set-section">
+                <div class="card-controls">
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="filterCards('phantasmal-flames', 'all')">All</button>
+                        <button class="filter-btn" onclick="filterCards('phantasmal-flames', 'incomplete')">Incomplete</button>
+                        <button class="filter-btn" onclick="filterCards('phantasmal-flames', 'complete')">Complete</button>
+                    </div>
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Search cards..." oninput="searchCards('phantasmal-flames', this.value)" data-set="phantasmal-flames">
+                        <button class="search-clear" onclick="clearSearch('phantasmal-flames')">×</button>
+                    </div>
+                </div>
                 <div class="card-grid" id="phantasmal-flames-grid"></div>
             </div>
 
             <div id="ascended-heroes" class="set-section">
+                <div class="card-controls">
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="filterCards('ascended-heroes', 'all')">All</button>
+                        <button class="filter-btn" onclick="filterCards('ascended-heroes', 'incomplete')">Incomplete</button>
+                        <button class="filter-btn" onclick="filterCards('ascended-heroes', 'complete')">Complete</button>
+                    </div>
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Search cards..." oninput="searchCards('ascended-heroes', this.value)" data-set="ascended-heroes">
+                        <button class="search-clear" onclick="clearSearch('ascended-heroes')">×</button>
+                    </div>
+                </div>
                 <div class="card-grid" id="ascended-heroes-grid"></div>
             </div>
         </div>
@@ -1644,7 +1835,21 @@
                     `;
                 }
 
-                section.innerHTML = langToggleHTML + `<div class="card-grid" id="custom-${setKey}-grid"></div>`;
+                const controlsHTML = `
+                    <div class="card-controls">
+                        <div class="filter-buttons">
+                            <button class="filter-btn active" onclick="filterCards('custom-${setKey}', 'all')">All</button>
+                            <button class="filter-btn" onclick="filterCards('custom-${setKey}', 'incomplete')">Incomplete</button>
+                            <button class="filter-btn" onclick="filterCards('custom-${setKey}', 'complete')">Complete</button>
+                        </div>
+                        <div class="search-container">
+                            <input type="text" class="search-input" placeholder="Search cards..." oninput="searchCards('custom-${setKey}', this.value)" data-set="custom-${setKey}">
+                            <button class="search-clear" onclick="clearSearch('custom-${setKey}')">×</button>
+                        </div>
+                    </div>
+                `;
+
+                section.innerHTML = langToggleHTML + controlsHTML + `<div class="card-grid" id="custom-${setKey}-grid"></div>`;
                 container.appendChild(section);
             });
         }
@@ -1871,7 +2076,107 @@
             
             console.log(`✓ Done: ${grid.children.length} cards in grid`);
         }
-        
+
+        // Store active filters and searches for each set
+        let activeFilters = {};
+        let activeSearches = {};
+
+        // Filter cards by completion status
+        window.filterCards = function(setKey, filterType) {
+            // Update active filter
+            activeFilters[setKey] = filterType;
+
+            // Update button states
+            const section = document.getElementById(setKey);
+            if (section) {
+                const buttons = section.querySelectorAll('.filter-btn');
+                buttons.forEach(btn => {
+                    btn.classList.remove('active');
+                    if ((filterType === 'all' && btn.textContent === 'All') ||
+                        (filterType === 'incomplete' && btn.textContent === 'Incomplete') ||
+                        (filterType === 'complete' && btn.textContent === 'Complete')) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+
+            // Apply filter to cards
+            applyFiltersAndSearch(setKey);
+        };
+
+        // Search cards by name or number
+        window.searchCards = function(setKey, query) {
+            activeSearches[setKey] = query.toLowerCase().trim();
+
+            // Show/hide clear button
+            const section = document.getElementById(setKey);
+            if (section) {
+                const clearBtn = section.querySelector('.search-clear');
+                if (clearBtn) {
+                    if (query.trim()) {
+                        clearBtn.classList.add('visible');
+                    } else {
+                        clearBtn.classList.remove('visible');
+                    }
+                }
+            }
+
+            // Apply search to cards
+            applyFiltersAndSearch(setKey);
+        };
+
+        // Clear search input
+        window.clearSearch = function(setKey) {
+            const section = document.getElementById(setKey);
+            if (section) {
+                const searchInput = section.querySelector('.search-input');
+                if (searchInput) {
+                    searchInput.value = '';
+                }
+                const clearBtn = section.querySelector('.search-clear');
+                if (clearBtn) {
+                    clearBtn.classList.remove('visible');
+                }
+            }
+            activeSearches[setKey] = '';
+            applyFiltersAndSearch(setKey);
+        };
+
+        // Apply both filters and search to cards
+        function applyFiltersAndSearch(setKey) {
+            const grid = document.getElementById(setKey + '-grid');
+            if (!grid) return;
+
+            const filterType = activeFilters[setKey] || 'all';
+            const searchQuery = activeSearches[setKey] || '';
+
+            const cards = grid.querySelectorAll('.card-item');
+            cards.forEach(card => {
+                let show = true;
+
+                // Apply filter
+                const isCompleted = card.getAttribute('data-completed') === 'true';
+                if (filterType === 'incomplete' && isCompleted) {
+                    show = false;
+                } else if (filterType === 'complete' && !isCompleted) {
+                    show = false;
+                }
+
+                // Apply search
+                if (show && searchQuery) {
+                    const cardName = card.querySelector('.card-name')?.textContent.toLowerCase() || '';
+                    const cardNumber = card.querySelector('.card-number')?.textContent.toLowerCase() || '';
+
+                    if (!cardName.includes(searchQuery) && !cardNumber.includes(searchQuery)) {
+                        show = false;
+                    }
+                }
+
+                // Show or hide card
+                card.style.display = show ? '' : 'none';
+            });
+        }
+
         // Toggle variant (with soft-lock protection for completed cards)
         window.toggleVariant = function(setKey, cardNumber, variant) {
             if (!collectionProgress[setKey]) {
