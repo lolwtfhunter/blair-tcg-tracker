@@ -1,0 +1,1028 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-02-15",
+  "setKey": "whispers-in-the-well",
+  "name": "Whispers in the Well",
+  "displayName": "Whispers in the Well",
+  "totalCards": 204,
+  "mainSet": 204,
+  "setCode": "whi",
+  "releaseDate": "2025-11-14",
+  "block": "Disney Lorcana",
+  "blockCode": "lorcana",
+  "hasPokeBallVariant": false,
+  "hasMasterBallVariant": false,
+  "singleVariantOnly": false,
+  "cards": {
+    "1": {
+      "name": "Baloo - Friend and Guardian",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "2": {
+      "name": "Gaston - Frightful Bully",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "3": {
+      "name": "Rapunzel - Ready for Adventure",
+      "rarity": "legendary",
+      "type": "character"
+    },
+    "4": {
+      "name": "Headless Manhorse - Manny",
+      "rarity": "common",
+      "type": "character"
+    },
+    "5": {
+      "name": "Higgins - Undercover Officer",
+      "rarity": "common",
+      "type": "character"
+    },
+    "6": {
+      "name": "Rajah - Devoted Protector",
+      "rarity": "common",
+      "type": "character"
+    },
+    "7": {
+      "name": "Eilonwy - Princess of Llyr",
+      "rarity": "common",
+      "type": "character"
+    },
+    "8": {
+      "name": "Scrooge McDuck - On the Right Track",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "9": {
+      "name": "Webby Vanderquack - Knowledge Seeker",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "10": {
+      "name": "Gurgi - Apple Lover",
+      "rarity": "common",
+      "type": "character"
+    },
+    "11": {
+      "name": "Mrs. Beakley - Former S.H.U.S.H. Agent",
+      "rarity": "common",
+      "type": "character"
+    },
+    "12": {
+      "name": "Bagheera - Cautious Explorer",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "13": {
+      "name": "Shanti - Village Girl",
+      "rarity": "common",
+      "type": "character"
+    },
+    "14": {
+      "name": "Flash - Records Specialist",
+      "rarity": "common",
+      "type": "character"
+    },
+    "15": {
+      "name": "Taran - Pig Keeper",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "16": {
+      "name": "Sebastian - Loyal Crab",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "17": {
+      "name": "Ariel - Ethereal Voice",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "18": {
+      "name": "Scrooge McDuck - Cavern Prospector",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "19": {
+      "name": "Mowgli - Man Cub",
+      "rarity": "super-rare",
+      "type": "character"
+    },
+    "20": {
+      "name": "Simba - King in the Making",
+      "rarity": "super-rare",
+      "type": "character"
+    },
+    "21": {
+      "name": "Goofy - Ghost Hunter",
+      "rarity": "common",
+      "type": "character"
+    },
+    "22": {
+      "name": "Della Duck - Returning Mother",
+      "rarity": "common",
+      "type": "character"
+    },
+    "23": {
+      "name": "Mickey Mouse - Amber Champion",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "24": {
+      "name": "Goofy - Galumphing Gumshoe",
+      "rarity": "super-rare",
+      "type": "character"
+    },
+    "25": {
+      "name": "Gazelle - Ballad Singer",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "26": {
+      "name": "Search for Clues",
+      "rarity": "uncommon",
+      "type": "action"
+    },
+    "27": {
+      "name": "Or Rewrite History!",
+      "rarity": "uncommon",
+      "type": "action"
+    },
+    "28": {
+      "name": "Della's Moon Lullaby",
+      "rarity": "common",
+      "type": "action"
+    },
+    "29": {
+      "name": "The Horseman Strikes!",
+      "rarity": "rare",
+      "type": "action"
+    },
+    "30": {
+      "name": "Recovered Page",
+      "rarity": "uncommon",
+      "type": "item"
+    },
+    "31": {
+      "name": "Webby's Diary",
+      "rarity": "uncommon",
+      "type": "item"
+    },
+    "32": {
+      "name": "The Black Cauldron",
+      "rarity": "legendary",
+      "type": "item"
+    },
+    "33": {
+      "name": "Munchings and Crunchings",
+      "rarity": "common",
+      "type": "item"
+    },
+    "34": {
+      "name": "Duckburg - Funso’s Funzone",
+      "rarity": "rare",
+      "type": "location"
+    },
+    "35": {
+      "name": "Minnie Mouse - Amethyst Champion",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "36": {
+      "name": "The Horned King - Wicked Ruler",
+      "rarity": "super-rare",
+      "type": "character"
+    },
+    "37": {
+      "name": "Gwythaint - Savage Hunter",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "38": {
+      "name": "The Horned King - Heartless Devil",
+      "rarity": "common",
+      "type": "character"
+    },
+    "39": {
+      "name": "Cauldron Born - Mindless Horde",
+      "rarity": "common",
+      "type": "character"
+    },
+    "40": {
+      "name": "Demona - Betrayer of the Clan",
+      "rarity": "common",
+      "type": "character"
+    },
+    "41": {
+      "name": "Magica De Spell - Shadowy and Sinister",
+      "rarity": "common",
+      "type": "character"
+    },
+    "42": {
+      "name": "Lena Sabrewing - Mysterious Duck",
+      "rarity": "common",
+      "type": "character"
+    },
+    "43": {
+      "name": "Iago - Stompin' Mad",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "44": {
+      "name": "Violet Sabrewing - Senior Junior Woodchuck",
+      "rarity": "common",
+      "type": "character"
+    },
+    "45": {
+      "name": "Elsa - Exploring the Unknown",
+      "rarity": "common",
+      "type": "character"
+    },
+    "46": {
+      "name": "Mushu - Braggin' Dragon",
+      "rarity": "common",
+      "type": "character"
+    },
+    "47": {
+      "name": "Duckworth - Ghost Butler",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "48": {
+      "name": "Nibs - Lost Boy",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "49": {
+      "name": "The Horned King - Triumphant Ghoul",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "50": {
+      "name": "Creeper - Loyal Lackey",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "51": {
+      "name": "Coldstone - Reincarnated Cyborg",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "52": {
+      "name": "Magica De Spell - Spiteful Sorceress",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "53": {
+      "name": "Nana - Canine Caregiver",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "54": {
+      "name": "Magica De Spell - Conniving Sorceress",
+      "rarity": "super-rare",
+      "type": "character"
+    },
+    "55": {
+      "name": "Demona - Scourge of the Wyvern Clan",
+      "rarity": "legendary",
+      "type": "character"
+    },
+    "56": {
+      "name": "Hades - Looking for a Deal",
+      "rarity": "legendary",
+      "type": "character"
+    },
+    "57": {
+      "name": "Olaf - Helping Hand",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "58": {
+      "name": "Merlin - Completing His Research",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "59": {
+      "name": "Ursula - Whisper of Vanessa",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "60": {
+      "name": "Cheshire Cat - Inexplicable",
+      "rarity": "super-rare",
+      "type": "character"
+    },
+    "61": {
+      "name": "Begone!",
+      "rarity": "common",
+      "type": "action"
+    },
+    "62": {
+      "name": "Can't Hold It Back Anymore",
+      "rarity": "rare",
+      "type": "action"
+    },
+    "63": {
+      "name": "Swooping Strike",
+      "rarity": "common",
+      "type": "action"
+    },
+    "64": {
+      "name": "Performance Review",
+      "rarity": "uncommon",
+      "type": "action"
+    },
+    "65": {
+      "name": "Fragile as a Flower",
+      "rarity": "common",
+      "type": "action"
+    },
+    "66": {
+      "name": "Junior Woodchuck Guidebook",
+      "rarity": "common",
+      "type": "item"
+    },
+    "67": {
+      "name": "Grimorum Arcanorum",
+      "rarity": "rare",
+      "type": "item"
+    },
+    "68": {
+      "name": "The Great Illuminary - Abandoned Laboratory",
+      "rarity": "uncommon",
+      "type": "location"
+    },
+    "69": {
+      "name": "Baloo - Laid-Back Bear",
+      "rarity": "common",
+      "type": "character"
+    },
+    "70": {
+      "name": "Big Nose - Lovesick Poet",
+      "rarity": "common",
+      "type": "character"
+    },
+    "71": {
+      "name": "Flotsam - Slippery as an Eel",
+      "rarity": "common",
+      "type": "character"
+    },
+    "72": {
+      "name": "Kaa - Suspicious Serpent",
+      "rarity": "common",
+      "type": "character"
+    },
+    "73": {
+      "name": "Webby Vanderquack - Mystery Enthusiast",
+      "rarity": "common",
+      "type": "character"
+    },
+    "74": {
+      "name": "Finnick - Tiny Terror",
+      "rarity": "common",
+      "type": "character"
+    },
+    "75": {
+      "name": "Vladimir - Ceramic Unicorn Fan",
+      "rarity": "common",
+      "type": "character"
+    },
+    "76": {
+      "name": "Flintheart Glomgold - Scheming Billionaire",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "77": {
+      "name": "Jetsam - Opportunistic Eel",
+      "rarity": "common",
+      "type": "character"
+    },
+    "78": {
+      "name": "Hook Hand - Unexpectedly Friendly",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "79": {
+      "name": "Kaa - Secretive Snake",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "80": {
+      "name": "Emily Quackfaster - Level-Headed Librarian",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "81": {
+      "name": "Flynn Rider - Spectral Scoundrel",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "82": {
+      "name": "Bellwether - Master Manipulator",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "83": {
+      "name": "Launchpad - Exceptional Pilot",
+      "rarity": "common",
+      "type": "character"
+    },
+    "84": {
+      "name": "Penumbra - Moon Alien",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "85": {
+      "name": "Baloo - Carefree Bear",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "86": {
+      "name": "Megara - Secret Keeper",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "87": {
+      "name": "Goldie O'Gilt - Cunning Prospector",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "88": {
+      "name": "Shere Khan - Fearsome Tiger",
+      "rarity": "legendary",
+      "type": "character"
+    },
+    "89": {
+      "name": "Scrooge McDuck - S.H.U.S.H. Agent",
+      "rarity": "super-rare",
+      "type": "character"
+    },
+    "90": {
+      "name": "Akela - Forest Runner",
+      "rarity": "common",
+      "type": "character"
+    },
+    "91": {
+      "name": "Goofy - Emerald Champion",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "92": {
+      "name": "Little John - Impermanent Outlaw",
+      "rarity": "super-rare",
+      "type": "character"
+    },
+    "93": {
+      "name": "Webby Vanderquack - Junior Prospector",
+      "rarity": "legendary",
+      "type": "character"
+    },
+    "94": {
+      "name": "So Be It!",
+      "rarity": "common",
+      "type": "action"
+    },
+    "95": {
+      "name": "Trust In Me",
+      "rarity": "rare",
+      "type": "action"
+    },
+    "96": {
+      "name": "Chomp!",
+      "rarity": "common",
+      "type": "action"
+    },
+    "97": {
+      "name": "Malicious, Mean, and Scary",
+      "rarity": "uncommon",
+      "type": "action"
+    },
+    "98": {
+      "name": "Potion of Malice",
+      "rarity": "super-rare",
+      "type": "item"
+    },
+    "99": {
+      "name": "Inscrutable Map",
+      "rarity": "uncommon",
+      "type": "item"
+    },
+    "100": {
+      "name": "Enigmatic Inkcaster",
+      "rarity": "rare",
+      "type": "item"
+    },
+    "101": {
+      "name": "Blessed Bagpipes",
+      "rarity": "uncommon",
+      "type": "item"
+    },
+    "102": {
+      "name": "White Agony Plains - Golden Lagoon",
+      "rarity": "rare",
+      "type": "location"
+    },
+    "103": {
+      "name": "Diablo - Watchful Raven",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "104": {
+      "name": "Ares - God of War",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "105": {
+      "name": "Peter Pan - High Flyer",
+      "rarity": "common",
+      "type": "character"
+    },
+    "106": {
+      "name": "Tinker Bell - Fancy Footwork",
+      "rarity": "common",
+      "type": "character"
+    },
+    "107": {
+      "name": "Raksha - Fearless Mother",
+      "rarity": "common",
+      "type": "character"
+    },
+    "108": {
+      "name": "Shere Khan - Keen-Eyed Hunter",
+      "rarity": "common",
+      "type": "character"
+    },
+    "109": {
+      "name": "Rama - Vigilant Father",
+      "rarity": "common",
+      "type": "character"
+    },
+    "110": {
+      "name": "Mother Gothel - Underhanded Schemer",
+      "rarity": "common",
+      "type": "character"
+    },
+    "111": {
+      "name": "Katrina Van Tassel - Rosy-Cheeked Lass",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "112": {
+      "name": "Hermes - Harried Messenger",
+      "rarity": "common",
+      "type": "character"
+    },
+    "113": {
+      "name": "Beast - Aggressive Lord",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "114": {
+      "name": "Bronx - Ferocious Beast",
+      "rarity": "common",
+      "type": "character"
+    },
+    "115": {
+      "name": "Tinker Bell - Temperamental Fairy",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "116": {
+      "name": "David Xanatos - Charismatic Leader",
+      "rarity": "super-rare",
+      "type": "character"
+    },
+    "117": {
+      "name": "Hans - Brazen Manipulator",
+      "rarity": "super-rare",
+      "type": "character"
+    },
+    "118": {
+      "name": "Hercules - Mighty Leader",
+      "rarity": "legendary",
+      "type": "character"
+    },
+    "119": {
+      "name": "Goliath - Guardian of Castle Wyvern",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "120": {
+      "name": "Brooklyn - Second in Command",
+      "rarity": "common",
+      "type": "character"
+    },
+    "121": {
+      "name": "Donald Duck - Ruby Champion",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "122": {
+      "name": "Elisa Maza - Intrepid Investigator",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "123": {
+      "name": "Aladdin - Barreling Through",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "124": {
+      "name": "Lady Tremaine - Sinister Socialite",
+      "rarity": "super-rare",
+      "type": "character"
+    },
+    "125": {
+      "name": "The Headless Horseman - Terror of Sleepy Hollow",
+      "rarity": "legendary",
+      "type": "character"
+    },
+    "126": {
+      "name": "Mulan - Standing Her Ground",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "127": {
+      "name": "Brom Bones - Burly Bully",
+      "rarity": "common",
+      "type": "character"
+    },
+    "128": {
+      "name": "Shere Khan - Fierce and Furious",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "129": {
+      "name": "Next Stop, Olympus",
+      "rarity": "rare",
+      "type": "action"
+    },
+    "130": {
+      "name": "Get to Safety!",
+      "rarity": "rare",
+      "type": "action"
+    },
+    "131": {
+      "name": "Time to Go!",
+      "rarity": "uncommon",
+      "type": "action"
+    },
+    "132": {
+      "name": "Ghostly Tale",
+      "rarity": "common",
+      "type": "action"
+    },
+    "134": {
+      "name": "Mushu's Rocket",
+      "rarity": "uncommon",
+      "type": "item"
+    },
+    "135": {
+      "name": "The Bitterwood - Underground Forest",
+      "rarity": "rare",
+      "type": "location"
+    },
+    "136": {
+      "name": "Sleepy Hollow - The Bridge",
+      "rarity": "uncommon",
+      "type": "location"
+    },
+    "137": {
+      "name": "Judy Hopps - On the Case",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "138": {
+      "name": "Hen Wen - Prophetic Pig",
+      "rarity": "common",
+      "type": "character"
+    },
+    "139": {
+      "name": "Anna - Making Snow Plans",
+      "rarity": "common",
+      "type": "character"
+    },
+    "140": {
+      "name": "Chef Louis - In Over His Head",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "141": {
+      "name": "Daisy Duck - Ghost Finder",
+      "rarity": "common",
+      "type": "character"
+    },
+    "142": {
+      "name": "Cri-Kee - Good Luck Charm",
+      "rarity": "common",
+      "type": "character"
+    },
+    "143": {
+      "name": "Rapunzel - Creative Captor",
+      "rarity": "common",
+      "type": "character"
+    },
+    "144": {
+      "name": "Fergus McDuck - Scrooge's Father",
+      "rarity": "common",
+      "type": "character"
+    },
+    "145": {
+      "name": "Li Shang - Seasoned Strategist",
+      "rarity": "common",
+      "type": "character"
+    },
+    "146": {
+      "name": "Genie - Investigative Mind",
+      "rarity": "common",
+      "type": "character"
+    },
+    "147": {
+      "name": "Scuttle - Birdbrained",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "148": {
+      "name": "Ichabod Crane - Bookish Schoolmaster",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "149": {
+      "name": "Jasmine - Soothing Princess",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "150": {
+      "name": "Judy Hopps - Lead Detective",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "151": {
+      "name": "The Sultan - Playful Monarch",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "152": {
+      "name": "Ichabod Crane - Scared Out of His Mind",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "153": {
+      "name": "Scar - Eerily Prepared",
+      "rarity": "super-rare",
+      "type": "character"
+    },
+    "154": {
+      "name": "Daisy Duck - Paranormal Investigator",
+      "rarity": "legendary",
+      "type": "character"
+    },
+    "155": {
+      "name": "Cinderella - Dream Come True",
+      "rarity": "legendary",
+      "type": "character"
+    },
+    "156": {
+      "name": "Judy Hopps - Uncovering Clues",
+      "rarity": "super-rare",
+      "type": "character"
+    },
+    "157": {
+      "name": "Pluto - Clever Cluefinder",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "158": {
+      "name": "Daisy Duck - Sapphire Champion",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "159": {
+      "name": "Kristoff - Mining the Ruins",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "161": {
+      "name": "Hen Wen's Visions",
+      "rarity": "common",
+      "type": "action"
+    },
+    "162": {
+      "name": "Promising Lead",
+      "rarity": "common",
+      "type": "action"
+    },
+    "163": {
+      "name": "Might Solve a Mystery",
+      "rarity": "uncommon",
+      "type": "action"
+    },
+    "164": {
+      "name": "Sudden Scare",
+      "rarity": "uncommon",
+      "type": "action"
+    },
+    "165": {
+      "name": "Spooky Sight",
+      "rarity": "rare",
+      "type": "action"
+    },
+    "166": {
+      "name": "Detective's Badge",
+      "rarity": "common",
+      "type": "item"
+    },
+    "167": {
+      "name": "Ink Amplifier",
+      "rarity": "rare",
+      "type": "item"
+    },
+    "168": {
+      "name": "Fairy Godmother's Wand",
+      "rarity": "super-rare",
+      "type": "item"
+    },
+    "169": {
+      "name": "Inkrunner",
+      "rarity": "uncommon",
+      "type": "item"
+    },
+    "170": {
+      "name": "Castle of the Horned King - Bastion of Evil",
+      "rarity": "rare",
+      "type": "location"
+    },
+    "171": {
+      "name": "Robin Hood - Ephemeral Archer",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "172": {
+      "name": "Donald Duck - Ghost Hunter",
+      "rarity": "common",
+      "type": "character"
+    },
+    "173": {
+      "name": "Goliath - Clan Leader",
+      "rarity": "legendary",
+      "type": "character"
+    },
+    "174": {
+      "name": "The Headless Horseman - Cursed Rider",
+      "rarity": "super-rare",
+      "type": "character"
+    },
+    "175": {
+      "name": "Clawhauser - Donut Detective",
+      "rarity": "common",
+      "type": "character"
+    },
+    "176": {
+      "name": "Francine - Eyeing the Evidence",
+      "rarity": "common",
+      "type": "character"
+    },
+    "177": {
+      "name": "Inspector Tezuka - Resolute Officer",
+      "rarity": "common",
+      "type": "character"
+    },
+    "178": {
+      "name": "Nick Wilde - Sly Fox Sleuth",
+      "rarity": "common",
+      "type": "character"
+    },
+    "179": {
+      "name": "Basil - Tenacious Mouse",
+      "rarity": "common",
+      "type": "character"
+    },
+    "180": {
+      "name": "Hudson - Determined Reader",
+      "rarity": "common",
+      "type": "character"
+    },
+    "181": {
+      "name": "Minnie Mouse - Ghost Hunter",
+      "rarity": "common",
+      "type": "character"
+    },
+    "182": {
+      "name": "Black Heron - Real Bad Egg",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "183": {
+      "name": "Lexington - Small in Stature",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "184": {
+      "name": "David Xanatos - Steel Clan Leader",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "185": {
+      "name": "Chief Bogo - Calling the Shots",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "186": {
+      "name": "The Twins - Lost Boys",
+      "rarity": "common",
+      "type": "character"
+    },
+    "187": {
+      "name": "Nick Wilde - Persistent Investigator",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "188": {
+      "name": "Mayor Winddancer - Actor-Turned-Politician",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "189": {
+      "name": "Prince Charming - Protector of the Realm",
+      "rarity": "legendary",
+      "type": "character"
+    },
+    "190": {
+      "name": "Broadway - Sturdy and Strong",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "191": {
+      "name": "Pluto - Steel Champion",
+      "rarity": "rare",
+      "type": "character"
+    },
+    "192": {
+      "name": "Fairy Godmother - Magical Benefactor",
+      "rarity": "super-rare",
+      "type": "character"
+    },
+    "193": {
+      "name": "Zeus - Missing His Spark",
+      "rarity": "uncommon",
+      "type": "character"
+    },
+    "194": {
+      "name": "The Headless Horseman - Relentless Spirit",
+      "rarity": "common",
+      "type": "character"
+    },
+    "195": {
+      "name": "But I'm Much Faster",
+      "rarity": "common",
+      "type": "action"
+    },
+    "196": {
+      "name": "Putting It All Together",
+      "rarity": "common",
+      "type": "action"
+    },
+    "197": {
+      "name": "He Hurled His Thunderbolt",
+      "rarity": "uncommon",
+      "type": "action"
+    },
+    "198": {
+      "name": "The Game's Afoot!",
+      "rarity": "uncommon",
+      "type": "action"
+    },
+    "199": {
+      "name": "The Robot Queen",
+      "rarity": "uncommon",
+      "type": "item"
+    },
+    "200": {
+      "name": "The Sword of Hercules",
+      "rarity": "rare",
+      "type": "item"
+    },
+    "201": {
+      "name": "Ingenious Device",
+      "rarity": "rare",
+      "type": "item"
+    },
+    "202": {
+      "name": "Illuminary Tunnels - Linked Caverns",
+      "rarity": "super-rare",
+      "type": "location"
+    },
+    "203": {
+      "name": "Zootopia - Police Headquarters",
+      "rarity": "uncommon",
+      "type": "location"
+    },
+    "204": {
+      "name": "Castle Wyvern - Above the Clouds",
+      "rarity": "rare",
+      "type": "location"
+    }
+  }
+}

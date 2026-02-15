@@ -1714,10 +1714,37 @@
 
         <!-- Lorcana tab content -->
         <div id="lorcana-content" class="top-tab-content">
-            <div class="placeholder-content">
-                <h2>Disney Lorcana</h2>
-                <p>Disney Lorcana card tracking will be available here.<br>Stay tuned for future updates!</p>
-                <span class="coming-soon-badge lorcana">Coming Soon</span>
+            <div class="helper-text">Choose a set to view cards</div>
+            <div class="set-buttons" id="lorcanaSetButtons"></div>
+
+            <div id="first-chapter" class="set-section">
+                <div class="card-controls">
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="filterLorcanaCards('first-chapter', 'all')">All</button>
+                        <button class="filter-btn" onclick="filterLorcanaCards('first-chapter', 'incomplete')">Incomplete</button>
+                        <button class="filter-btn" onclick="filterLorcanaCards('first-chapter', 'complete')">Complete</button>
+                    </div>
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Search cards..." oninput="searchLorcanaCards('first-chapter', this.value)" data-set="first-chapter">
+                        <button class="search-clear" onclick="clearLorcanaSearch('first-chapter')">×</button>
+                    </div>
+                </div>
+                <div class="card-grid" id="first-chapter-grid"></div>
+            </div>
+
+            <div id="whispers-in-the-well" class="set-section">
+                <div class="card-controls">
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="filterLorcanaCards('whispers-in-the-well', 'all')">All</button>
+                        <button class="filter-btn" onclick="filterLorcanaCards('whispers-in-the-well', 'incomplete')">Incomplete</button>
+                        <button class="filter-btn" onclick="filterLorcanaCards('whispers-in-the-well', 'complete')">Complete</button>
+                    </div>
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Search cards..." oninput="searchLorcanaCards('whispers-in-the-well', this.value)" data-set="whispers-in-the-well">
+                        <button class="search-clear" onclick="clearLorcanaSearch('whispers-in-the-well')">×</button>
+                    </div>
+                </div>
+                <div class="card-grid" id="whispers-in-the-well-grid"></div>
             </div>
         </div>
 
@@ -1727,9 +1754,11 @@
         // Global state
         let cardSets = {};
         let customCardSets = {};
+        let lorcanaCardSets = {};
         let collectionProgress = {};
         let currentSet = null; // No set selected by default
         let currentCustomSet = null;
+        let currentLorcanaSet = null; // No Lorcana set selected by default
         let customSetLangFilter = {}; // Per-set language filter: 'EN' or 'JP'
         let firebase_db = null;
         let firebase_ref = null;
@@ -2050,6 +2079,12 @@
             'togepi'
         ];
 
+        // Lorcana sets to load
+        const LORCANA_SETS = [
+            'first-chapter',
+            'whispers-in-the-well'
+        ];
+
         // Load custom sets data from modular JSON files
         async function loadCustomSetsData() {
             console.log('Loading custom Pokemon sets...');
@@ -2122,6 +2157,65 @@
                 return `https://images.pokemontcg.io/${setId}/${num}.png`;
             }
             return null;
+        }
+
+        // Load Lorcana card data from JSON files
+        async function loadLorcanaData() {
+            console.log('Loading Disney Lorcana sets...');
+            try {
+                let loadedCount = 0;
+
+                // Load each Lorcana set individually
+                for (const setKey of LORCANA_SETS) {
+                    try {
+                        const response = await fetch(`./data/lorcana/sets/${setKey}.json`);
+                        if (!response.ok) {
+                            console.warn(`Lorcana set ${setKey} not found, skipping`);
+                            continue;
+                        }
+                        const setInfo = await response.json();
+                        const cards = [];
+
+                        // Convert cards object to array
+                        if (setInfo.cards && typeof setInfo.cards === 'object') {
+                            for (const [cardNum, cardData] of Object.entries(setInfo.cards)) {
+                                const cardObj = {
+                                    number: parseInt(cardNum),
+                                    name: cardData.name,
+                                    rarity: cardData.rarity,
+                                    type: cardData.type || 'character'
+                                };
+                                if (cardData.imageId) cardObj.imageId = cardData.imageId;
+                                cards.push(cardObj);
+                            }
+                        }
+
+                        lorcanaCardSets[setKey] = {
+                            name: setInfo.name,
+                            displayName: setInfo.displayName,
+                            totalCards: setInfo.totalCards,
+                            mainSet: setInfo.mainSet,
+                            setCode: setInfo.setCode,
+                            releaseDate: setInfo.releaseDate || '',
+                            block: setInfo.block || '',
+                            blockCode: setInfo.blockCode || '',
+                            singleVariantOnly: setInfo.singleVariantOnly || false,
+                            cards: cards
+                        };
+
+                        console.log(`✓ Lorcana ${setKey}: ${cards.length} cards`);
+                        loadedCount++;
+                    } catch (setError) {
+                        console.error(`Error loading Lorcana set ${setKey}:`, setError);
+                    }
+                }
+
+                console.log(`✓ Loaded ${loadedCount} Lorcana sets`);
+                return true; // Non-fatal, app continues even if no Lorcana sets loaded
+            } catch (error) {
+                console.log('Lorcana sets load error: ' + error.message);
+                return true; // Non-fatal, app continues without Lorcana sets
+            }
         }
 
         // Render custom set buttons
@@ -2548,8 +2642,245 @@
                     collectionProgress[csKey] = {};
                 }
             });
+            // Also ensure Lorcana set keys exist in progress
+            Object.keys(lorcanaCardSets).forEach(setKey => {
+                if (!collectionProgress[setKey]) {
+                    collectionProgress[setKey] = {};
+                }
+            });
         }
         
+        // ==================== LORCANA FUNCTIONS ====================
+
+        // Render Lorcana set buttons
+        function renderLorcanaSetButtons() {
+            const container = document.getElementById('lorcanaSetButtons');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const setKeys = Object.keys(lorcanaCardSets);
+            if (setKeys.length === 0) return;
+
+            setKeys.forEach(setKey => {
+                const setData = lorcanaCardSets[setKey];
+                const btn = document.createElement('button');
+                btn.className = 'set-btn' + (setKey === currentLorcanaSet ? ' active' : '');
+                btn.setAttribute('data-lorcana-set-key', setKey);
+
+                const progress = getLorcanaSetProgress(setKey);
+
+                btn.innerHTML = `
+                    <div class="set-btn-left" style="flex:1;min-width:0;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;">
+                            <span class="set-btn-name">${setData.displayName}</span>
+                        </div>
+                        <div class="set-btn-meta">${setData.releaseDate ? new Date(setData.releaseDate).toLocaleDateString('en-US', {month: 'short', year: 'numeric'}) : ''}</div>
+                        <div class="set-btn-progress-bar">
+                            <div class="set-btn-progress-fill" style="width: ${progress.percentage}%;"></div>
+                        </div>
+                        <div class="set-btn-stats">${progress.collected}/${progress.total} (${progress.percentage}%)</div>
+                    </div>
+                `;
+
+                btn.onclick = () => switchLorcanaSet(setKey);
+                container.appendChild(btn);
+            });
+        }
+
+        // Switch active Lorcana set
+        function switchLorcanaSet(setKey) {
+            currentLorcanaSet = setKey;
+
+            // Update all Lorcana set buttons
+            document.querySelectorAll('.set-btn[data-lorcana-set-key]').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-lorcana-set-key') === setKey);
+            });
+
+            // Update sections
+            document.querySelectorAll('#lorcana-content .set-section').forEach(section => {
+                section.classList.toggle('active', section.id === setKey);
+            });
+
+            if (!lorcanaCardSets[setKey]) return;
+            renderLorcanaCards(setKey);
+            updateLorcanaSetButtonProgress();
+        }
+
+        // Render Lorcana cards for a set
+        function renderLorcanaCards(setKey) {
+            const setData = lorcanaCardSets[setKey];
+            const grid = document.getElementById(`${setKey}-grid`);
+            if (!grid) return;
+
+            grid.innerHTML = '';
+
+            setData.cards.forEach(card => {
+                const cardEl = document.createElement('div');
+                cardEl.className = 'card';
+                cardEl.setAttribute('data-card-number', card.number);
+                cardEl.setAttribute('data-card-name', card.name.toLowerCase());
+
+                const cardProgress = collectionProgress[setKey]?.[card.number] || {};
+                const allCollected = cardProgress['single'] || false;
+
+                cardEl.classList.toggle('completed', allCollected);
+
+                const rarityClass = (card.rarity || 'common').replace(/_/g, '-');
+
+                // Lorcana uses single variant for now
+                const isChecked = cardProgress['single'] || false;
+                const variantHTML = `
+                    <div class="single-variant ${isChecked ? 'checked' : ''}" onclick="toggleLorcanaVariant('${setKey}', ${card.number}, 'single')">
+                        <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="event.stopPropagation(); toggleLorcanaVariant('${setKey}', ${card.number}, 'single')">
+                        <label>✓ Collected</label>
+                    </div>
+                `;
+
+                // Placeholder image for now - can be updated with actual Lorcana image sources
+                const placeholderFallback = `onerror="showPlaceholder(this)"`;
+                const displayNumber = String(card.number).padStart(3, '0');
+
+                cardEl.innerHTML = `
+                    <div class="card-img-wrapper">
+                        <img src=""
+                             alt="${card.name.replace(/"/g, '&quot;')}"
+                             loading="lazy"
+                             data-card-name="${card.name.replace(/"/g, '&quot;')}"
+                             data-card-number="${displayNumber}"
+                             data-card-rarity="${card.rarity}"
+                             ${placeholderFallback}>
+                    </div>
+                    <div class="card-header">
+                        <div class="card-info">
+                            <div class="card-number">#${displayNumber}</div>
+                            <div class="card-name">${card.name}</div>
+                            <span class="rarity-badge ${rarityClass}">${card.rarity}</span>
+                        </div>
+                    </div>
+                    <div class="variants-section">
+                        <div class="variants-title">STATUS:</div>
+                        ${variantHTML}
+                        ${allCollected ? `<div class="completed-lock"><svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>Complete</div>` : ''}
+                    </div>
+                `;
+
+                grid.appendChild(cardEl);
+            });
+        }
+
+        // Toggle Lorcana variant
+        function toggleLorcanaVariant(setKey, cardNumber, variant) {
+            if (!collectionProgress[setKey]) {
+                collectionProgress[setKey] = {};
+            }
+            if (!collectionProgress[setKey][cardNumber]) {
+                collectionProgress[setKey][cardNumber] = {};
+            }
+
+            const current = collectionProgress[setKey][cardNumber][variant] || false;
+            collectionProgress[setKey][cardNumber][variant] = !current;
+
+            saveProgress();
+            renderLorcanaCards(setKey);
+            updateLorcanaSetButtonProgress();
+        }
+
+        // Get Lorcana set progress
+        function getLorcanaSetProgress(setKey) {
+            const setData = lorcanaCardSets[setKey];
+            if (!setData) return { collected: 0, total: 0, percentage: '0.0' };
+
+            let totalVariants = 0;
+            let collectedVariants = 0;
+
+            setData.cards.forEach(card => {
+                const cardProgress = collectionProgress[setKey]?.[card.number] || {};
+                // Lorcana uses single variant
+                totalVariants++;
+                if (cardProgress['single']) collectedVariants++;
+            });
+
+            const percentage = totalVariants > 0 ? ((collectedVariants / totalVariants) * 100).toFixed(1) : '0.0';
+            return { collected: collectedVariants, total: totalVariants, percentage };
+        }
+
+        // Update Lorcana set button progress
+        function updateLorcanaSetButtonProgress() {
+            document.querySelectorAll('.set-btn[data-lorcana-set-key]').forEach(btn => {
+                const setKey = btn.getAttribute('data-lorcana-set-key');
+                const progress = getLorcanaSetProgress(setKey);
+                const fill = btn.querySelector('.set-btn-progress-fill');
+                const stats = btn.querySelector('.set-btn-stats');
+                if (fill) fill.style.width = progress.percentage + '%';
+                if (stats) stats.textContent = `${progress.collected}/${progress.total} (${progress.percentage}%)`;
+            });
+        }
+
+        // Filter Lorcana cards
+        function filterLorcanaCards(setKey, filter) {
+            const section = document.getElementById(setKey);
+            if (!section) return;
+
+            section.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.toLowerCase() === filter);
+            });
+
+            const cards = section.querySelectorAll('.card');
+            cards.forEach(card => {
+                if (filter === 'all') {
+                    card.style.display = '';
+                } else if (filter === 'incomplete') {
+                    card.style.display = card.classList.contains('completed') ? 'none' : '';
+                } else if (filter === 'complete') {
+                    card.style.display = card.classList.contains('completed') ? '' : 'none';
+                }
+            });
+        }
+
+        // Search Lorcana cards
+        function searchLorcanaCards(setKey, query) {
+            const section = document.getElementById(setKey);
+            if (!section) return;
+
+            const searchQuery = query.toLowerCase().trim();
+            const cards = section.querySelectorAll('.card');
+
+            cards.forEach(card => {
+                const cardName = card.getAttribute('data-card-name');
+                const cardNumber = card.getAttribute('data-card-number');
+
+                if (!searchQuery) {
+                    card.style.display = '';
+                } else {
+                    const matches = cardName.includes(searchQuery) || cardNumber.includes(searchQuery);
+                    card.style.display = matches ? '' : 'none';
+                }
+            });
+        }
+
+        // Clear Lorcana search
+        function clearLorcanaSearch(setKey) {
+            const section = document.getElementById(setKey);
+            if (!section) return;
+
+            const searchInput = section.querySelector('.search-input');
+            if (searchInput) {
+                searchInput.value = '';
+                searchLorcanaCards(setKey, '');
+            }
+        }
+
+        // Initialize Lorcana progress
+        function initializeLorcanaProgress() {
+            Object.keys(lorcanaCardSets).forEach(setKey => {
+                if (!collectionProgress[setKey]) {
+                    collectionProgress[setKey] = {};
+                }
+            });
+        }
+
+        // ==================== END LORCANA FUNCTIONS ====================
+
         // Render set buttons with inline progress bars
         // Track current block selection
         let currentBlock = null;
@@ -3496,6 +3827,9 @@
                 // Load custom sets data
                 await loadCustomSetsData();
 
+                // Load Lorcana data
+                await loadLorcanaData();
+
                 console.log('Initializing progress...');
                 // Initialize progress
                 initializeProgress();
@@ -3531,7 +3865,17 @@
                 } catch (e) {
                     console.log('ERROR in custom sets: ' + e.message);
                 }
-                
+
+                // Initialize Lorcana set buttons
+                console.log('Initializing Lorcana sets...');
+                try {
+                    renderLorcanaSetButtons();
+                    // Lorcana set cards will render on-demand when user selects a set
+                    console.log('✓ Lorcana set buttons ready');
+                } catch (e) {
+                    console.log('ERROR in Lorcana sets: ' + e.message);
+                }
+
                 console.log('Checking sync code...');
                 // Check for sync code
                 const savedCode = localStorage.getItem(SYNC_CODE_KEY);
