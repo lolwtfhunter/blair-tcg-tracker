@@ -11,7 +11,7 @@ A mobile-friendly web app for tracking trading card collections. Currently suppo
 The app has three top-level tabs:
 
 - **Pokemon TCG** — Full set tracking with variant checkboxes, progress bars, and card images
-- **Custom Sets** — Placeholder for user-defined card collections (coming soon)
+- **Custom Sets** — Curated cross-set collections (e.g., "It's Pikachu!" — all 263 Pichu/Pikachu/Raichu cards ever printed)
 - **Lorcana** — Placeholder for Disney Lorcana card tracking (coming soon)
 
 ### Pokemon TCG
@@ -42,6 +42,7 @@ The app has three top-level tabs:
 blair-pokemon-tracker/
 ├── index.html              Main app (single-page, self-contained)
 ├── card-data.json          Card database (names, rarities, types for all sets)
+├── custom-sets-data.json   Custom set definitions (cross-set collections)
 ├── restore.html            Backup restore utility
 ├── test.html               Test page
 ├── test-card-data.html     Card data validation page
