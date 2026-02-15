@@ -307,6 +307,7 @@
 
         .top-tab-content {
             display: none;
+            overflow: hidden;
         }
 
         .top-tab-content.active {
@@ -413,6 +414,8 @@
             padding: 8px;
             transition: all 0.2s;
             font-size: 0.85rem;
+            min-width: 0;
+            overflow: hidden;
         }
         
         .card-item:hover {
@@ -647,13 +650,26 @@
             background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
         }
         
+        .region-badge {
+            display: inline-block;
+            background: #e74c3c;
+            color: #fff;
+            font-size: 0.55rem;
+            font-weight: 700;
+            padding: 1px 4px;
+            border-radius: 3px;
+            vertical-align: middle;
+            margin-left: 4px;
+        }
+
         .card-origin {
             font-size: 0.6rem;
             opacity: 0.45;
             padding: 2px 8px 0;
-            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 100%;
         }
 
         .variants-section {
@@ -1254,7 +1270,8 @@
                                 setOrigin: cardData.setOrigin || '',
                                 apiId: cardData.apiId || '',
                                 releaseDate: cardData.releaseDate || '',
-                                originalNumber: cardData.originalNumber || ''
+                                originalNumber: cardData.originalNumber || '',
+                                region: cardData.region || ''
                             };
                             cards.push(cardObj);
                         }
@@ -1423,7 +1440,7 @@
                     </div>
                     <div class="card-header">
                         <div class="card-info">
-                            <div class="card-number">#${String(card.number).padStart(3, '0')}</div>
+                            <div class="card-number">#${String(card.number).padStart(3, '0')}${card.region === 'JP' ? ' <span class="region-badge">JP</span>' : ''}</div>
                             <div class="card-name">${card.name}</div>
                             <span class="rarity-badge ${rarityClass}">${getRarityDisplay(card.rarity)}</span>
                         </div>
