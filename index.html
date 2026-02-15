@@ -1321,6 +1321,10 @@
                                 originalNumber: cardData.originalNumber || '',
                                 region: cardData.region || ''
                             };
+                            // Parse variants array if present (merged cards with multiple rarities)
+                            if (cardData.variants && Array.isArray(cardData.variants)) {
+                                cardObj.variants = cardData.variants;
+                            }
                             cards.push(cardObj);
                         }
                     }
@@ -1429,9 +1433,12 @@
                         if (lang === 'JP' && !isJP) return;
                         if (lang === 'EN' && isJP) return;
                     }
-                    totalVariants += 1; // singleVariantOnly
+                    const variants = getCustomCardVariants(card);
+                    totalVariants += variants.length;
                     const cardProgress = (collectionProgress[csKey] || {})[card.number] || {};
-                    if (cardProgress['single']) collectedVariants++;
+                    variants.forEach(v => {
+                        if (cardProgress[v]) collectedVariants++;
+                    });
                 });
             }
 
@@ -1449,6 +1456,28 @@
                 if (fill) fill.style.width = progress.percentage + '%';
                 if (stats) stats.textContent = `${progress.collected}/${progress.total} (${progress.percentage}%)`;
             });
+        }
+
+        // Get variant keys for a custom card
+        function getCustomCardVariants(card) {
+            if (card.variants && card.variants.length > 0) {
+                return card.variants.map(v => v.rarity);
+            }
+            return ['single'];
+        }
+
+        // Get image URL for a specific variant of a custom card
+        function getCustomVariantImageUrl(card, variantKey) {
+            if (card.variants) {
+                const variant = card.variants.find(v => v.rarity === variantKey);
+                if (variant && variant.apiId) {
+                    const parts = variant.apiId.split('-');
+                    const setId = parts.slice(0, -1).join('-');
+                    const num = parts[parts.length - 1];
+                    return `https://images.pokemontcg.io/${setId}/${num}.png`;
+                }
+            }
+            return getCustomCardImageUrl(card);
         }
 
         // Render cards for a custom set
@@ -1474,23 +1503,46 @@
 
             filteredCards.forEach(card => {
                 const cardProgress = collectionProgress[csKey][card.number] || {};
-                const isChecked = cardProgress['single'] || false;
+                const variants = getCustomCardVariants(card);
+                const hasMultiVariants = card.variants && card.variants.length > 1;
+                const allCollected = variants.every(v => cardProgress[v]);
+                const isSingleVariant = !hasMultiVariants;
 
                 const cardEl = document.createElement('div');
-                cardEl.className = 'card-item' + (isChecked ? ' all-collected' : '');
-                cardEl.setAttribute('data-completed', isChecked ? 'true' : 'false');
+                cardEl.className = 'card-item' + (allCollected ? ' all-collected' : '');
+                cardEl.setAttribute('data-completed', allCollected ? 'true' : 'false');
 
                 const rarityClass = `rarity-${card.rarity}`;
 
-                const variantHTML = `
-                    <div class="single-variant ${isChecked ? 'checked' : ''}" onclick="toggleVariant('${csKey}', ${card.number}, 'single')">
-                        <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="event.stopPropagation(); toggleVariant('${csKey}', ${card.number}, 'single')">
-                        <label>✓ Collected</label>
-                    </div>
-                `;
+                // Build variant HTML
+                let variantHTML = '';
+                if (hasMultiVariants) {
+                    variantHTML = card.variants.map(v => {
+                        const isChecked = cardProgress[v.rarity] || false;
+                        const displayNum = v.originalNumber ? ` #${v.originalNumber}` : '';
+                        return `
+                            <div class="variant-checkbox ${isChecked ? 'checked' : ''}" onclick="toggleVariant('${csKey}', ${card.number}, '${v.rarity}')">
+                                <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="event.stopPropagation(); toggleVariant('${csKey}', ${card.number}, '${v.rarity}')">
+                                <label>${getRarityDisplay(v.rarity)}${displayNum}</label>
+                            </div>
+                        `;
+                    }).join('');
+                    variantHTML = '<div class="variant-checkboxes">' + variantHTML + '</div>';
+                } else {
+                    const isChecked = cardProgress['single'] || false;
+                    variantHTML = `
+                        <div class="single-variant ${isChecked ? 'checked' : ''}" onclick="toggleVariant('${csKey}', ${card.number}, 'single')">
+                            <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="event.stopPropagation(); toggleVariant('${csKey}', ${card.number}, 'single')">
+                            <label>✓ Collected</label>
+                        </div>
+                    `;
+                }
 
                 const imgUrl = getCustomCardImageUrl(card);
                 const placeholderFallback = `onerror="showPlaceholder(this)"`;
+
+                // Display originalNumber from the set instead of the sequential custom set number
+                const displayNumber = card.originalNumber ? card.originalNumber : String(card.number).padStart(3, '0');
 
                 cardEl.innerHTML = `
                     <div class="card-img-wrapper">
@@ -1498,22 +1550,22 @@
                              alt="${card.name.replace(/"/g, '&quot;')}"
                              loading="lazy"
                              data-card-name="${card.name.replace(/"/g, '&quot;')}"
-                             data-card-number="${card.number}"
+                             data-card-number="${displayNumber}"
                              data-card-rarity="${card.rarity}"
                              ${placeholderFallback}>
                     </div>
                     <div class="card-header">
                         <div class="card-info">
-                            <div class="card-number">#${String(card.number).padStart(3, '0')}${card.region === 'JP' ? ' <span class="region-badge">JP</span>' : ''}</div>
+                            <div class="card-number">#${displayNumber}${card.region === 'JP' ? ' <span class="region-badge">JP</span>' : ''}</div>
                             <div class="card-name">${card.name}</div>
                             <span class="rarity-badge ${rarityClass}">${getRarityDisplay(card.rarity)}</span>
                         </div>
                     </div>
                     <div class="card-origin">${card.setOrigin}</div>
                     <div class="variants-section">
-                        <div class="variants-title">STATUS:</div>
+                        <div class="variants-title">${isSingleVariant ? 'STATUS:' : 'VARIANTS:'}</div>
                         ${variantHTML}
-                        ${isChecked ? `<div class="completed-lock"><svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>Complete</div>` : ''}
+                        ${allCollected ? `<div class="completed-lock"><svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>Complete</div>` : ''}
                     </div>
                 `;
 
@@ -1838,7 +1890,7 @@
                     const customKey = setKey.replace('custom-', '');
                     setData = customCardSets[customKey];
                     card = setData ? setData.cards.find(c => c.number === cardNumber) : null;
-                    variants = ['single']; // Custom sets are singleVariantOnly
+                    variants = card ? getCustomCardVariants(card) : ['single'];
                 } else {
                     setData = cardSets[setKey];
                     card = setData ? setData.cards.find(c => c.number === cardNumber) : null;
@@ -1900,7 +1952,7 @@
             const toast = document.createElement('div');
             toast.className = 'unlock-toast';
             const variantInfo = variantLabels[variant];
-            const variantName = variantInfo ? variantInfo.label : variant;
+            const variantName = variantInfo ? variantInfo.label : (RARITY_DISPLAY_NAMES[variant] || variant);
             toast.innerHTML = `
                 <div class="unlock-toast-text">
                     Uncheck <strong>${variantName}</strong> on <strong>${cardName}</strong>? This card is complete.
@@ -1922,11 +1974,19 @@
                 setTimeout(() => { toast.remove(); activeToast = null; }, 300);
                 applyVariantToggle(setKey, cardNumber, variant);
             };
+            const reRender = () => {
+                if (setKey.startsWith('custom-')) {
+                    renderCustomCards(setKey.replace('custom-', ''));
+                } else {
+                    renderCards(setKey);
+                }
+            };
+
             document.getElementById('toastCancel').onclick = () => {
                 toast.classList.remove('visible');
                 setTimeout(() => { toast.remove(); activeToast = null; }, 300);
                 // Re-render to restore the checkbox the browser already toggled visually
-                renderCards(setKey);
+                reRender();
             };
 
             // Auto-dismiss after 5 seconds (treat as "Keep")
@@ -1935,7 +1995,7 @@
                     toast.classList.remove('visible');
                     setTimeout(() => { toast.remove(); activeToast = null; }, 300);
                     // Re-render to restore the checkbox the browser already toggled visually
-                    renderCards(setKey);
+                    reRender();
                 }
             }, 5000);
         }
