@@ -1,7 +1,7 @@
 # Blair Pokemon Master Set Tracker - Project Master Document
 
-**Version:** 2.0.0  
-**Last Updated:** February 14, 2026  
+**Version:** 3.0.0
+**Last Updated:** February 15, 2026
 **Live URL:** https://lolwtfhunter.github.io/blair-pokemon-tracker/  
 **Sync Code:** Blair2024
 
@@ -13,6 +13,8 @@ A web-based Pokemon TCG collection tracker for tracking 1,076 cards across 5 set
 
 ### **Core Features**
 - ✅ Track 1,076 cards across 5 Pokemon TCG sets
+- ✅ Custom curated sets (e.g., "It's Pikachu!" - 375 cards)
+- ✅ Japanese-exclusive card tracking with JP badges
 - ✅ Variant tracking per card (Regular, Reverse Holo, Poké Ball, Master Ball)
 - ✅ Real-time sync between devices via Firebase
 - ✅ Password-protected with sync code
@@ -25,8 +27,9 @@ A web-based Pokemon TCG collection tracker for tracking 1,076 cards across 5 set
 ## 🗂️ PROJECT FILES
 
 ### **Required Files (Must Upload to GitHub)**
-1. **index.html** (47KB) - Main application
-2. **card-data.json** (3.6KB) - Card metadata and rarity rules
+1. **index.html** (~40KB) - Main application
+2. **card-data.json** (~123KB) - Card metadata and rarity rules for 5 main sets
+3. **custom-sets-data.json** (~95KB) - Custom curated sets (e.g., "It's Pikachu!")
 
 ### **File Locations**
 - Repository: https://github.com/lolwtfhunter/blair-pokemon-tracker
@@ -471,6 +474,7 @@ Displays fullscreen modal requiring valid sync code entry.
 
 ## 📅 VERSION HISTORY
 
+- **v3.0.0** (Feb 15, 2026) - "It's Pikachu!" custom set: 375 cards (263 EN + 112 JP-exclusive)
 - **v2.0.0** (Feb 14, 2026) - Card data system with proper rarity detection
 - **v1.5.0** (Feb 14, 2026) - Mandatory sync code authentication
 - **v1.0.0** (Feb 14, 2026) - Initial release with Firebase sync
@@ -2169,4 +2173,162 @@ This ensures:
 - ✅ If exact card not found, tries to find Pokemon by name
 - ✅ If all fails, shows clean placeholder
 - ✅ No broken images ever displayed
+
+
+---
+
+## 📅 SESSION: February 15, 2026 - "It's Pikachu!" Custom Set & Japanese Exclusives
+
+### **Context**
+User requested a custom collection set tracking all Pichu, Pikachu, and Raichu cards ever printed in the Pokemon TCG, including Japanese-exclusive cards that were never released in English.
+
+### **Major Updates**
+
+#### 1. Custom Sets System (`custom-sets-data.json`)
+
+New data file created alongside `card-data.json` for custom/curated sets that don't map 1:1 to official TCG sets.
+
+**Architecture:**
+```json
+{
+  "customSets": {
+    "its-pikachu": {
+      "name": "It's Pikachu!",
+      "totalCards": 375,
+      "cards": {
+        "1": {
+          "name": "Pikachu (CoroCoro Promo)",
+          "rarity": "promo",
+          "type": "pokemon",
+          "setOrigin": "CoroCoro Comic Promo (JP, 1996)",
+          "originalNumber": "",
+          "releaseDate": "1996/10/01",
+          "apiId": "",
+          "region": "JP"
+        }
+      }
+    }
+  }
+}
+```
+
+**Key Fields:**
+- `name` - Card display name with disambiguating details in parentheses
+- `rarity` - Standard rarity (common, uncommon, rare, rare-holo, ex, secret, promo, etc.)
+- `setOrigin` - Original set/promo source for reference
+- `releaseDate` - Used for chronological sorting (YYYY/MM/DD)
+- `apiId` - pokemontcg.io API ID for image loading (English cards only)
+- `region` - "JP" for Japanese-exclusive cards (omitted for English)
+
+#### 2. Data Sources & APIs
+
+**Pokemon TCG API (pokemontcg.io) - PRIMARY for English cards**
+- Free public API, no authentication required for basic use
+- API endpoint: `https://api.pokemontcg.io/v2/cards?q=name:pikachu`
+- Image CDN: `https://images.pokemontcg.io/{set}/{number}.png`
+- Coverage: All English-language Pokemon TCG sets from Base Set (1999) through current
+- Limitations: Does NOT cover Japanese-exclusive promos or cards never localized to English
+- Used to populate 263 English cards with real names, set origins, and image IDs
+
+**Key Finding:** The pokemontcg.io API is reliable and comprehensive for English sets. Card IDs follow the format `{setcode}-{number}` (e.g., `base1-58` for Base Set Pikachu #58). These IDs map directly to CDN image URLs.
+
+**Web Research - SECONDARY for Japanese exclusives**
+The following sources were used to compile the 112 Japanese-exclusive cards:
+
+| Source | URL | What It Provided |
+|--------|-----|------------------|
+| **Bulbapedia** | bulbapedia.bulbagarden.net | Most comprehensive TCG database. Individual card pages list all prints. Promo card indexes (Unnumbered, DP-P, BW-P, XY-P, SM-P, S-P, SV-P) were primary reference. |
+| **Serebii** | serebii.net/card/ | Japanese promo card listings with set numbers and distribution details. |
+| **PriceCharting** | pricecharting.com/console/pokemon-japanese-promo | Price data confirms existence and rarity of JP-exclusive cards. |
+| **PokeVault** | pokevault.com/japanese-pokemon-cards/promos | Retail listings for JP promos with images and descriptions. |
+| **PokeBoon** | pokeboon.com/category/ptcg-promo/ | Japanese-language source for SM-P and S-P promo card listings. |
+| **pichu.blog** | pichu.blog/cards-featuring-pichu | Specialized Pichu collector's resource with comprehensive card list. |
+| **Elite Fourum** | elitefourum.com | Collector community with curated Japanese-exclusive galleries. |
+| **PCA Grade** | pcagrade.com | Japanese grading service with Pikachu card spotlight articles. |
+| **Collector Station** | collectorstation.com | Curated "best of" Japanese Pikachu promo lists with context. |
+
+**Key Finding:** No single source covers ALL Japanese-exclusive cards. Bulbapedia is the most complete but requires cross-referencing individual card/promo pages. The intersection of Bulbapedia + Serebii + collector community sources gives the most reliable picture.
+
+#### 3. Card Count Breakdown
+
+**Total: 375 cards**
+
+| Category | Count | Source |
+|----------|-------|--------|
+| English Pikachu | ~180 | pokemontcg.io API |
+| English Pichu | ~35 | pokemontcg.io API |
+| English Raichu | ~48 | pokemontcg.io API |
+| JP-Exclusive Pikachu | 99 | Web research (see sources above) |
+| JP-Exclusive Pichu | 10 | Web research |
+| JP-Exclusive Raichu | 3 | Web research |
+
+**Cards sorted chronologically** from 1996 (CoroCoro Pikachu) through 2025 (McDonald's Japan M-P promo).
+
+#### 4. Notable Japanese-Exclusive Card Series
+
+**Poncho-Wearing Pikachu Series (XY-P, 2015-2016)**
+Cards 153-165 in our list. Pikachu wearing ponchos of various Mega-evolved Pokemon. Includes Mega Charizard X/Y, Rayquaza, Shiny Rayquaza, Magikarp, Gyarados variants. Fan-favorite collectible series with high secondary market value.
+
+**Pretend Boss Pikachu Series (SM-P 191-197, 2018)**
+7 cards featuring Pikachu dressed as each villain team leader (Giovanni, Archie, Maxie, Cyrus, Ghetsis, Lysandre, Guzma). Released as part of "Team Rainbow Rocket's Ambition" campaign. One of the most iconic JP-exclusive promo sets.
+
+**Mario/Luigi Pikachu (XY-P 293-296, 2016)**
+Nintendo crossover cards with Pikachu in Mario and Luigi costumes. Both regular and Full Art versions. Released in special boxes at Pokemon Centers.
+
+**Pikachu "Munch Scream" (SM-P 288, 2018)**
+Collaboration with Tokyo Metropolitan Art Museum's "Munch: A Retrospective" exhibit. Pikachu reimagined in the style of Edvard Munch's "The Scream." Extremely limited distribution.
+
+**Pokemon Center City Exclusives**
+Multiple Pikachu cards released for Pokemon Center openings/anniversaries across Japanese cities: Tokyo, Yokohama, Osaka, Nagoya, Sapporo, Kanazawa, Shibuya, Kyoto, Hiroshima, Tohoku, Fukuoka. Each features locally-themed artwork.
+
+**Stamp Box "Beauty Looking Back" (S-P 227, 2021)**
+Japan Post collaboration. Pikachu reimagined in the style of Hishikawa Moronobu's famous ukiyo-e painting. Available only through lottery purchase. Illustrated by Mitsuhiro Arita.
+
+#### 5. UI Updates for Custom Set
+
+**Japanese-Exclusive Badge:**
+Cards with `region: "JP"` display a red "JP" badge, styled with:
+```css
+background: #dc3545;
+color: white;
+font-size: 0.6rem;
+padding: 1px 4px;
+border-radius: 3px;
+```
+
+**Image Handling:**
+- English cards: Load images via pokemontcg.io CDN using `apiId`
+- JP-exclusive cards: Show styled placeholder with card name (no free image CDN exists for JP promos)
+
+**Set Origin Display:**
+Each card shows its original set/promo source below the name, helping collectors identify where the card came from.
+
+#### 6. Files Created/Modified
+
+| File | Size | Change |
+|------|------|--------|
+| `custom-sets-data.json` | ~95KB | NEW - All 375 Pichu/Pikachu/Raichu cards |
+| `index.html` | ~40KB | Added custom set rendering, JP badge CSS |
+| `card-data.json` | 123KB | Unchanged |
+
+### **What Works Well**
+
+1. **pokemontcg.io API** - Reliable, free, comprehensive for English cards. No auth needed for basic queries. Image CDN is fast and well-cached.
+2. **Bulbapedia** - Best single reference for TCG card data including Japanese exclusives. Promo card index pages are well-organized by era (DP-P, SM-P, S-P, etc.).
+3. **Chronological sorting** - Using `releaseDate` field allows meaningful ordering across 30 years of cards from multiple regions.
+4. **Graceful degradation** - JP cards work fine without images; the placeholder system keeps the UI consistent.
+
+### **Known Gaps & Future Work**
+
+1. **JP card images** - No free CDN exists for Japanese promo card images. Would require manual image collection or a paid/custom image hosting solution.
+2. **Completeness** - The 112 JP-exclusive count is a strong baseline but likely not exhaustive. Unnumbered promos from 1996-2005 are particularly difficult to catalog.
+3. **Card details** - HP, attacks, and card text not included. Would need per-card API queries to pokemontcg.io (English only) or manual data entry (JP).
+4. **Destined Rivals / Ascended Heroes set codes** - Not yet confirmed on pokemontcg.io; using best-guess codes with fallback.
+
+### **Version History Update**
+
+- **v3.0.0** (Feb 15, 2026) - "It's Pikachu!" custom set: 375 cards (263 EN + 112 JP-exclusive)
+- **v2.0.0** (Feb 14, 2026) - Card data system with proper rarity detection
+- **v1.5.0** (Feb 14, 2026) - Mandatory sync code authentication
+- **v1.0.0** (Feb 14, 2026) - Initial release with Firebase sync
 
