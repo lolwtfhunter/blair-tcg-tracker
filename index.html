@@ -1523,13 +1523,17 @@
             document.getElementById('toastCancel').onclick = () => {
                 toast.classList.remove('visible');
                 setTimeout(() => { toast.remove(); activeToast = null; }, 300);
+                // Re-render to restore the checkbox the browser already toggled visually
+                renderCards(setKey);
             };
 
-            // Auto-dismiss after 5 seconds
+            // Auto-dismiss after 5 seconds (treat as "Keep")
             setTimeout(() => {
                 if (activeToast === toast) {
                     toast.classList.remove('visible');
                     setTimeout(() => { toast.remove(); activeToast = null; }, 300);
+                    // Re-render to restore the checkbox the browser already toggled visually
+                    renderCards(setKey);
                 }
             }, 5000);
         }
