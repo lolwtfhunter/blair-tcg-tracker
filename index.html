@@ -392,6 +392,9 @@
         
         <div class="progress-section" id="progressSection"></div>
         
+        <!-- Debug output for iOS -->
+        <div id="debugOutput" style="background: rgba(255,0,0,0.2); color: #fff; padding: 10px; margin: 10px 0; border-radius: 5px; font-size: 12px; font-family: monospace; display: none;"></div>
+        
         <div id="journey-together" class="set-section active">
             <div class="card-grid" id="journey-together-grid"></div>
         </div>
@@ -414,6 +417,16 @@
     </div>
 
     <script>
+        // Debug output for iOS (visible on screen)
+        function debugOut(msg) {
+            const debug = document.getElementById('debugOutput');
+            if (debug) {
+                debug.style.display = 'block';
+                debug.innerHTML += msg + '<br>';
+            }
+            console.log(msg);
+        }
+        
         // Global state
         let cardSets = {};
         let collectionProgress = {};
@@ -457,9 +470,12 @@
         
         // Load card data from JSON
         async function loadCardData() {
+            debugOut('Loading card-data.json...');
             try {
                 const response = await fetch('./card-data.json');
                 const data = await response.json();
+                
+                debugOut(`JSON loaded: ${Object.keys(data.sets).length} sets`);
                 
                 // Build cardSets from JSON - NEW structure with card objects
                 for (const [setKey, setInfo] of Object.entries(data.sets)) {
@@ -487,10 +503,14 @@
                         hasMasterBallVariant: setInfo.hasMasterBallVariant,
                         cards: cards
                     };
+                    
+                    debugOut(`${setKey}: ${cards.length} cards`);
                 }
                 
+                debugOut('✓ Card data loaded');
                 return true;
             } catch (error) {
+                debugOut('ERROR: ' + error.message);
                 console.error('Error loading card data:', error);
                 alert('Failed to load card data. Please refresh the page.');
                 return false;
@@ -580,10 +600,22 @@
         
         // Render cards for a set
         function renderCards(setKey) {
+            debugOut(`renderCards: ${setKey}`);
+            
             const grid = document.getElementById(setKey + '-grid');
             const setData = cardSets[setKey];
             
-            if (!grid || !setData) return;
+            debugOut(`Grid found: ${!!grid}, Data found: ${!!setData}`);
+            
+            if (!grid) {
+                debugOut(`ERROR: No grid for ${setKey}-grid`);
+                return;
+            }
+            
+            if (!setData) {
+                debugOut(`ERROR: No data for ${setKey}`);
+                return;
+            }
             
             grid.innerHTML = '';
             
@@ -591,7 +623,9 @@
                 collectionProgress[setKey] = {};
             }
             
-            setData.cards.forEach(card => {
+            debugOut(`Rendering ${setData.cards.length} cards`);
+            
+            setData.cards.forEach((card, index) => {
                 const variants = getVariants(card, setKey);
                 const cardProgress = collectionProgress[setKey][card.number] || {};
                 const allCollected = variants.every(v => cardProgress[v]);
@@ -643,6 +677,8 @@
                 
                 grid.appendChild(cardEl);
             });
+            
+            debugOut(`✓ Done: ${grid.children.length} cards in grid`);
         }
         
         // Toggle variant
