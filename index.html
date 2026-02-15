@@ -83,13 +83,13 @@
         
         .set-buttons {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
+            grid-template-columns: 1fr;
+            gap: 8px;
             margin-bottom: 20px;
         }
         
         .set-btn {
-            padding: 15px;
+            padding: 12px 15px;
             border: none;
             border-radius: 10px;
             background: rgba(255, 255, 255, 0.1);
@@ -98,6 +98,10 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-align: left;
         }
         
         .set-btn:hover {
@@ -110,16 +114,31 @@
             box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
         }
         
-        .set-btn .block-badge {
-            display: block;
+        .set-btn-left {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .set-btn-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        
+        .set-btn .set-release-date {
             font-size: 0.6rem;
+            opacity: 0.5;
+            margin-top: 2px;
+        }
+        
+        .set-btn .block-badge {
+            font-size: 0.55rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-top: 4px;
-            padding: 2px 8px;
+            padding: 3px 10px;
             border-radius: 8px;
-            display: inline-block;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
         
         .set-btn .block-badge.block-sv {
@@ -130,13 +149,6 @@
         .set-btn .block-badge.block-me {
             background: linear-gradient(135deg, #f39c12, #e67e22);
             color: #fff;
-        }
-        
-        .set-btn .set-release-date {
-            display: block;
-            font-size: 0.6rem;
-            opacity: 0.5;
-            margin-top: 2px;
         }
         
         .progress-block-badge {
@@ -716,9 +728,11 @@
                 }
                 
                 btn.innerHTML = `
-                    ${setData.displayName}
+                    <div class="set-btn-left">
+                        <span class="set-btn-name">${setData.displayName}</span>
+                        ${dateStr ? `<span class="set-release-date">${dateStr}</span>` : ''}
+                    </div>
                     ${setData.blockCode ? `<span class="block-badge block-${setData.blockCode}">${setData.block}</span>` : ''}
-                    ${dateStr ? `<span class="set-release-date">${dateStr}</span>` : ''}
                 `;
                 btn.onclick = () => switchSet(setKey);
                 container.appendChild(btn);
