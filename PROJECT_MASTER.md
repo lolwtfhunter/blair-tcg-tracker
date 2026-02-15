@@ -1,8 +1,8 @@
 # Blair Pokemon Master Set Tracker - Project Master Document
 
-**Version:** 3.0.0
+**Version:** 3.1.0
 **Last Updated:** February 15, 2026
-**Live URL:** https://lolwtfhunter.github.io/blair-pokemon-tracker/  
+**Live URL:** https://lolwtfhunter.github.io/blair-pokemon-tracker/
 **Sync Code:** Blair2024
 
 ---
@@ -21,6 +21,10 @@ A web-based Pokemon TCG collection tracker for tracking 1,076 cards across 5 set
 - ✅ Mobile-optimized responsive design
 - ✅ Progress tracking and statistics
 - ✅ Persistent storage (survives page refresh)
+- ✅ Filter cards (All/Incomplete/Complete)
+- ✅ Search cards by name or number
+- ✅ Card detail modal with large images
+- ✅ Lazy loading for performance
 
 ---
 
@@ -2327,8 +2331,261 @@ Each card shows its original set/promo source below the name, helping collectors
 
 ### **Version History Update**
 
+- **v3.1.0** (Feb 15, 2026) - UX improvements: Filter/search controls, card detail modal, lazy loading, updated branding
 - **v3.0.0** (Feb 15, 2026) - "It's Pikachu!" custom set: 375 cards (263 EN + 112 JP-exclusive)
 - **v2.0.0** (Feb 14, 2026) - Card data system with proper rarity detection
 - **v1.5.0** (Feb 14, 2026) - Mandatory sync code authentication
 - **v1.0.0** (Feb 14, 2026) - Initial release with Firebase sync
+
+
+---
+
+## 📅 SESSION: February 15, 2026 - Card List UX Improvements
+
+### **Context**
+User requested improvements to card list review UX and the ability to view full card details, including addressing truncated set names and broken custom set images in modals.
+
+### **Major Updates**
+
+#### 1. Filter Controls for Card Lists
+
+Added filter buttons to all card sets (both regular and custom sets):
+- **All** - Show all cards (default)
+- **Incomplete** - Show only cards with missing variants
+- **Complete** - Show only fully collected cards
+
+**Implementation:**
+- Filter state maintained independently per set
+- Filters work in combination with search
+- Real-time filtering without page reload
+- Smooth visual transitions
+
+**Use Cases:**
+- Focus on cards still needed for collection
+- Review completed cards
+- Quick progress assessment
+
+#### 2. Search Functionality
+
+Added search bar to every set for quick card location:
+- Search by **card name** (e.g., "Pikachu")
+- Search by **card number** (e.g., "#025" or "025")
+- Real-time search as you type
+- Clear button (×) appears when text is entered
+
+**Implementation:**
+- Case-insensitive search
+- Searches both name and number fields
+- Works in combination with filters
+- Search state independent per set
+
+**CSS Features:**
+- Focus state with highlight effect
+- Mobile-optimized input sizing
+- Responsive layout (stacks on mobile)
+
+#### 3. Card Detail Modal
+
+Tapping any card in the grid opens a full-detail modal showing:
+- **Large card image** - Much easier to see artwork
+- **Full card name** - No truncation issues
+- **Card number** - With secret rare indicators
+- **Set name** - Complete set name displayed
+- **Rarity badge** - Color-coded rarity indicator
+- **Variant checklist** - All variants with collection status
+- **Interactive checkboxes** - Toggle variants directly in modal
+
+**Modal Features:**
+- Click card to open (except checkboxes/labels)
+- Close via X button, ESC key, or click outside
+- Mobile-responsive layout (stacks on small screens)
+- Smooth animations (fade in/out, scale)
+- Updates immediately when toggling variants
+
+**Custom Set Support:**
+- Uses `getCustomCardImageUrl()` for proper image loading
+- Displays `originalNumber` instead of sequential numbers
+- Shows JP region indicator for Japanese cards
+- Correct variant display for multi-variant custom cards
+
+**CSS Styling:**
+- Dark gradient background
+- Responsive grid (side-by-side on desktop, stacked on mobile)
+- Large image preview (300px wide)
+- Colored rarity badges matching card grid
+- Collection status badges (collected variants highlighted)
+
+#### 4. Branding Updates
+
+Updated application branding throughout:
+- **Page title:** "Blair Card Tracker" → "Blair TCG Set Tracker"
+- **Header:** Updated to match new title
+- **Tabs renamed:**
+  - "Pokemon TCG" → "Pokemon"
+  - "Lorcana" → "Disney Lorcana"
+- **Subtitle:** Updated to reflect new branding
+
+#### 5. Lazy Loading / On-Demand Rendering
+
+Implemented performance optimization for initial page load:
+- **Before:** All 1,076 cards rendered immediately on page load
+- **After:** Only set buttons and progress bars display initially
+
+**How It Works:**
+1. Page loads with set buttons and progress indicators
+2. No cards rendered by default
+3. User clicks a set button
+4. Cards render for that set only
+5. Cards remain rendered (no re-render on subsequent clicks)
+
+**Benefits:**
+- Faster initial page load
+- Reduced memory usage
+- Better performance on mobile devices
+- Cleaner initial view
+
+**Implementation:**
+- `currentSet = null` (no default active set)
+- Removed `class="active"` from default set
+- `switchSet()` checks if grid is empty before rendering
+- `switchCustomSet()` uses same lazy loading pattern
+
+#### 6. Bug Fix: Custom Set Modal Images
+
+Fixed broken images when opening modal for custom set cards:
+- **Issue:** Modal used regular set image functions for custom cards
+- **Fix:** Conditional logic to use `getCustomCardImageUrl()` for custom sets
+- **Also fixed:**
+  - Card number display (now shows `originalNumber`)
+  - JP region indicator in modal
+  - Variant list format for custom cards with multiple variants
+
+### **Files Updated**
+
+**index.html:**
+- Added filter button CSS and JavaScript (280 lines)
+- Added search bar CSS and JavaScript (150 lines)
+- Added card modal CSS and JavaScript (450 lines)
+- Updated branding text (title, header, tabs)
+- Implemented lazy loading logic (30 lines)
+- Fixed custom set modal bugs (75 lines)
+- **Total changes:** ~985 lines added/modified
+
+**File Size:**
+- Was: ~36KB
+- Now: ~45KB
+
+### **Mobile Optimizations**
+
+All new features are fully responsive:
+
+**Filter & Search Controls:**
+- Desktop: Side-by-side layout
+- Mobile: Stacked vertically
+- Touch-friendly button sizing
+- Optimized font sizes
+
+**Card Modal:**
+- Desktop: Image and details side-by-side (800px max width)
+- Mobile: Stacked layout, centered image (280px max width)
+- Touch-friendly close button
+- Swipe-friendly (click outside to close)
+
+**Performance:**
+- No impact on mobile load times (lazy loading)
+- Smooth animations on all devices
+- Touch-optimized interactions
+
+### **Technical Implementation Details**
+
+**Filter System:**
+```javascript
+// State management
+let activeFilters = {}; // Per-set filter state
+let activeSearches = {}; // Per-set search state
+
+// Filter function
+function filterCards(setKey, filterType) {
+    activeFilters[setKey] = filterType;
+    // Update button states
+    // Apply filter + search combination
+}
+```
+
+**Search System:**
+```javascript
+function searchCards(setKey, query) {
+    activeSearches[setKey] = query.toLowerCase().trim();
+    // Show/hide clear button
+    // Apply search + filter combination
+}
+```
+
+**Modal System:**
+```javascript
+function openCardModal(setKey, cardNumber) {
+    // Detect set type (regular vs custom)
+    // Load appropriate image URL
+    // Display card details
+    // Render variant checkboxes
+    // Show modal with animation
+}
+```
+
+**Lazy Loading:**
+```javascript
+function switchSet(setKey) {
+    // Update active states
+    // Check if grid is empty
+    if (grid.children.length === 0) {
+        renderCards(setKey); // Render on first view only
+    }
+}
+```
+
+### **User Experience Improvements**
+
+**Before:**
+- Had to scroll through all cards to find specific one
+- No way to hide completed cards
+- Set name sometimes truncated in grid
+- All cards loaded on page open (slower)
+
+**After:**
+- Filter to show only incomplete cards
+- Search by name or number instantly
+- Tap card for full details and large image
+- Cards load only when set is selected (faster)
+- Better branding clarity
+
+### **Known Limitations & Future Ideas**
+
+**Current Limitations:**
+- Filters/search reset when switching sets (intentional design)
+- No sort options (by name, rarity, etc.)
+- No "view mode" toggle (grid/list)
+
+**Potential Enhancements:**
+- Remember filter/search state per set across sessions
+- Sort cards by name, rarity, or collection status
+- Compact/normal/large grid density toggle
+- Bulk operations (mark multiple cards)
+- Export filtered/searched results
+
+### **Testing Completed**
+
+✅ Filter buttons work on all regular sets
+✅ Filter buttons work on all custom sets
+✅ Search works with card names
+✅ Search works with card numbers
+✅ Filters + search work together
+✅ Modal opens for regular set cards
+✅ Modal opens for custom set cards
+✅ Custom set images load correctly in modal
+✅ Variant checkboxes work in modal
+✅ Modal closes properly (all methods)
+✅ Lazy loading works for all sets
+✅ Mobile responsive on all features
+✅ No default set loads on page open
+✅ Progress bars still display correctly
 

@@ -1,6 +1,6 @@
-# Blair Card Tracker
+# Blair TCG Set Tracker
 
-A mobile-friendly web app for tracking trading card collections. Currently supports Pokemon TCG sets with full variant tracking, cloud sync, and card artwork. Custom sets and Disney Lorcana tabs are planned for future releases.
+A mobile-friendly web app for tracking trading card collections. Currently supports Pokemon TCG sets with full variant tracking, cloud sync, card artwork, and advanced filtering. Custom sets and Disney Lorcana tabs are planned for future releases.
 
 **Live app:** Hosted via GitHub Pages — just open `index.html` in any browser.
 
@@ -30,6 +30,9 @@ The app has three top-level tabs:
 
 - **Variant tracking** — Check off each variant (Regular, Holo, Reverse Holo, Poke Ball, Master Ball) independently per card. EX, Ultra Rare, and other special rarities use a single "Collected" checkbox.
 - **Inline progress bars** — Each set button shows a progress bar and collected/total count directly inside it, so you can see completion at a glance without a separate section.
+- **Filter & search** — Filter cards by completion status (All/Incomplete/Complete) and search by card name or number. Filters and search work together for quick card location.
+- **Card detail modal** — Tap any card to open a full-detail view with a large image, complete card information, and the ability to toggle variants directly in the modal.
+- **Lazy loading** — Cards render on-demand when you select a set, improving initial page load performance.
 - **Soft-lock for completed cards** — When all variants of a card are collected, the card visually fades out (reduced opacity, desaturated image) and shows a lock icon with "Complete" label. Unchecking a variant on a completed card requires confirmation via a toast prompt, preventing accidental taps while scrolling.
 - **Card images** — Artwork loads automatically from the [Pokemon TCG API](https://pokemontcg.io/) CDN, with fallback to [TCGdex](https://tcgdex.net/) CDN, then local images, then a styled placeholder.
 - **Cloud sync** — Real-time sync across devices via Firebase Realtime Database, protected by a family sync code.
@@ -65,11 +68,13 @@ blair-pokemon-tracker/
 ## How It Works
 
 1. **Open the app** in a browser and enter the family sync code
-2. **Choose a tab** — Pokemon TCG is active by default
+2. **Choose a tab** — Pokemon, Custom Sets, or Disney Lorcana
 3. **Select a set** from the buttons (each shows its progress bar inline)
-4. **Check off variants** as you collect cards — progress saves automatically
-5. Completed cards fade out with a lock icon; unchecking requires confirmation
-6. Data syncs in real-time to Firebase so all family devices stay up to date
+4. **Filter or search** to quickly find specific cards
+5. **Tap a card** to view full details in a modal with a large image
+6. **Check off variants** as you collect cards — progress saves automatically
+7. Completed cards fade out with a lock icon; unchecking requires confirmation
+8. Data syncs in real-time to Firebase so all family devices stay up to date
 
 ## Card Images
 
