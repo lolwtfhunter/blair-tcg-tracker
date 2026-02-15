@@ -830,39 +830,61 @@
         
         // Initialize app
         window.addEventListener('load', async function() {
-            debugOut('App loading...');
-            
-            // Load card data
-            const loaded = await loadCardData();
-            if (!loaded) {
-                debugOut('Failed to load data!');
-                return;
-            }
-            
-            debugOut('Initializing progress...');
-            // Initialize progress
-            initializeProgress();
-            
-            debugOut('Rendering UI...');
-            // Render UI
-            renderSetButtons();
-            renderProgress();
-            
-            debugOut('Rendering all cards initially...');
-            Object.keys(cardSets).forEach(setKey => {
-                debugOut(`Initial render: ${setKey}`);
-                renderCards(setKey);
-            });
-            
-            debugOut('Checking sync code...');
-            // Check for sync code
-            const savedCode = localStorage.getItem(SYNC_CODE_KEY);
-            if (savedCode === SYNC_CODE) {
-                debugOut('Saved code found, initializing Firebase');
-                initializeFirebase();
-            } else {
-                debugOut('No saved code, showing modal');
-                showSyncModal();
+            try {
+                debugOut('App loading...');
+                
+                // Load card data
+                const loaded = await loadCardData();
+                if (!loaded) {
+                    debugOut('Failed to load data!');
+                    return;
+                }
+                
+                debugOut('Initializing progress...');
+                // Initialize progress
+                initializeProgress();
+                
+                debugOut('Rendering UI...');
+                
+                debugOut('Calling renderSetButtons...');
+                try {
+                    renderSetButtons();
+                    debugOut('✓ Set buttons rendered');
+                } catch (e) {
+                    debugOut('ERROR in renderSetButtons: ' + e.message);
+                }
+                
+                debugOut('Calling renderProgress...');
+                try {
+                    renderProgress();
+                    debugOut('✓ Progress rendered');
+                } catch (e) {
+                    debugOut('ERROR in renderProgress: ' + e.message);
+                }
+                
+                debugOut('Rendering all cards initially...');
+                Object.keys(cardSets).forEach(setKey => {
+                    try {
+                        debugOut(`Initial render: ${setKey}`);
+                        renderCards(setKey);
+                    } catch (e) {
+                        debugOut(`ERROR rendering ${setKey}: ` + e.message);
+                    }
+                });
+                
+                debugOut('Checking sync code...');
+                // Check for sync code
+                const savedCode = localStorage.getItem(SYNC_CODE_KEY);
+                if (savedCode === SYNC_CODE) {
+                    debugOut('Saved code found, initializing Firebase');
+                    initializeFirebase();
+                } else {
+                    debugOut('No saved code, showing modal');
+                    showSyncModal();
+                }
+            } catch (error) {
+                debugOut('FATAL ERROR: ' + error.message);
+                console.error('Fatal error:', error);
             }
         });
     </script>
