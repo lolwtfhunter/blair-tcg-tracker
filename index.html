@@ -640,10 +640,22 @@
             background: linear-gradient(135deg, #c0c0c0 0%, #ffffff 100%); 
             color: #000;
         }
-        .rarity-promo { 
-            background: linear-gradient(135deg, #ff512f 0%, #dd2476 100%); 
+        .rarity-promo {
+            background: linear-gradient(135deg, #ff512f 0%, #dd2476 100%);
+        }
+        .rarity-rare-holo {
+            background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
         }
         
+        .card-origin {
+            font-size: 0.6rem;
+            opacity: 0.45;
+            padding: 2px 8px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
         .variants-section {
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             padding-top: 6px;
@@ -930,11 +942,8 @@
 
         <!-- Custom Sets tab content -->
         <div id="custom-sets-content" class="top-tab-content">
-            <div class="placeholder-content">
-                <h2>Custom Sets</h2>
-                <p>Add and track custom collections of Pokemon cards<br>that aren't part of the main sets.</p>
-                <span class="coming-soon-badge custom-sets">Coming Soon</span>
-            </div>
+            <div class="set-buttons" id="customSetButtons"></div>
+            <div id="custom-sets-grids"></div>
         </div>
 
         <!-- Lorcana tab content -->
@@ -951,8 +960,10 @@
     <script>
         // Global state
         let cardSets = {};
+        let customCardSets = {};
         let collectionProgress = {};
         let currentSet = 'prismatic-evolutions';
+        let currentCustomSet = null;
         let firebase_db = null;
         let firebase_ref = null;
         
@@ -1115,6 +1126,7 @@
             'amazing-rare': 'AMAZING',
             'shiny-rare': 'SHINY',
             'promo': 'PROMO',
+            'rare-holo': 'RARE HOLO',
             'trainer': 'TRAINER',
             'energy': 'ENERGY'
         };
@@ -1216,6 +1228,233 @@
             }
         }
         
+        // Load custom sets data from JSON
+        async function loadCustomSetsData() {
+            console.log('Loading custom-sets-data.json...');
+            try {
+                const response = await fetch('./custom-sets-data.json');
+                if (!response.ok) {
+                    console.log('No custom-sets-data.json found, skipping');
+                    return true;
+                }
+                const data = await response.json();
+
+                console.log(`Custom sets JSON loaded: ${Object.keys(data.customSets).length} sets`);
+
+                for (const [setKey, setInfo] of Object.entries(data.customSets)) {
+                    const cards = [];
+
+                    if (setInfo.cards && typeof setInfo.cards === 'object') {
+                        for (const [cardNum, cardData] of Object.entries(setInfo.cards)) {
+                            const cardObj = {
+                                number: parseInt(cardNum),
+                                name: cardData.name,
+                                rarity: cardData.rarity,
+                                type: cardData.type || 'pokemon',
+                                setOrigin: cardData.setOrigin || '',
+                                apiId: cardData.apiId || '',
+                                releaseDate: cardData.releaseDate || '',
+                                originalNumber: cardData.originalNumber || ''
+                            };
+                            cards.push(cardObj);
+                        }
+                    }
+
+                    customCardSets[setKey] = {
+                        name: setInfo.name,
+                        displayName: setInfo.displayName,
+                        description: setInfo.description || '',
+                        totalCards: setInfo.totalCards,
+                        singleVariantOnly: setInfo.singleVariantOnly || true,
+                        cards: cards
+                    };
+
+                    console.log(`Custom set ${setKey}: ${cards.length} cards`);
+                }
+
+                console.log('✓ Custom sets data loaded');
+                return true;
+            } catch (error) {
+                console.log('Custom sets load error: ' + error.message);
+                return true; // Non-fatal, app continues without custom sets
+            }
+        }
+
+        // Get image URL for a custom set card using its apiId
+        function getCustomCardImageUrl(card) {
+            if (card.apiId) {
+                // apiId format is "setId-number", e.g. "base1-58"
+                const parts = card.apiId.split('-');
+                const setId = parts.slice(0, -1).join('-');
+                const num = parts[parts.length - 1];
+                return `https://images.pokemontcg.io/${setId}/${num}.png`;
+            }
+            return null;
+        }
+
+        // Render custom set buttons
+        function renderCustomSetButtons() {
+            const container = document.getElementById('customSetButtons');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const setKeys = Object.keys(customCardSets);
+            if (setKeys.length === 0) return;
+
+            // Default to first custom set if none selected
+            if (!currentCustomSet) currentCustomSet = setKeys[0];
+
+            setKeys.forEach(setKey => {
+                const setData = customCardSets[setKey];
+                const btn = document.createElement('button');
+                btn.className = 'set-btn' + (setKey === currentCustomSet ? ' active' : '');
+                btn.setAttribute('data-custom-set-key', setKey);
+
+                const progress = getCustomSetProgress(setKey);
+
+                btn.innerHTML = `
+                    <div class="set-btn-left" style="flex:1;min-width:0;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;">
+                            <span class="set-btn-name">${setData.displayName}</span>
+                            <div class="set-btn-right">
+                                <span class="set-btn-stats">${progress.collected}/${progress.total} (${progress.percentage}%)</span>
+                            </div>
+                        </div>
+                        <span class="set-release-date">${setData.totalCards} cards</span>
+                        <div class="set-btn-progress">
+                            <div class="set-btn-progress-fill" style="width: ${progress.percentage}%"></div>
+                        </div>
+                    </div>
+                `;
+                btn.onclick = () => switchCustomSet(setKey);
+                container.appendChild(btn);
+            });
+        }
+
+        // Switch custom set
+        function switchCustomSet(setKey) {
+            currentCustomSet = setKey;
+
+            document.querySelectorAll('#customSetButtons .set-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-custom-set-key') === setKey);
+            });
+
+            document.querySelectorAll('#custom-sets-grids .set-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            const target = document.getElementById('custom-' + setKey);
+            if (target) target.classList.add('active');
+        }
+
+        // Calculate progress for a custom set
+        function getCustomSetProgress(setKey) {
+            const setData = customCardSets[setKey];
+            const csKey = 'custom-' + setKey;
+            let totalVariants = 0;
+            let collectedVariants = 0;
+
+            if (setData && setData.cards) {
+                setData.cards.forEach(card => {
+                    totalVariants += 1; // singleVariantOnly
+                    const cardProgress = (collectionProgress[csKey] || {})[card.number] || {};
+                    if (cardProgress['single']) collectedVariants++;
+                });
+            }
+
+            const percentage = totalVariants > 0 ? (collectedVariants / totalVariants * 100).toFixed(1) : '0.0';
+            return { collected: collectedVariants, total: totalVariants, percentage };
+        }
+
+        // Update custom set button progress
+        function updateCustomSetButtonProgress() {
+            document.querySelectorAll('#customSetButtons .set-btn[data-custom-set-key]').forEach(btn => {
+                const setKey = btn.getAttribute('data-custom-set-key');
+                const progress = getCustomSetProgress(setKey);
+                const fill = btn.querySelector('.set-btn-progress-fill');
+                const stats = btn.querySelector('.set-btn-stats');
+                if (fill) fill.style.width = progress.percentage + '%';
+                if (stats) stats.textContent = `${progress.collected}/${progress.total} (${progress.percentage}%)`;
+            });
+        }
+
+        // Render cards for a custom set
+        function renderCustomCards(setKey) {
+            const csKey = 'custom-' + setKey;
+            const grid = document.getElementById(csKey + '-grid');
+            const setData = customCardSets[setKey];
+
+            if (!grid || !setData) return;
+
+            grid.innerHTML = '';
+
+            if (!collectionProgress[csKey]) {
+                collectionProgress[csKey] = {};
+            }
+
+            setData.cards.forEach(card => {
+                const cardProgress = collectionProgress[csKey][card.number] || {};
+                const isChecked = cardProgress['single'] || false;
+
+                const cardEl = document.createElement('div');
+                cardEl.className = 'card-item' + (isChecked ? ' all-collected' : '');
+                cardEl.setAttribute('data-completed', isChecked ? 'true' : 'false');
+
+                const rarityClass = `rarity-${card.rarity}`;
+
+                const variantHTML = `
+                    <div class="single-variant ${isChecked ? 'checked' : ''}" onclick="toggleVariant('${csKey}', ${card.number}, 'single')">
+                        <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="event.stopPropagation(); toggleVariant('${csKey}', ${card.number}, 'single')">
+                        <label>✓ Collected</label>
+                    </div>
+                `;
+
+                const imgUrl = getCustomCardImageUrl(card);
+                const placeholderFallback = `onerror="showPlaceholder(this)"`;
+
+                cardEl.innerHTML = `
+                    <div class="card-img-wrapper">
+                        <img src="${imgUrl || ''}"
+                             alt="${card.name.replace(/"/g, '&quot;')}"
+                             loading="lazy"
+                             data-card-name="${card.name.replace(/"/g, '&quot;')}"
+                             data-card-number="${card.number}"
+                             data-card-rarity="${card.rarity}"
+                             ${placeholderFallback}>
+                    </div>
+                    <div class="card-header">
+                        <div class="card-info">
+                            <div class="card-number">#${String(card.number).padStart(3, '0')}</div>
+                            <div class="card-name">${card.name}</div>
+                            <span class="rarity-badge ${rarityClass}">${getRarityDisplay(card.rarity)}</span>
+                        </div>
+                    </div>
+                    <div class="card-origin">${card.setOrigin}</div>
+                    <div class="variants-section">
+                        <div class="variants-title">STATUS:</div>
+                        ${variantHTML}
+                        ${isChecked ? `<div class="completed-lock"><svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>Complete</div>` : ''}
+                    </div>
+                `;
+
+                grid.appendChild(cardEl);
+            });
+        }
+
+        // Create DOM elements for custom set grids
+        function initCustomSetGrids() {
+            const container = document.getElementById('custom-sets-grids');
+            if (!container) return;
+            container.innerHTML = '';
+
+            Object.keys(customCardSets).forEach((setKey, idx) => {
+                const section = document.createElement('div');
+                section.id = 'custom-' + setKey;
+                section.className = 'set-section' + (setKey === currentCustomSet ? ' active' : '');
+                section.innerHTML = `<div class="card-grid" id="custom-${setKey}-grid"></div>`;
+                container.appendChild(section);
+            });
+        }
+
         // Initialize collection progress
         function initializeProgress() {
             const saved = localStorage.getItem('pokemonVariantProgress');
@@ -1227,6 +1466,13 @@
                     collectionProgress[setKey] = {};
                 });
             }
+            // Also ensure custom set keys exist in progress
+            Object.keys(customCardSets).forEach(setKey => {
+                const csKey = 'custom-' + setKey;
+                if (!collectionProgress[csKey]) {
+                    collectionProgress[csKey] = {};
+                }
+            });
         }
         
         // Render set buttons with inline progress bars
@@ -1445,10 +1691,18 @@
 
             // If unchecking a variant on a fully-completed card, show confirmation
             if (isCurrentlyChecked) {
-                const setData = cardSets[setKey];
-                const card = setData.cards.find(c => c.number === cardNumber);
+                let setData, card, variants;
+                if (setKey.startsWith('custom-')) {
+                    const customKey = setKey.replace('custom-', '');
+                    setData = customCardSets[customKey];
+                    card = setData ? setData.cards.find(c => c.number === cardNumber) : null;
+                    variants = ['single']; // Custom sets are singleVariantOnly
+                } else {
+                    setData = cardSets[setKey];
+                    card = setData ? setData.cards.find(c => c.number === cardNumber) : null;
+                    variants = card ? getVariants(card, setKey) : [];
+                }
                 if (card) {
-                    const variants = getVariants(card, setKey);
                     const cardProgress = collectionProgress[setKey][cardNumber] || {};
                     const allCollected = variants.every(v => cardProgress[v]);
 
@@ -1482,8 +1736,14 @@
             }
 
             // Re-render
-            renderCards(setKey);
-            updateSetButtonProgress();
+            if (setKey.startsWith('custom-')) {
+                const customKey = setKey.replace('custom-', '');
+                renderCustomCards(customKey);
+                updateCustomSetButtonProgress();
+            } else {
+                renderCards(setKey);
+                updateSetButtonProgress();
+            }
         }
 
         // Show unlock confirmation toast
@@ -1633,31 +1893,43 @@
                             renderCards(setKey);
                         });
                         updateSetButtonProgress();
-                        
+                        Object.keys(customCardSets).forEach(setKey => {
+                            renderCustomCards(setKey);
+                        });
+                        updateCustomSetButtonProgress();
+
                         updateSyncStatus('Synced ✓', 'synced');
                     } else {
                         // No data yet, upload current progress and render cards
                         firebase_ref.set(collectionProgress);
-                        
+
                         // Ensure cards are rendered even if no Firebase data
                         Object.keys(cardSets).forEach(setKey => {
                             renderCards(setKey);
                         });
                         updateSetButtonProgress();
-                        
+                        Object.keys(customCardSets).forEach(setKey => {
+                            renderCustomCards(setKey);
+                        });
+                        updateCustomSetButtonProgress();
+
                         updateSyncStatus('Synced ✓', 'synced');
                     }
                 });
-                
+
             } catch (error) {
                 console.error('Firebase error:', error);
                 updateSyncStatus('Offline', 'error');
-                
+
                 // CRITICAL: Render cards even if Firebase fails
                 Object.keys(cardSets).forEach(setKey => {
                     renderCards(setKey);
                 });
                 updateSetButtonProgress();
+                Object.keys(customCardSets).forEach(setKey => {
+                    renderCustomCards(setKey);
+                });
+                updateCustomSetButtonProgress();
             }
         }
         
@@ -1672,13 +1944,16 @@
                     console.log('Failed to load data!');
                     return;
                 }
-                
+
+                // Load custom sets data
+                await loadCustomSetsData();
+
                 console.log('Initializing progress...');
                 // Initialize progress
                 initializeProgress();
-                
+
                 console.log('Rendering UI...');
-                
+
                 console.log('Calling renderSetButtons...');
                 try {
                     renderSetButtons();
@@ -1686,7 +1961,7 @@
                 } catch (e) {
                     console.log('ERROR in renderSetButtons: ' + e.message);
                 }
-                
+
                 console.log('Calling updateSetButtonProgress...');
                 try {
                     updateSetButtonProgress();
@@ -1694,7 +1969,7 @@
                 } catch (e) {
                     console.log('ERROR in updateSetButtonProgress: ' + e.message);
                 }
-                
+
                 console.log('Rendering all cards initially...');
                 Object.keys(cardSets).forEach(setKey => {
                     try {
@@ -1704,6 +1979,19 @@
                         console.log(`ERROR rendering ${setKey}: ` + e.message);
                     }
                 });
+
+                // Render custom sets
+                console.log('Rendering custom sets...');
+                try {
+                    initCustomSetGrids();
+                    renderCustomSetButtons();
+                    Object.keys(customCardSets).forEach(setKey => {
+                        renderCustomCards(setKey);
+                    });
+                    console.log('✓ Custom sets rendered');
+                } catch (e) {
+                    console.log('ERROR in custom sets: ' + e.message);
+                }
                 
                 console.log('Checking sync code...');
                 // Check for sync code
