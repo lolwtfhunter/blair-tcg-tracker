@@ -1008,11 +1008,11 @@ Your browser downloads files from Netlify, then your browser connects to Firebas
 ```javascript
 // Firebase Configuration (UNCHANGED)
 const firebaseConfig = {
-    apiKey: "AIzaSyDUZwwGKYfRzvj13bKTkYecIH19ge8oWZw",
+    apiKey: "[REDACTED - See Firebase Console]",
     authDomain: "blair-pokemon-tracker.firebaseapp.com",
     databaseURL: "https://blair-pokemon-tracker-default-rtdb.firebaseio.com",
     projectId: "blair-pokemon-tracker",
-    // ...
+    // ... other config
 };
 
 // Initialize Firebase (UNCHANGED)
@@ -1072,7 +1072,7 @@ Response: ✓ Saved, sync to other devices
 
 **Firebase doesn't care about the domain!**
 It only cares about:
-- Valid API key ✓
+- Valid Firebase configuration ✓
 - Correct database URL ✓
 - Valid sync code path ✓
 
