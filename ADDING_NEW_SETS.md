@@ -20,10 +20,179 @@ This document provides step-by-step instructions for adding new card sets to the
 Before adding a new set, ensure you have:
 
 - [ ] Set information (name, release date, total cards, main set size)
+- [ ] **ACCURATE, REAL card list** from official sources (never generate fictional data)
 - [ ] Complete card list with card numbers, names, rarities, and types
 - [ ] Set code for image CDN mapping (if official set)
 - [ ] Access to the repository with appropriate branch permissions
 - [ ] Understanding of the variant rules (see `CARD_GAME_LOGIC.md`)
+
+### ⚠️ CRITICAL: Use Real Data Only
+
+**NEVER generate or invent fictional card lists.** Always research and use real, accurate data from official Pokemon TCG sources. Images from the Pokemon TCG API must match the card names in the JSON file.
+
+See the [Reliable Data Sources](#reliable-data-sources) section below for recommended resources.
+
+---
+
+## Reliable Data Sources
+
+**ALWAYS use these official and verified sources for card data. NEVER invent or generate fictional card information.**
+
+### Primary Sources (Most Reliable)
+
+These sources provide official, accurate card data and should be your first stop:
+
+#### 1. **Official Pokemon Company Resources** ⭐ BEST
+- **Pokemon TCG Official Site**: https://www.pokemon.com/us/pokemon-tcg/
+  - Card galleries: https://tcg.pokemon.com/en-us/galleries/
+  - Official checklists (PDF): https://www.pokemon.com/us/pokemon-tcg/product-gallery/
+  - **Use for**: Official card names, set information, release dates
+  - **Reliability**: 100% - This is the source of truth
+
+- **Pokemon TCG API**: https://pokemontcg.io/
+  - API endpoint: `https://api.pokemontcg.io/v2/cards?q=set.id:{setCode}`
+  - Example: `https://api.pokemontcg.io/v2/cards?q=set.id:me1`
+  - **Use for**: Programmatic access to card data, images, rarities
+  - **Reliability**: 99% - Official API with comprehensive data
+
+#### 2. **PokeBeach** ⭐ HIGHLY RELIABLE
+- **URL**: https://www.pokebeach.com/
+- Search for: `"{Set Name}" set guide card list`
+- **Use for**: Complete set guides, cut cards, card lists, early set information
+- **Reliability**: 95% - Long-standing, highly accurate Pokemon TCG news site
+- **Best for**: New set announcements, comprehensive set guides
+
+#### 3. **Serebii.net** ⭐ HIGHLY RELIABLE
+- **URL**: https://www.serebii.net/card/
+- **Use for**: Card databases, set lists, Japanese set information
+- **Reliability**: 95% - Comprehensive Pokemon resource
+
+### Secondary Sources (Very Reliable)
+
+Use these for verification and additional details:
+
+#### 4. **JustInBasil** ⭐ EXCELLENT FOR VISUALS
+- **URL**: https://www.justinbasil.com/
+- Visual set lists: `https://www.justinbasil.com/visual/{set-code}`
+- **Use for**: Visual card checklists, card images, deck building
+- **Reliability**: 90% - Community-trusted resource
+- **Best for**: Quick visual reference of complete sets
+
+#### 5. **Bulbapedia** (Bulbagarden)
+- **URL**: https://bulbapedia.bulbagarden.net/
+- Search: `{Set Name} (TCG)`
+- **Use for**: Detailed set information, card variations, historical data
+- **Reliability**: 90% - Wiki format, well-maintained
+
+#### 6. **TCGPlayer**
+- **URL**: https://www.tcgplayer.com/search/pokemon/product
+- **Use for**: Card pricing, availability, verifying card existence
+- **Reliability**: 85% - Marketplace data, may have listing variations
+
+### Tertiary Sources (Good for Verification)
+
+Use these to cross-reference and verify:
+
+#### 7. **Beckett**
+- **URL**: https://www.beckett.com/news/
+- Search for: `"{Set Name}" checklist`
+- **Use for**: Set checklists, card values
+- **Reliability**: 85%
+
+#### 8. **PokéCottage, Pikawiz, Pokellector**
+- **URLs**:
+  - https://pokecottage.com/
+  - https://www.pikawiz.com/
+  - https://www.pokellector.com/
+- **Use for**: Visual set lists, card organization
+- **Reliability**: 80-85%
+
+### How to Research a New Set
+
+Follow this process IN ORDER:
+
+1. **Start with Official Pokemon.com**
+   - Search for the set's official card gallery
+   - Download the official checklist PDF if available
+   - Note the official set code, release date, and total cards
+
+2. **Check PokeBeach for Set Guide**
+   - Search: `"{Set Name}" tcg set guide site:pokebeach.com`
+   - PokeBeach usually has comprehensive guides with full card lists
+   - Verify card numbers, names, and rarities
+
+3. **Use Pokemon TCG API (if available)**
+   - Try: `https://api.pokemontcg.io/v2/cards?q=set.id:{setCode}&pageSize=250`
+   - This gives you programmatic access to all card data
+   - Can be used to generate the JSON file automatically
+
+4. **Cross-reference with JustInBasil**
+   - Check the visual set list to verify card count and order
+   - Use for visual confirmation of card names
+
+5. **Verify rarities with multiple sources**
+   - Cross-check rarity designations across 2-3 sources
+   - Official Pokemon.com and PokeBeach are most reliable for rarities
+
+6. **Document your sources**
+   - Note which sources you used in commit messages
+   - If there are discrepancies, go with Official Pokemon.com
+
+### Red Flags (Signs of Unreliable Data)
+
+🚫 **NEVER use data that shows these signs:**
+- Inconsistent card numbering (gaps, duplicates)
+- Card names that don't match official Pokemon naming conventions
+- Rarity designations not found in other sources
+- Sets with no official Pokemon Company acknowledgment
+- Fan-made or custom cards mixed with official sets
+- Unofficial translations or romanizations
+
+### Example Research Workflow
+
+**Adding "Journey Together" (sv9) set:**
+
+```bash
+# Step 1: Check official Pokemon.com
+Open: https://tcg.pokemon.com/en-us/galleries/journey-together/
+
+# Step 2: Check PokeBeach
+Search: "Journey Together set guide site:pokebeach.com"
+Read: Full set guide with all 190 cards
+
+# Step 3: Use Pokemon TCG API
+curl "https://api.pokemontcg.io/v2/cards?q=set.id:sv9&pageSize=200"
+
+# Step 4: Cross-reference with JustInBasil
+Open: https://www.justinbasil.com/visual/sv9
+
+# Step 5: Build JSON file
+# Use card data from steps 1-4, prioritizing official sources
+
+# Step 6: Validate
+python3 -m json.tool journey-together.json
+# Verify total cards matches official count (190)
+```
+
+### For Custom Sets
+
+Custom sets (like "It's Pikachu!") that track cards across multiple sets:
+
+1. **Use Pokemon TCG API for individual cards**:
+   ```
+   https://api.pokemontcg.io/v2/cards?q=name:pikachu
+   ```
+
+2. **Cross-reference with Bulbapedia**:
+   - Search for: "List of Pokémon Trading Card Game cards featuring {Pokemon Name}"
+
+3. **Verify Japanese exclusives**:
+   - Use Serebii.net for Japanese card information
+   - Check Bulbapedia's Japanese set lists
+
+4. **Document setOrigin accurately**:
+   - Use official set names from Pokemon.com
+   - Include region (EN/JP) and year
 
 ---
 
@@ -31,7 +200,32 @@ Before adding a new set, ensure you have:
 
 Follow these steps in order to add a new official Pokemon TCG set:
 
-### Step 1: Create the Set Data File
+### Step 1: Research and Obtain Real Card Data
+
+**⚠️ CRITICAL: Research FIRST, Create JSON SECOND**
+
+1. **Research the set using official sources** (see [Reliable Data Sources](#reliable-data-sources)):
+   - Visit Pokemon.com for official set information
+   - Check PokeBeach for complete set guide
+   - Use Pokemon TCG API if available
+   - Cross-reference with JustInBasil visual list
+   - Document your sources
+
+2. **Verify you have ACCURATE data for:**
+   - ✅ Exact card names (as they appear on the cards)
+   - ✅ Correct rarities (from official sources)
+   - ✅ Card types (pokemon, trainer, energy)
+   - ✅ Total card count and main set size
+   - ✅ Official set code for image CDN
+   - ✅ Release date
+
+3. **Create a data collection file** (temporary working file):
+   ```bash
+   # Create a temporary file to organize your research
+   nano ~/set-research-notes.txt
+   ```
+
+### Step 2: Create the Set Data File
 
 1. **Navigate to the data directory:**
    ```bash
@@ -43,7 +237,7 @@ Follow these steps in order to add a new official Pokemon TCG set:
    touch my-new-set.json
    ```
 
-3. **Populate the JSON file** with the following structure:
+3. **Populate the JSON file with REAL, RESEARCHED data:**
    ```json
    {
      "version": "3.0.0",
@@ -81,7 +275,14 @@ Follow these steps in order to add a new official Pokemon TCG set:
    python3 -m json.tool my-new-set.json > /dev/null && echo "✓ Valid JSON"
    ```
 
-### Step 2: Update index.html
+5. **Verify card data accuracy:**
+   - ✅ Card count matches official total
+   - ✅ Card names match official Pokemon.com names
+   - ✅ No gaps in card numbering (1, 2, 3, ... total)
+   - ✅ Rarities match official sources
+   - ✅ Main set size is correct (before secret rares)
+
+### Step 3: Update index.html
 
 1. **Add the set to the OFFICIAL_SETS array** (around line 1699):
    ```javascript
@@ -387,4 +588,14 @@ Before committing your changes, verify:
 
 ## Version History
 
+- **v1.1** (2026-02-15): Added comprehensive "Reliable Data Sources" section with official Pokemon resources, research workflow, and data verification procedures. Emphasized using real data only after Mega Evolution set required correction from fictional to accurate card list.
 - **v1.0** (2026-02-15): Initial documentation created alongside Mega Evolution set addition and modular refactoring
+
+## Lessons Learned
+
+### Mega Evolution Set (Feb 2026)
+**Issue**: Initial implementation used a generated/fictional card list that didn't match the actual Pokemon TCG Mega Evolution set. Card names in JSON didn't match images from Pokemon TCG API, causing confusion.
+
+**Resolution**: Researched actual set data from official Pokemon sources (Pokemon.com, PokeBeach, Beckett) and replaced entire card list with accurate data for all 188 cards.
+
+**Key Takeaway**: ALWAYS use real, researched data from official sources. NEVER generate or invent card information. Images from Pokemon TCG API must exactly match card names in JSON files.
