@@ -4,7 +4,7 @@
   "setKey": "first-chapter",
   "name": "The First Chapter",
   "displayName": "The First Chapter",
-  "totalCards": 204,
+  "totalCards": 216,
   "mainSet": 204,
   "setCode": "tfc",
   "releaseDate": "2023-08-18",
@@ -43,6 +43,12 @@
       "rarity": "rare",
       "type": "character",
       "dreambornId": "001-005"
+    },
+    "205": {
+      "name": "Hades - King of Olympus",
+      "rarity": "enchanted",
+      "type": "character",
+      "dreambornId": "001-205"
     },
     "6": {
       "name": "Hades - Lord of the Underworld",
@@ -139,6 +145,12 @@
       "rarity": "legendary",
       "type": "character",
       "dreambornId": "001-021"
+    },
+    "206": {
+      "name": "Stitch - Carefree Surfer",
+      "rarity": "enchanted",
+      "type": "character",
+      "dreambornId": "001-206"
     },
     "22": {
       "name": "Stitch - New Dog",
@@ -266,6 +278,12 @@
       "type": "character",
       "dreambornId": "001-042"
     },
+    "207": {
+      "name": "Elsa - Spirit of Winter",
+      "rarity": "enchanted",
+      "type": "character",
+      "dreambornId": "001-207"
+    },
     "43": {
       "name": "Flotsam - Ursula’s Spy",
       "rarity": "rare",
@@ -319,6 +337,12 @@
       "rarity": "super-rare",
       "type": "character",
       "dreambornId": "001-051"
+    },
+    "208": {
+      "name": "Mickey Mouse - Wayward Sorcerer",
+      "rarity": "enchanted",
+      "type": "character",
+      "dreambornId": "001-208"
     },
     "52": {
       "name": "Olaf - Friendly Snowman",
@@ -464,6 +488,12 @@
       "type": "character",
       "dreambornId": "001-075"
     },
+    "209": {
+      "name": "Genie - On the Job",
+      "rarity": "enchanted",
+      "type": "character",
+      "dreambornId": "001-209"
+    },
     "76": {
       "name": "Genie - Powers Unleashed",
       "rarity": "rare",
@@ -541,6 +571,12 @@
       "rarity": "super-rare",
       "type": "character",
       "dreambornId": "001-088"
+    },
+    "210": {
+      "name": "Mickey Mouse - Artful Rogue",
+      "rarity": "enchanted",
+      "type": "character",
+      "dreambornId": "001-210"
     },
     "89": {
       "name": "Mickey Mouse - Steamboat Pilot",
@@ -638,6 +674,12 @@
       "type": "character",
       "dreambornId": "001-104"
     },
+    "211": {
+      "name": "Aladdin - Heroic Outlaw",
+      "rarity": "enchanted",
+      "type": "character",
+      "dreambornId": "001-211"
+    },
     "105": {
       "name": "Aladdin - Street Rat",
       "rarity": "common",
@@ -697,6 +739,12 @@
       "rarity": "rare",
       "type": "character",
       "dreambornId": "001-114"
+    },
+    "212": {
+      "name": "Maui - Hero to All",
+      "rarity": "enchanted",
+      "type": "character",
+      "dreambornId": "001-212"
     },
     "115": {
       "name": "Mickey Mouse - Brave Little Tailor",
@@ -848,6 +896,12 @@
       "type": "character",
       "dreambornId": "001-139"
     },
+    "213": {
+      "name": "Aurora - Dreaming Guardian",
+      "rarity": "enchanted",
+      "type": "character",
+      "dreambornId": "001-213"
+    },
     "140": {
       "name": "Aurora - Regal Princess",
       "rarity": "uncommon",
@@ -865,6 +919,12 @@
       "rarity": "legendary",
       "type": "character",
       "dreambornId": "001-142"
+    },
+    "214": {
+      "name": "Belle - Strange but Special",
+      "rarity": "enchanted",
+      "type": "character",
+      "dreambornId": "001-214"
     },
     "143": {
       "name": "Chief Tui - Respected Leader",
@@ -1148,6 +1208,12 @@
       "type": "character",
       "dreambornId": "001-189"
     },
+    "215": {
+      "name": "Simba - Returned King",
+      "rarity": "enchanted",
+      "type": "character",
+      "dreambornId": "001-215"
+    },
     "190": {
       "name": "Simba - Rightful Heir",
       "rarity": "uncommon",
@@ -1171,6 +1237,12 @@
       "rarity": "super-rare",
       "type": "character",
       "dreambornId": "001-193"
+    },
+    "216": {
+      "name": "Tinker Bell - Giant Fairy",
+      "rarity": "enchanted",
+      "type": "character",
+      "dreambornId": "001-216"
     },
     "194": {
       "name": "Tinker Bell - Tiny Tactician",

@@ -55,14 +55,17 @@ The app has three top-level tabs:
 
   | Set | Cards | Release |
   |-----|-------|---------|
-  | The First Chapter | 204 | Aug 2023 |
-  | Whispers in the Well | 204 | Nov 2025 |
+  | The First Chapter | 216 | Aug 2023 |
+  | Whispers in the Well | 240 | Nov 2025 |
 
 - **Simple collection tracking** — Single "Collected" checkbox per card (Lorcana uses foil/non-foil variants rather than multiple variant types like Pokemon)
 - **Card images** — Artwork loads from [Dreamborn.ink](https://dreamborn.ink/) CDN, with fallback to [Lorcania](https://lorcania.com/) CDN, then local images, then placeholder
 - **Filter & search** — Same powerful filtering and search as Pokemon TCG
 - **Progress tracking** — Real-time progress bars and completion statistics
 - **Cloud sync** — Shares the same Firebase sync as Pokemon, so all your TCG collections sync together
+- **Includes enchanted cards** — Secret rare cards with alternate art and special foiling (cards 205+ in each set)
+
+For detailed information about Lorcana's rarity system and card variants, see [LORCANA_VARIANTS.md](LORCANA_VARIANTS.md).
 
 ## Project Structure
 
@@ -195,6 +198,7 @@ For contributors and maintainers:
 - **[CARD_GAME_LOGIC.md](CARD_GAME_LOGIC.md)** - Comprehensive reference for card game rules, rarities, variants, and logic
 - **[PROJECT_MASTER.md](PROJECT_MASTER.md)** - Detailed project documentation and architecture
 - **[RARITY_REFERENCE.md](RARITY_REFERENCE.md)** - Quick reference for rarity types and variant rules
+- **[LORCANA_VARIANTS.md](LORCANA_VARIANTS.md)** - Disney Lorcana variant and rarity reference guide
 
 ## Legal & Attribution
 

@@ -136,6 +136,8 @@ All sets follow a standardized JSON structure with required and optional fields.
 - **Different card types**: character, action, item, location (instead of pokemon, trainer, energy)
 - **Different rarities**: common, uncommon, rare, super-rare, legendary, enchanted, etc.
 
+**See Also:** [LORCANA_VARIANTS.md](LORCANA_VARIANTS.md) for comprehensive Lorcana variant and rarity information.
+
 ---
 
 ## Rarity Types
@@ -196,6 +198,13 @@ Lorcana uses a different rarity system than Pokemon:
 | `promo` | promo | Promotional cards |
 
 **Note:** Lorcana rarities are displayed as-is without uppercase transformation. All Lorcana cards use a single "Collected" checkbox regardless of rarity.
+
+**See Also:** [LORCANA_VARIANTS.md](LORCANA_VARIANTS.md) for detailed information on:
+- Foil vs. non-foil variants
+- Enchanted card characteristics and numbering
+- Pull rates and rarity distribution
+- Epic and Iconic variants (Set 10+)
+- Current simplified tracking vs. potential full variant tracking
 
 ---
 

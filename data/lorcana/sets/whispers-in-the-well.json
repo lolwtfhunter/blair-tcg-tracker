@@ -4,7 +4,7 @@
   "setKey": "whispers-in-the-well",
   "name": "Whispers in the Well",
   "displayName": "Whispers in the Well",
-  "totalCards": 204,
+  "totalCards": 242,
   "mainSet": 204,
   "setCode": "whi",
   "releaseDate": "2025-11-14",
@@ -25,6 +25,12 @@
       "rarity": "uncommon",
       "type": "character",
       "dreambornId": "010-002"
+    },
+    "206": {
+      "name": "Gaston - Frightful Bully",
+      "rarity": "epic",
+      "type": "character",
+      "dreambornId": "010-206"
     },
     "3": {
       "name": "Rapunzel - Ready for Adventure",
@@ -116,6 +122,12 @@
       "type": "character",
       "dreambornId": "010-017"
     },
+    "241": {
+      "name": "Ariel - Ethereal Voice",
+      "rarity": "iconic",
+      "type": "character",
+      "dreambornId": "010-241"
+    },
     "18": {
       "name": "Scrooge McDuck - Cavern Prospector",
       "rarity": "rare",
@@ -134,11 +146,23 @@
       "type": "character",
       "dreambornId": "010-020"
     },
+    "224": {
+      "name": "Simba - King in the Making",
+      "rarity": "enchanted",
+      "type": "character",
+      "dreambornId": "010-224"
+    },
     "21": {
       "name": "Goofy - Ghost Hunter",
       "rarity": "common",
       "type": "character",
       "dreambornId": "010-021"
+    },
+    "205": {
+      "name": "Goofy - Ghost Hunter",
+      "rarity": "epic",
+      "type": "character",
+      "dreambornId": "010-205"
     },
     "22": {
       "name": "Della Duck - Returning Mother",
@@ -157,6 +181,12 @@
       "rarity": "super-rare",
       "type": "character",
       "dreambornId": "010-024"
+    },
+    "223": {
+      "name": "Goofy - Galumphing Gumshoe",
+      "rarity": "enchanted",
+      "type": "character",
+      "dreambornId": "010-223"
     },
     "25": {
       "name": "Gazelle - Ballad Singer",
@@ -188,6 +218,12 @@
       "type": "action",
       "dreambornId": "010-029"
     },
+    "207": {
+      "name": "The Horseman Strikes!",
+      "rarity": "epic",
+      "type": "action",
+      "dreambornId": "010-207"
+    },
     "30": {
       "name": "Recovered Page",
       "rarity": "uncommon",
@@ -205,6 +241,12 @@
       "rarity": "legendary",
       "type": "item",
       "dreambornId": "010-032"
+    },
+    "225": {
+      "name": "The Black Cauldron",
+      "rarity": "enchanted",
+      "type": "item",
+      "dreambornId": "010-225"
     },
     "33": {
       "name": "Munchings and Crunchings",
@@ -229,6 +271,12 @@
       "rarity": "super-rare",
       "type": "character",
       "dreambornId": "010-036"
+    },
+    "226": {
+      "name": "The Horned King - Wicked Ruler",
+      "rarity": "enchanted",
+      "type": "character",
+      "dreambornId": "010-226"
     },
     "37": {
       "name": "Gwythaint - Savage Hunter",
@@ -284,6 +332,12 @@
       "type": "character",
       "dreambornId": "010-045"
     },
+    "208": {
+      "name": "Elsa - Exploring the Unknown",
+      "rarity": "epic",
+      "type": "character",
+      "dreambornId": "010-208"
+    },
     "46": {
       "name": "Mushu - Braggin' Dragon",
       "rarity": "common",
@@ -307,6 +361,12 @@
       "rarity": "rare",
       "type": "character",
       "dreambornId": "010-049"
+    },
+    "210": {
+      "name": "The Horned King - Triumphant Ghoul",
+      "rarity": "epic",
+      "type": "character",
+      "dreambornId": "010-210"
     },
     "50": {
       "name": "Creeper - Loyal Lackey",
@@ -344,11 +404,23 @@
       "type": "character",
       "dreambornId": "010-055"
     },
+    "227": {
+      "name": "Demona - Scourge of the Wyvern Clan",
+      "rarity": "enchanted",
+      "type": "character",
+      "dreambornId": "010-227"
+    },
     "56": {
       "name": "Hades - Looking for a Deal",
       "rarity": "legendary",
       "type": "character",
       "dreambornId": "010-056"
+    },
+    "242": {
+      "name": "Hades - Looking for a Deal",
+      "rarity": "iconic",
+      "type": "character",
+      "dreambornId": "010-242"
     },
     "57": {
       "name": "Olaf - Helping Hand",
@@ -361,6 +433,12 @@
       "rarity": "uncommon",
       "type": "character",
       "dreambornId": "010-058"
+    },
+    "209": {
+      "name": "Merlin - Completing His Research",
+      "rarity": "epic",
+      "type": "character",
+      "dreambornId": "010-209"
     },
     "59": {
       "name": "Ursula - Whisper of Vanessa",
@@ -385,6 +463,12 @@
       "rarity": "rare",
       "type": "action",
       "dreambornId": "010-062"
+    },
+    "228": {
+      "name": "Can't Hold It Back Anymore",
+      "rarity": "enchanted",
+      "type": "action",
+      "dreambornId": "010-228"
     },
     "63": {
       "name": "Swooping Strike",
@@ -452,6 +536,12 @@
       "type": "character",
       "dreambornId": "010-073"
     },
+    "211": {
+      "name": "Webby Vanderquack - Mystery Enthusiast",
+      "rarity": "epic",
+      "type": "character",
+      "dreambornId": "010-211"
+    },
     "74": {
       "name": "Finnick - Tiny Terror",
       "rarity": "common",
@@ -487,6 +577,12 @@
       "rarity": "uncommon",
       "type": "character",
       "dreambornId": "010-079"
+    },
+    "212": {
+      "name": "Kaa - Secretive Snake",
+      "rarity": "epic",
+      "type": "character",
+      "dreambornId": "010-212"
     },
     "80": {
       "name": "Emily Quackfaster - Level-Headed Librarian",
@@ -524,11 +620,23 @@
       "type": "character",
       "dreambornId": "010-085"
     },
+    "230": {
+      "name": "Baloo - Carefree Bear",
+      "rarity": "enchanted",
+      "type": "character",
+      "dreambornId": "010-230"
+    },
     "86": {
       "name": "Megara - Secret Keeper",
       "rarity": "rare",
       "type": "character",
       "dreambornId": "010-086"
+    },
+    "213": {
+      "name": "Megara - Secret Keeper",
+      "rarity": "epic",
+      "type": "character",
+      "dreambornId": "010-213"
     },
     "87": {
       "name": "Goldie O'Gilt - Cunning Prospector",
@@ -572,6 +680,12 @@
       "type": "character",
       "dreambornId": "010-093"
     },
+    "229": {
+      "name": "Webby Vanderquack - Junior Prospector",
+      "rarity": "enchanted",
+      "type": "character",
+      "dreambornId": "010-229"
+    },
     "94": {
       "name": "So Be It!",
       "rarity": "common",
@@ -595,6 +709,12 @@
       "rarity": "uncommon",
       "type": "action",
       "dreambornId": "010-097"
+    },
+    "231": {
+      "name": "Malicious, Mean, and Scary",
+      "rarity": "enchanted",
+      "type": "action",
+      "dreambornId": "010-231"
     },
     "98": {
       "name": "Potion of Malice",
@@ -649,6 +769,12 @@
       "rarity": "common",
       "type": "character",
       "dreambornId": "010-106"
+    },
+    "214": {
+      "name": "Tinker Bell - Fancy Footwork",
+      "rarity": "epic",
+      "type": "character",
+      "dreambornId": "010-214"
     },
     "107": {
       "name": "Raksha - Fearless Mother",
@@ -752,11 +878,23 @@
       "type": "character",
       "dreambornId": "010-123"
     },
+    "216": {
+      "name": "Aladdin - Barreling Through",
+      "rarity": "epic",
+      "type": "character",
+      "dreambornId": "010-216"
+    },
     "124": {
       "name": "Lady Tremaine - Sinister Socialite",
       "rarity": "super-rare",
       "type": "character",
       "dreambornId": "010-124"
+    },
+    "233": {
+      "name": "Lady Tremaine - Sinister Socialite",
+      "rarity": "enchanted",
+      "type": "character",
+      "dreambornId": "010-233"
     },
     "125": {
       "name": "The Headless Horseman - Terror of Sleepy Hollow",
@@ -764,11 +902,23 @@
       "type": "character",
       "dreambornId": "010-125"
     },
+    "232": {
+      "name": "The Headless Horseman - Terror of Sleepy Hollow",
+      "rarity": "enchanted",
+      "type": "character",
+      "dreambornId": "010-232"
+    },
     "126": {
       "name": "Mulan - Standing Her Ground",
       "rarity": "uncommon",
       "type": "character",
       "dreambornId": "010-126"
+    },
+    "215": {
+      "name": "Mulan - Standing Her Ground",
+      "rarity": "epic",
+      "type": "character",
+      "dreambornId": "010-215"
     },
     "127": {
       "name": "Brom Bones - Burly Bully",
@@ -787,6 +937,12 @@
       "rarity": "rare",
       "type": "action",
       "dreambornId": "010-129"
+    },
+    "234": {
+      "name": "Next Stop, Olympus",
+      "rarity": "enchanted",
+      "type": "action",
+      "dreambornId": "010-234"
     },
     "130": {
       "name": "Get to Safety!",
@@ -854,6 +1010,12 @@
       "type": "character",
       "dreambornId": "010-141"
     },
+    "217": {
+      "name": "Daisy Duck - Ghost Finder",
+      "rarity": "epic",
+      "type": "character",
+      "dreambornId": "010-217"
+    },
     "142": {
       "name": "Cri-Kee - Good Luck Charm",
       "rarity": "common",
@@ -908,6 +1070,12 @@
       "type": "character",
       "dreambornId": "010-150"
     },
+    "235": {
+      "name": "Judy Hopps - Lead Detective",
+      "rarity": "enchanted",
+      "type": "character",
+      "dreambornId": "010-235"
+    },
     "151": {
       "name": "The Sultan - Playful Monarch",
       "rarity": "rare",
@@ -938,6 +1106,12 @@
       "type": "character",
       "dreambornId": "010-155"
     },
+    "236": {
+      "name": "Cinderella - Dream Come True",
+      "rarity": "enchanted",
+      "type": "character",
+      "dreambornId": "010-236"
+    },
     "156": {
       "name": "Judy Hopps - Uncovering Clues",
       "rarity": "super-rare",
@@ -961,6 +1135,12 @@
       "rarity": "rare",
       "type": "character",
       "dreambornId": "010-159"
+    },
+    "218": {
+      "name": "Kristoff - Mining the Ruins",
+      "rarity": "epic",
+      "type": "character",
+      "dreambornId": "010-218"
     },
     "161": {
       "name": "Hen Wen's Visions",
@@ -986,11 +1166,23 @@
       "type": "action",
       "dreambornId": "010-164"
     },
+    "219": {
+      "name": "Sudden Scare",
+      "rarity": "epic",
+      "type": "action",
+      "dreambornId": "010-219"
+    },
     "165": {
       "name": "Spooky Sight",
       "rarity": "rare",
       "type": "action",
       "dreambornId": "010-165"
+    },
+    "237": {
+      "name": "Spooky Sight",
+      "rarity": "enchanted",
+      "type": "action",
+      "dreambornId": "010-237"
     },
     "166": {
       "name": "Detective's Badge",
@@ -1028,6 +1220,12 @@
       "type": "character",
       "dreambornId": "010-171"
     },
+    "221": {
+      "name": "Robin Hood - Ephemeral Archer",
+      "rarity": "epic",
+      "type": "character",
+      "dreambornId": "010-221"
+    },
     "172": {
       "name": "Donald Duck - Ghost Hunter",
       "rarity": "common",
@@ -1039,6 +1237,12 @@
       "rarity": "legendary",
       "type": "character",
       "dreambornId": "010-173"
+    },
+    "238": {
+      "name": "Goliath - Clan Leader",
+      "rarity": "enchanted",
+      "type": "character",
+      "dreambornId": "010-238"
     },
     "174": {
       "name": "The Headless Horseman - Cursed Rider",
@@ -1088,6 +1292,12 @@
       "type": "character",
       "dreambornId": "010-181"
     },
+    "220": {
+      "name": "Minnie Mouse - Ghost Hunter",
+      "rarity": "epic",
+      "type": "character",
+      "dreambornId": "010-220"
+    },
     "182": {
       "name": "Black Heron - Real Bad Egg",
       "rarity": "uncommon",
@@ -1123,6 +1333,12 @@
       "rarity": "rare",
       "type": "character",
       "dreambornId": "010-187"
+    },
+    "239": {
+      "name": "Nick Wilde - Persistent Investigator",
+      "rarity": "enchanted",
+      "type": "character",
+      "dreambornId": "010-239"
     },
     "188": {
       "name": "Mayor Winddancer - Actor-Turned-Politician",
@@ -1184,6 +1400,12 @@
       "type": "action",
       "dreambornId": "010-197"
     },
+    "222": {
+      "name": "He Hurled His Thunderbolt",
+      "rarity": "epic",
+      "type": "action",
+      "dreambornId": "010-222"
+    },
     "198": {
       "name": "The Game's Afoot!",
       "rarity": "uncommon",
@@ -1201,6 +1423,12 @@
       "rarity": "rare",
       "type": "item",
       "dreambornId": "010-200"
+    },
+    "240": {
+      "name": "The Sword of Hercules",
+      "rarity": "enchanted",
+      "type": "item",
+      "dreambornId": "010-240"
     },
     "201": {
       "name": "Ingenious Device",
