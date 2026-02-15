@@ -285,6 +285,16 @@
             background: linear-gradient(135deg, #f39c12, #e67e22);
             color: #fff;
         }
+
+        .set-btn .block-badge.block-swsh {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: #fff;
+        }
+
+        .progress-block-badge.block-swsh {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: #fff;
+        }
         
         .progress-section {
             margin-bottom: 20px;
@@ -744,6 +754,14 @@
         <div id="ascended-heroes" class="set-section">
             <div class="card-grid" id="ascended-heroes-grid"></div>
         </div>
+
+        <div id="celebrations" class="set-section">
+            <div class="card-grid" id="celebrations-grid"></div>
+        </div>
+
+        <div id="surging-sparks" class="set-section">
+            <div class="card-grid" id="surging-sparks-grid"></div>
+        </div>
     </div>
 
     <script>
@@ -763,7 +781,9 @@
             'journey-together': 'sv9',
             'destined-rivals': 'sv10',
             'phantasmal-flames': 'me2',
-            'ascended-heroes': 'me2pt5'
+            'ascended-heroes': 'me2pt5',
+            'celebrations': 'cel25',
+            'surging-sparks': 'sv8'
         };
 
         // TCGdex API set mapping: { series, setId } (for assets.tcgdex.net CDN)
@@ -772,11 +792,17 @@
             'journey-together':     { series: 'sv', set: 'sv09' },
             'destined-rivals':      { series: 'sv', set: 'sv10' },
             'phantasmal-flames':    { series: 'me', set: 'me02' },
-            'ascended-heroes':      { series: 'me', set: 'me02.5' }
+            'ascended-heroes':      { series: 'me', set: 'me02.5' },
+            'celebrations':         { series: 'swsh', set: 'cel25' },
+            'surging-sparks':       { series: 'sv', set: 'sv08' }
         };
 
         // Get card image URL from Pokemon TCG API (pokemontcg.io)
         function getCardImageUrl(setKey, cardNumber) {
+            // Celebrations Classic Collection (cards 26-50) use separate API set
+            if (setKey === 'celebrations' && cardNumber > 25) {
+                return `https://images.pokemontcg.io/cel25c/${cardNumber - 25}.png`;
+            }
             const apiSetId = TCG_API_SET_IDS[setKey];
             if (apiSetId) {
                 return `https://images.pokemontcg.io/${apiSetId}/${cardNumber}.png`;
@@ -914,7 +940,12 @@
         function getVariants(card, setKey) {
             const setData = cardSets[setKey];
             const rarity = card.rarity.toLowerCase();
-            
+
+            // Sets where all cards are single variant (e.g., Celebrations)
+            if (setData && setData.singleVariantOnly) {
+                return ['single'];
+            }
+
             // Single checkbox rarities (EX, Ultra Rares, Illustration Rares, etc.)
             if (SINGLE_VARIANT_RARITIES.includes(rarity)) {
                 return ['single'];
@@ -978,6 +1009,7 @@
                         blockCode: setInfo.blockCode || '',
                         hasPokeBallVariant: setInfo.hasPokeBallVariant,
                         hasMasterBallVariant: setInfo.hasMasterBallVariant,
+                        singleVariantOnly: setInfo.singleVariantOnly || false,
                         cards: cards
                     };
                     
