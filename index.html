@@ -371,18 +371,39 @@
             box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
         }
 
+        .set-btn-logo-wrapper {
+            position: relative;
+            width: 100%;
+            height: 80px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .set-btn-logo {
             width: 100%;
             height: 80px;
             object-fit: contain;
-            margin-bottom: 8px;
             border-radius: 6px;
             background: rgba(255, 255, 255, 0.03);
             padding: 8px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
         }
 
-        .set-btn-logo[style*="display: none"] + .set-btn-name {
-            margin-top: 8px;
+        .set-btn-logo-fallback {
+            font-size: 2.5rem;
+            opacity: 0.6;
+            filter: grayscale(30%);
+            z-index: 1;
+        }
+
+        /* Hide fallback when logo loads successfully */
+        .set-btn-logo:not([style*="display: none"]) ~ .set-btn-logo-fallback {
+            display: none;
         }
 
         .set-btn-name {
@@ -2240,16 +2261,17 @@
                 // Determine TCG type from first card's setOrigin
                 let tcgType = 'Pokemon'; // default
                 let logoUrl = null;
+                let logoIcon = '🎴'; // Default card icon
                 if (setData.cards && setData.cards.length > 0) {
                     tcgType = setData.cards[0].setOrigin || 'Pokemon';
 
-                    // Use TCG-specific logo
+                    // Use TCG-specific logo and icon
                     if (tcgType.toLowerCase().includes('pokemon')) {
-                        // Use Pokemon logo - generic Pokemon TCG logo
-                        logoUrl = 'https://images.pokemontcg.io/base1/logo.png';
+                        logoUrl = './Images/pokemon/logo.png';
+                        logoIcon = '⚡'; // Pokemon lightning bolt
                     } else if (tcgType.toLowerCase().includes('lorcana')) {
-                        // Lorcana logos not readily available, use local if provided
-                        logoUrl = `./Images/lorcana/logos/lorcana.png`;
+                        logoUrl = './Images/lorcana/logos/lorcana.png';
+                        logoIcon = '🃏'; // Lorcana playing card
                     }
                 }
 
@@ -2278,7 +2300,10 @@
                 const progress = getCustomSetProgress(setKey);
 
                 btn.innerHTML = `
-                    ${logoUrl ? `<img src="${logoUrl}" alt="${tcgType}" class="set-btn-logo" onerror="this.style.display='none'">` : ''}
+                    <div class="set-btn-logo-wrapper">
+                        ${logoUrl ? `<img src="${logoUrl}" alt="${tcgType}" class="set-btn-logo" onerror="this.style.display='none'">` : ''}
+                        <div class="set-btn-logo-fallback">${logoIcon}</div>
+                    </div>
                     <div class="set-btn-name">${setData.displayName}</div>
                     <div class="set-release-date">${dateStr}</div>
                     <div class="set-btn-stats">${progress.collected}/${progress.total} (${progress.percentage}%)</div>
@@ -2817,12 +2842,14 @@
                 // Calculate progress
                 const progress = getLorcanaSetProgress(setKey);
 
-                // Lorcana logos are not readily available via CDN
-                // Users can add local logos in ./Images/lorcana/logos/ if desired
+                // Lorcana logos - use local if available, fallback to icon
                 const localLogoUrl = `./Images/lorcana/logos/${setKey}.png`;
 
                 btn.innerHTML = `
-                    <img src="${localLogoUrl}" alt="${setData.displayName}" class="set-btn-logo" onerror="this.style.display='none'">
+                    <div class="set-btn-logo-wrapper">
+                        <img src="${localLogoUrl}" alt="${setData.displayName}" class="set-btn-logo" onerror="this.style.display='none'">
+                        <div class="set-btn-logo-fallback">🃏</div>
+                    </div>
                     <div class="set-btn-name">${setData.displayName}</div>
                     ${dateStr ? `<div class="set-release-date">${dateStr}</div>` : ''}
                     <div class="set-btn-stats">${progress.collected}/${progress.total} (${progress.percentage}%)</div>
