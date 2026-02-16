@@ -102,6 +102,16 @@ function renderCustomSetButtons() {
             fallback.style.display = 'block';
         };
 
+        // Handle race condition: image may have already loaded/failed
+        // before the onload/onerror handlers were attached above
+        if (img.complete) {
+            if (img.naturalWidth > 0) {
+                img.onload();
+            } else {
+                img.onerror();
+            }
+        }
+
         btn.onclick = () => switchCustomSet(setKey);
         container.appendChild(btn);
     });
