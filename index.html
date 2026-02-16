@@ -228,36 +228,7 @@
                 <button class="debug-bug-btn" onclick="debugLorcanaImages()" title="Open image debug panel">&#128027;</button>
             </div>
             <div class="set-buttons" id="lorcanaSetButtons"></div>
-
-            <div id="first-chapter" class="set-section">
-                <div class="card-controls">
-                    <div class="filter-buttons">
-                        <button class="filter-btn active" onclick="filterLorcanaCards('first-chapter', 'all')">All</button>
-                        <button class="filter-btn" onclick="filterLorcanaCards('first-chapter', 'incomplete')">Incomplete</button>
-                        <button class="filter-btn" onclick="filterLorcanaCards('first-chapter', 'complete')">Complete</button>
-                    </div>
-                    <div class="search-container">
-                        <input type="text" class="search-input" placeholder="Search cards..." oninput="searchLorcanaCards('first-chapter', this.value)" data-set="first-chapter">
-                        <button class="search-clear" onclick="clearLorcanaSearch('first-chapter')">×</button>
-                    </div>
-                </div>
-                <div class="card-grid" id="first-chapter-grid"></div>
-            </div>
-
-            <div id="whispers-in-the-well" class="set-section">
-                <div class="card-controls">
-                    <div class="filter-buttons">
-                        <button class="filter-btn active" onclick="filterLorcanaCards('whispers-in-the-well', 'all')">All</button>
-                        <button class="filter-btn" onclick="filterLorcanaCards('whispers-in-the-well', 'incomplete')">Incomplete</button>
-                        <button class="filter-btn" onclick="filterLorcanaCards('whispers-in-the-well', 'complete')">Complete</button>
-                    </div>
-                    <div class="search-container">
-                        <input type="text" class="search-input" placeholder="Search cards..." oninput="searchLorcanaCards('whispers-in-the-well', this.value)" data-set="whispers-in-the-well">
-                        <button class="search-clear" onclick="clearLorcanaSearch('whispers-in-the-well')">×</button>
-                    </div>
-                </div>
-                <div class="card-grid" id="whispers-in-the-well-grid"></div>
-            </div>
+            <!-- Lorcana set sections are dynamically created by initLorcanaSetGrids() -->
         </div>
 
     </div>
