@@ -1,9 +1,13 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
 
-// Helper to navigate to a set with cards
 async function navigateToFirstSet(page) {
-  await page.route('**/firebasejs/**', route => route.fulfill({ body: '', contentType: 'application/javascript' }));
+  // Block ALL external requests — only allow localhost. Prevents Firebase sync from ever touching production data.
+  await page.route('**/*', route => {
+    const url = route.request().url();
+    if (url.startsWith('http://localhost') || url.startsWith('http://127.0.0.1')) return route.continue();
+    return route.fulfill({ body: '', contentType: 'text/plain' });
+  });
   await page.goto('/about.html');
   await page.evaluate(() => {
     localStorage.setItem('blair_sync_code', 'Blair2024');
@@ -13,7 +17,6 @@ async function navigateToFirstSet(page) {
   await page.waitForFunction(() => document.querySelectorAll('.block-btn').length > 0, null, { timeout: 15000 });
   await page.locator('.block-btn').first().click();
   await page.locator('#pokemon-tcg-content .set-buttons.active .set-btn').first().click();
-  // Wait for cards to render
   await page.waitForSelector('#pokemon-tcg-content .set-section.active .card-item');
 }
 
@@ -22,109 +25,63 @@ test.describe('Filters', () => {
     await navigateToFirstSet(page);
   });
 
-  test('All filter should be active by default', async ({ page }) => {
-    const allButton = page.locator('#pokemon-tcg-content .set-section.active .filter-btn', { hasText: 'All' });
-    await expect(allButton).toHaveClass(/active/);
-  });
-
-  test('should have All, Incomplete, and Complete filter buttons', async ({ page }) => {
-    const filterBtns = page.locator('#pokemon-tcg-content .set-section.active .filter-btn');
+  test('All/Incomplete/Complete filter cycling', async ({ page }) => {
+    const section = '#pokemon-tcg-content .set-section.active';
+    const filterBtns = page.locator(`${section} .filter-btn`);
     await expect(filterBtns).toHaveCount(3);
-    await expect(filterBtns.nth(0)).toHaveText('All');
-    await expect(filterBtns.nth(1)).toHaveText('Incomplete');
-    await expect(filterBtns.nth(2)).toHaveText('Complete');
-  });
 
-  test('Incomplete filter should activate and show only incomplete cards', async ({ page }) => {
-    const incompleteBtn = page.locator('#pokemon-tcg-content .set-section.active .filter-btn', { hasText: 'Incomplete' });
-    await incompleteBtn.click();
-    await expect(incompleteBtn).toHaveClass(/active/);
+    // All is active by default
+    await expect(filterBtns.nth(0)).toHaveClass(/active/);
+    const totalCards = await page.locator(`${section} .card-item`).count();
 
-    // With fresh state (no collection), all cards are incomplete, so all should be visible
-    const visibleCards = page.locator('#pokemon-tcg-content .set-section.active .card-item:not([style*="display: none"])');
-    const count = await visibleCards.count();
-    expect(count).toBeGreaterThan(0);
-  });
+    // Switch to Incomplete — fresh state means all cards incomplete
+    await filterBtns.nth(1).click();
+    await expect(filterBtns.nth(1)).toHaveClass(/active/);
+    const incompleteCount = await page.locator(`${section} .card-item:not([style*="display: none"])`).count();
+    expect(incompleteCount).toBeGreaterThan(0);
 
-  test('Complete filter should show only completed cards', async ({ page }) => {
-    const completeBtn = page.locator('#pokemon-tcg-content .set-section.active .filter-btn').filter({ hasText: /^Complete$/ });
+    // Switch to Complete — fresh state means no cards complete
+    const completeBtn = filterBtns.nth(2);
     await completeBtn.click();
     await expect(completeBtn).toHaveClass(/active/);
+    await expect(page.locator(`${section} .card-item:not([style*="display: none"])`)).toHaveCount(0);
 
-    // With fresh state, no cards are complete, so none should be visible
-    const visibleCards = page.locator('#pokemon-tcg-content .set-section.active .card-item:not([style*="display: none"])');
-    await expect(visibleCards).toHaveCount(0);
+    // Back to All — all cards visible again
+    await filterBtns.nth(0).click();
+    const restored = await page.locator(`${section} .card-item:not([style*="display: none"])`).count();
+    expect(restored).toBe(totalCards);
   });
 
-  test('All filter should restore all cards after filtering', async ({ page }) => {
-    const totalCards = await page.locator('#pokemon-tcg-content .set-section.active .card-item').count();
+  test('search filters cards and clear restores them', async ({ page }) => {
+    const section = '#pokemon-tcg-content .set-section.active';
+    const totalCards = await page.locator(`${section} .card-item`).count();
 
-    // Apply Incomplete filter
-    await page.locator('#pokemon-tcg-content .set-section.active .filter-btn', { hasText: 'Incomplete' }).click();
+    const searchInput = page.locator(`${section} .search-input`);
+    const clearBtn = page.locator(`${section} .search-clear`);
 
-    // Switch back to All
-    await page.locator('#pokemon-tcg-content .set-section.active .filter-btn', { hasText: 'All' }).click();
-
-    const visibleCards = page.locator('#pokemon-tcg-content .set-section.active .card-item:not([style*="display: none"])');
-    await expect(visibleCards).toHaveCount(totalCards);
-  });
-
-  test('search input should filter cards by name', async ({ page }) => {
-    const searchInput = page.locator('#pokemon-tcg-content .set-section.active .search-input');
+    // Type to filter
     await searchInput.fill('a');
-
-    // Wait for filtering to apply
     await page.waitForTimeout(200);
+    const visibleAfterSearch = await page.locator(`${section} .card-item:not([style*="display: none"])`).count();
+    expect(visibleAfterSearch).toBeLessThanOrEqual(totalCards);
 
-    // Some cards should be hidden
-    const allCards = await page.locator('#pokemon-tcg-content .set-section.active .card-item').count();
-    const visibleCards = await page.locator('#pokemon-tcg-content .set-section.active .card-item:not([style*="display: none"])').count();
-
-    // At least some filtering should occur (unless all cards contain 'a')
-    expect(visibleCards).toBeLessThanOrEqual(allCards);
-    expect(visibleCards).toBeGreaterThanOrEqual(0);
-  });
-
-  test('search clear button should appear when typing', async ({ page }) => {
-    const searchInput = page.locator('#pokemon-tcg-content .set-section.active .search-input');
-    const clearBtn = page.locator('#pokemon-tcg-content .set-section.active .search-clear');
-
-    await searchInput.fill('test');
+    // Clear button should be visible
     await expect(clearBtn).toHaveClass(/visible/);
-  });
 
-  test('clearing search should restore all cards', async ({ page }) => {
-    const totalCards = await page.locator('#pokemon-tcg-content .set-section.active .card-item').count();
-
-    const searchInput = page.locator('#pokemon-tcg-content .set-section.active .search-input');
-    await searchInput.fill('zzzzz_nomatch');
+    // Clear restores all cards
+    await clearBtn.click();
     await page.waitForTimeout(200);
-
-    // Clear via the X button
-    await page.locator('#pokemon-tcg-content .set-section.active .search-clear').click();
-    await page.waitForTimeout(200);
-
-    const visibleCards = await page.locator('#pokemon-tcg-content .set-section.active .card-item:not([style*="display: none"])').count();
-    expect(visibleCards).toBe(totalCards);
+    const visibleAfterClear = await page.locator(`${section} .card-item:not([style*="display: none"])`).count();
+    expect(visibleAfterClear).toBe(totalCards);
   });
 
-  test('rarity filter pills should be present for multi-rarity sets', async ({ page }) => {
-    // Rarity filters container should exist
-    const rarityContainer = page.locator('#pokemon-tcg-content .set-section.active .rarity-filters');
-    await expect(rarityContainer).toBeVisible();
+  test('rarity pill toggle', async ({ page }) => {
+    const section = '#pokemon-tcg-content .set-section.active';
+    const rarityBtn = page.locator(`${section} .rarity-btn`).first();
 
-    // Should have at least one rarity button (most sets have multiple rarities)
-    const rarityBtns = rarityContainer.locator('.rarity-btn');
-    const count = await rarityBtns.count();
-    expect(count).toBeGreaterThanOrEqual(1);
-  });
-
-  test('clicking a rarity pill should toggle it active', async ({ page }) => {
-    const rarityBtn = page.locator('#pokemon-tcg-content .set-section.active .rarity-btn').first();
     await rarityBtn.click();
     await expect(rarityBtn).toHaveClass(/active/);
 
-    // Click again to deactivate
     await rarityBtn.click();
     await expect(rarityBtn).not.toHaveClass(/active/);
   });

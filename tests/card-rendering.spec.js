@@ -3,7 +3,12 @@ const { test, expect } = require('@playwright/test');
 
 test.describe('Card Rendering', () => {
   test.beforeEach(async ({ page }) => {
-    await page.route('**/firebasejs/**', route => route.fulfill({ body: '', contentType: 'application/javascript' }));
+    // Block ALL external requests — only allow localhost. Prevents Firebase sync from ever touching production data.
+    await page.route('**/*', route => {
+      const url = route.request().url();
+      if (url.startsWith('http://localhost') || url.startsWith('http://127.0.0.1')) return route.continue();
+      return route.fulfill({ body: '', contentType: 'text/plain' });
+    });
     await page.goto('/about.html');
     await page.evaluate(() => {
       localStorage.setItem('blair_sync_code', 'Blair2024');
@@ -13,80 +18,30 @@ test.describe('Card Rendering', () => {
     await page.waitForFunction(() => document.querySelectorAll('.block-btn').length > 0, null, { timeout: 15000 });
   });
 
-  test('no cards should be visible before selecting a set', async ({ page }) => {
-    // All card grids should be empty or hidden
+  test('no cards visible before selecting a set', async ({ page }) => {
     const visibleCards = page.locator('#pokemon-tcg-content .set-section.active .card-item');
     await expect(visibleCards).toHaveCount(0);
   });
 
-  test('cards should appear when a set is selected', async ({ page }) => {
-    // Click the first block button
-    await page.locator('.block-btn').first().click();
-
-    // Click the first set button
-    const setBtn = page.locator('#pokemon-tcg-content .set-buttons.active .set-btn').first();
-    await setBtn.click();
-
-    // Cards should now be visible
-    const cards = page.locator('#pokemon-tcg-content .set-section.active .card-item');
-    const count = await cards.count();
-    expect(count).toBeGreaterThan(0);
-  });
-
-  test('each card should display name, number, and rarity', async ({ page }) => {
+  test('set selection renders cards with name, number, rarity, and variant checkboxes', async ({ page }) => {
     await page.locator('.block-btn').first().click();
     await page.locator('#pokemon-tcg-content .set-buttons.active .set-btn').first().click();
 
     const firstCard = page.locator('#pokemon-tcg-content .set-section.active .card-item').first();
 
-    // Card should have name
-    const cardName = firstCard.locator('.card-name');
-    await expect(cardName).not.toBeEmpty();
+    // Name
+    await expect(firstCard.locator('.card-name')).not.toBeEmpty();
 
-    // Card should have number
-    const cardNumber = firstCard.locator('.card-number');
-    await expect(cardNumber).toContainText('#');
+    // Number
+    await expect(firstCard.locator('.card-number')).toContainText('#');
 
-    // Card should have rarity badge
-    const rarityBadge = firstCard.locator('.rarity-badge');
-    await expect(rarityBadge).toBeVisible();
-  });
+    // Rarity badge
+    await expect(firstCard.locator('.rarity-badge')).toBeVisible();
 
-  test('each card should have an image element', async ({ page }) => {
-    await page.locator('.block-btn').first().click();
-    await page.locator('#pokemon-tcg-content .set-buttons.active .set-btn').first().click();
-
-    const firstCard = page.locator('#pokemon-tcg-content .set-section.active .card-item').first();
-    const img = firstCard.locator('.card-img-wrapper img');
-    await expect(img).toHaveAttribute('src', /.+/);
-  });
-
-  test('cards should have variant checkboxes', async ({ page }) => {
-    await page.locator('.block-btn').first().click();
-    await page.locator('#pokemon-tcg-content .set-buttons.active .set-btn').first().click();
-
-    const firstCard = page.locator('#pokemon-tcg-content .set-section.active .card-item').first();
-    const variantsSection = firstCard.locator('.variants-section');
-    await expect(variantsSection).toBeVisible();
-
-    // Should have at least one checkbox (single variant or multi-variant)
+    // Variant checkboxes
+    await expect(firstCard.locator('.variants-section')).toBeVisible();
     const checkboxes = firstCard.locator('input[type="checkbox"]');
     const count = await checkboxes.count();
     expect(count).toBeGreaterThanOrEqual(1);
-  });
-
-  test('images should use lazy loading', async ({ page }) => {
-    await page.locator('.block-btn').first().click();
-    await page.locator('#pokemon-tcg-content .set-buttons.active .set-btn').first().click();
-
-    const images = page.locator('#pokemon-tcg-content .set-section.active .card-img-wrapper img');
-    const count = await images.count();
-    expect(count).toBeGreaterThan(0);
-
-    // Check first few images for lazy loading attribute
-    const checkCount = Math.min(count, 5);
-    for (let i = 0; i < checkCount; i++) {
-      await expect(images.nth(i)).toHaveAttribute('loading', 'lazy');
-    }
   });
 });

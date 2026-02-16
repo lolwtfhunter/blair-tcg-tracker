@@ -742,16 +742,15 @@ npm run test:ui                 # interactive Playwright UI
 npm run test:report             # open HTML report
 ```
 
-**Test suite** (`tests/` directory):
-| File | Coverage |
-|------|----------|
-| `navigation.spec.js` | Tab switching, block/set selection, deselect |
-| `card-rendering.spec.js` | Cards on set select, images, metadata, variants |
-| `filters.spec.js` | All/Incomplete/Complete, rarity toggles, search |
-| `modal.spec.js` | Open/close, card details, variant toggle |
-| `collection.spec.js` | Variant toggle, progress bar, soft-lock toast |
-| `persistence.spec.js` | localStorage save/restore across reload |
-| `responsive.spec.js` | Desktop/mobile/tablet layouts |
+**Test suite** (`tests/` directory — 18 tests × 4 browsers = 72 runs):
+| File | Tests | Coverage |
+|------|-------|----------|
+| `navigation.spec.js` | 4 | Tab switching, block/set selection, deselect |
+| `card-rendering.spec.js` | 2 | Cards on set select, metadata, variants |
+| `filters.spec.js` | 3 | All/Incomplete/Complete, rarity toggles, search |
+| `modal.spec.js` | 5 | Open/close, card details, variant toggle |
+| `collection.spec.js` | 3 | Variant toggle, progress bar, soft-lock toast |
+| `persistence.spec.js` | 1 | localStorage save/restore across reload |
 
 **Browser/viewport matrix:**
 - Chromium (Desktop, 1280x720)

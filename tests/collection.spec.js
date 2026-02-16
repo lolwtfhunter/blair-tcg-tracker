@@ -1,9 +1,13 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
 
-// Helper to navigate to a set with cards
 async function navigateToFirstSet(page) {
-  await page.route('**/firebasejs/**', route => route.fulfill({ body: '', contentType: 'application/javascript' }));
+  // Block ALL external requests — only allow localhost. Prevents Firebase sync from ever touching production data.
+  await page.route('**/*', route => {
+    const url = route.request().url();
+    if (url.startsWith('http://localhost') || url.startsWith('http://127.0.0.1')) return route.continue();
+    return route.fulfill({ body: '', contentType: 'text/plain' });
+  });
   await page.goto('/about.html');
   await page.evaluate(() => {
     localStorage.setItem('blair_sync_code', 'Blair2024');
@@ -21,49 +25,29 @@ test.describe('Collection Management', () => {
     await navigateToFirstSet(page);
   });
 
-  test('toggling a variant checkbox should check it', async ({ page }) => {
+  test('toggle variant checks it and updates progress bar', async ({ page }) => {
     const firstCard = page.locator('#pokemon-tcg-content .set-section.active .card-item').first();
     const checkbox = firstCard.locator('input[type="checkbox"]').first();
-
-    // Should start unchecked (clean state)
     await expect(checkbox).not.toBeChecked();
 
-    // Click the variant container (the checkbox's parent div handles the toggle)
-    const variantContainer = checkbox.locator('..');
-    await variantContainer.click();
-
-    // After re-render, the card should reflect the checked state
-    await page.waitForTimeout(300);
-
-    // Re-query after re-render
-    const updatedFirstCard = page.locator('#pokemon-tcg-content .set-section.active .card-item').first();
-    const updatedCheckbox = updatedFirstCard.locator('input[type="checkbox"]').first();
-    await expect(updatedCheckbox).toBeChecked();
-  });
-
-  test('progress bar should update after toggling a variant', async ({ page }) => {
-    // Get initial progress text from the active set button
     const activeSetBtn = page.locator('#pokemon-tcg-content .set-buttons.active .set-btn.active');
     const initialStats = await activeSetBtn.locator('.set-btn-stats').textContent();
 
-    // Toggle a variant
-    const firstCard = page.locator('#pokemon-tcg-content .set-section.active .card-item').first();
-    const variantContainer = firstCard.locator('input[type="checkbox"]').first().locator('..');
+    const variantContainer = checkbox.locator('..');
     await variantContainer.click();
     await page.waitForTimeout(300);
 
-    // Check that progress updated
+    const updatedCheckbox = page.locator('#pokemon-tcg-content .set-section.active .card-item').first().locator('input[type="checkbox"]').first();
+    await expect(updatedCheckbox).toBeChecked();
+
     const updatedStats = await activeSetBtn.locator('.set-btn-stats').textContent();
     expect(updatedStats).not.toBe(initialStats);
   });
 
-  test('completed card should show lock icon', async ({ page }) => {
-    // Find a card and check all its variants to make it "complete"
+  test('completed card shows lock icon', async ({ page }) => {
     const firstCard = page.locator('#pokemon-tcg-content .set-section.active .card-item').first();
-    const checkboxes = firstCard.locator('input[type="checkbox"]');
-    const checkboxCount = await checkboxes.count();
+    const checkboxCount = await firstCard.locator('input[type="checkbox"]').count();
 
-    // Toggle all checkboxes to complete the card
     for (let i = 0; i < checkboxCount; i++) {
       const card = page.locator('#pokemon-tcg-content .set-section.active .card-item').first();
       const container = card.locator('input[type="checkbox"]').nth(i).locator('..');
@@ -71,17 +55,13 @@ test.describe('Collection Management', () => {
       await page.waitForTimeout(300);
     }
 
-    // After all variants checked, card should have completed lock
     const completedCard = page.locator('#pokemon-tcg-content .set-section.active .card-item').first();
-    const lock = completedCard.locator('.completed-lock');
-    await expect(lock).toBeVisible();
+    await expect(completedCard.locator('.completed-lock')).toBeVisible();
   });
 
-  test('unchecking a variant on a completed card should show confirmation toast', async ({ page }) => {
-    // Complete the first card
+  test('unchecking variant on completed card shows confirmation toast', async ({ page }) => {
     const firstCard = page.locator('#pokemon-tcg-content .set-section.active .card-item').first();
-    const checkboxes = firstCard.locator('input[type="checkbox"]');
-    const checkboxCount = await checkboxes.count();
+    const checkboxCount = await firstCard.locator('input[type="checkbox"]').count();
 
     for (let i = 0; i < checkboxCount; i++) {
       const card = page.locator('#pokemon-tcg-content .set-section.active .card-item').first();
@@ -90,12 +70,10 @@ test.describe('Collection Management', () => {
       await page.waitForTimeout(300);
     }
 
-    // Now try to uncheck the first variant — should trigger confirmation toast
     const completedCard = page.locator('#pokemon-tcg-content .set-section.active .card-item').first();
     const container = completedCard.locator('input[type="checkbox"]').first().locator('..');
     await container.click();
 
-    // Toast should appear
     const toast = page.locator('.unlock-toast');
     await expect(toast).toBeVisible({ timeout: 3000 });
     await expect(toast).toContainText('Uncheck');

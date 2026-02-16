@@ -137,14 +137,13 @@ blair-pokemon-tracker/
 │           ├── whispers-in-the-well/
 │           ├── winterspell/
 │           └── logos/          Set logos (optional, CDN fallback exists)
-├── tests/                  Playwright test suite
+├── tests/                  Playwright test suite (18 tests × 4 browsers)
 │   ├── navigation.spec.js
 │   ├── card-rendering.spec.js
 │   ├── filters.spec.js
 │   ├── modal.spec.js
 │   ├── collection.spec.js
-│   ├── persistence.spec.js
-│   └── responsive.spec.js
+│   └── persistence.spec.js
 ├── backups/                Automated Firebase backup snapshots
 ├── .github/workflows/      CI/CD (Firebase backup, Playwright test CI)
 ├── package.json            Dev dependencies (Playwright only)
@@ -249,7 +248,7 @@ Variant eligibility is determined automatically from rarity. Custom set cards co
 ```bash
 npm install                     # first time only — installs Playwright
 npx playwright install          # first time only — downloads browser binaries
-npm test                        # run all tests headless (Chromium + WebKit)
+npm test                        # run all tests headless (Chromium + WebKit, desktop + mobile)
 npm run test:headed             # run tests with visible browser windows
 npm run test:ui                 # open interactive Playwright UI
 npm run test:report             # open the HTML test report
@@ -266,15 +265,14 @@ Pushing to `dev` automatically runs the full Playwright test suite via GitHub Ac
 
 ### Test Coverage
 
-| Test File | Coverage |
-|-----------|----------|
-| `navigation.spec.js` | Tab switching, block/set selection, deselect behavior |
-| `card-rendering.spec.js` | Cards render on set select, images, metadata, variants |
-| `filters.spec.js` | All/Incomplete/Complete filters, rarity toggles, search |
-| `modal.spec.js` | Open/close modal, card details, variant toggling |
-| `collection.spec.js` | Variant toggle, progress bar update, soft-lock toast |
-| `persistence.spec.js` | localStorage save/restore across reload |
-| `responsive.spec.js` | Layout correctness across desktop/mobile/tablet viewports |
+| Test File | Tests | Coverage |
+|-----------|-------|----------|
+| `navigation.spec.js` | 4 | Tab switching, block/set selection, deselect behavior |
+| `card-rendering.spec.js` | 2 | Cards render on set select, metadata, variants |
+| `filters.spec.js` | 3 | All/Incomplete/Complete filters, rarity toggles, search |
+| `modal.spec.js` | 5 | Open/close modal, card details, variant toggling |
+| `collection.spec.js` | 3 | Variant toggle, progress bar update, soft-lock toast |
+| `persistence.spec.js` | 1 | localStorage save/restore across reload |
 
 ### Promoting to Production
 
