@@ -84,21 +84,24 @@ function tryNextLorcanaLogo(img) {
     }
 }
 
+// Set-specific theme colors used for SVG logos and button gradients
+const LORCANA_SET_STYLES = {
+    'first-chapter':         { color: '#c9a84c', label: 'I' },
+    'rise-of-the-floodborn': { color: '#3a7bd5', label: 'II' },
+    'into-the-inklands':     { color: '#2ecc71', label: 'III' },
+    'ursulas-return':        { color: '#9b59b6', label: 'IV' },
+    'shimmering-skies':      { color: '#00b4d8', label: 'V' },
+    'azurite-sea':           { color: '#0077b6', label: 'VI' },
+    'archazias-island':      { color: '#e67e22', label: 'VII' },
+    'fabled':                { color: '#c0392b', label: 'VIII' },
+    'winterspell':           { color: '#27ae60', label: 'IX' },
+    'whispers-in-the-well':  { color: '#7b5ea7', label: 'X' }
+};
+
 // Generate inline SVG data URI as last-resort fallback logo.
 // Uses a double-hexagon (Lorcana's signature shape) with set-specific colors.
 function getLorcanaSetLogoSvg(setKey) {
-    const setStyles = {
-        'first-chapter':         { color: '#c9a84c', label: 'I' },
-        'rise-of-the-floodborn': { color: '#3a7bd5', label: 'II' },
-        'into-the-inklands':     { color: '#2ecc71', label: 'III' },
-        'ursulas-return':        { color: '#9b59b6', label: 'IV' },
-        'shimmering-skies':      { color: '#00b4d8', label: 'V' },
-        'azurite-sea':           { color: '#0077b6', label: 'VI' },
-        'archazias-island':      { color: '#e67e22', label: 'VII' },
-        'fabled':                { color: '#c0392b', label: 'VIII' },
-        'winterspell':           { color: '#27ae60', label: 'IX' },
-        'whispers-in-the-well':  { color: '#7b5ea7', label: 'X' }
-    };
+    const setStyles = LORCANA_SET_STYLES;
     const style = setStyles[setKey] || { color: '#c9a84c', label: '?' };
     const c = style.color;
     const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">' +
@@ -339,6 +342,13 @@ function renderLorcanaSetButtons() {
         const btn = document.createElement('button');
         btn.className = 'set-btn' + (setKey === currentLorcanaSet ? ' active' : '');
         btn.setAttribute('data-lorcana-set-key', setKey);
+
+        // Subtle gradient background from set theme color
+        const setStyle = LORCANA_SET_STYLES[setKey];
+        if (setStyle && setKey !== currentLorcanaSet) {
+            btn.style.background = `linear-gradient(135deg, rgba(255,255,255,0.08) 0%, ${setStyle.color}22 50%, ${setStyle.color}33 100%)`;
+            btn.style.borderLeft = `3px solid ${setStyle.color}55`;
+        }
 
         // Format release date
         let dateStr = '';

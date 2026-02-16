@@ -1,6 +1,12 @@
 // Pokemon TCG block navigation, set management, card rendering, and filtering
 
-// Render set buttons with inline progress bars
+// Representative set IDs for block logos (from pokemontcg.io)
+const BLOCK_LOGO_SET_IDS = {
+    'sv': 'sv1',
+    'me': 'me1',
+    'swsh': 'swsh1'
+};
+
 // Track current block selection
 let currentBlock = null;
 
@@ -70,8 +76,16 @@ function renderBlockButtons() {
         btn.className = `block-btn block-${blockCode}` + (blockCode === currentBlock ? ' active' : '');
         btn.setAttribute('data-block-code', blockCode);
 
+        // Block logo from pokemontcg.io using a representative set
+        const logoSetId = BLOCK_LOGO_SET_IDS[blockCode] || '';
+        const logoUrl = logoSetId ? `https://images.pokemontcg.io/${logoSetId}/logo.png` : '';
+
         btn.innerHTML = `
             <div class="block-btn-content">
+                ${logoUrl ? `<div class="block-btn-logo-wrapper">
+                    <img src="${logoUrl}" alt="${block.name}" class="block-btn-logo"
+                         onerror="this.parentElement.style.display='none'">
+                </div>` : ''}
                 <div class="block-btn-name">${block.name}</div>
                 <div class="block-btn-stats">${block.sets.length} set${block.sets.length !== 1 ? 's' : ''} · ${progress.collected}/${progress.total} variants</div>
                 <div class="block-btn-progress">
