@@ -59,7 +59,8 @@ The app has three top-level tabs:
   | Whispers in the Well | 240 | Nov 2025 |
 
 - **Simple collection tracking** — Single "Collected" checkbox per card (Lorcana uses foil/non-foil variants rather than multiple variant types like Pokemon)
-- **Card images** — Artwork loads from [Dreamborn.ink](https://dreamborn.ink/) CDN, with fallback to [Lorcania](https://lorcania.com/) CDN, then local images, then placeholder
+- **Set logos** — Official set logos load automatically from public wiki sources ([Mushu Report](https://wiki.mushureport.com/), [Lorcana Wiki](https://lorcana.fandom.com/)), with cascading fallback to local files and inline SVG
+- **Card images** — Artwork loads from [Dreamborn.ink](https://dreamborn.ink/) CDN, with fallback to local images, then placeholder
 - **Filter & search** — Same powerful filtering and search as Pokemon TCG
 - **Progress tracking** — Real-time progress bars and completion statistics
 - **Cloud sync** — Shares the same Firebase sync as Pokemon, so all your TCG collections sync together
@@ -107,7 +108,8 @@ blair-pokemon-tracker/
 │       ├── ascended-heroes/
 │       └── lorcana/         Lorcana card images (optional)
 │           ├── first-chapter/
-│           └── whispers-in-the-well/
+│           ├── whispers-in-the-well/
+│           └── logos/          Set logos (optional, CDN fallback exists)
 ├── backups/                Automated Firebase backup snapshots
 ├── .github/workflows/      CI/CD (Firebase backup workflow)
 ├── PROJECT_MASTER.md       Detailed project documentation
@@ -150,12 +152,18 @@ Card artwork loads through a 4-tier fallback system:
 
 ### Disney Lorcana
 
-Card artwork loads through a 3-tier fallback system:
+**Set logos** load through a 4-tier fallback system:
 
-1. **Dreamborn CDN** — `https://cdn.dreamborn.ink/images/en/cards/{dreamborn-id}` (primary source)
-2. **Lorcania CDN** — `https://lorcania.com/cards/{set-num}/{card-num}.webp` (secondary)
-3. **Local images** — `Images/lorcana/{set-key}/{number}.jpg` (tertiary)
-4. **Placeholder** — A generated card back SVG with the card number and name
+1. **Local file** — `Images/lorcana/logos/{set-key}.png` (if you add your own)
+2. **Mushu Report wiki** — `wiki.mushureport.com/wiki/Special:FilePath/{SetName}_logo.png`
+3. **Lorcana Fandom wiki** — `lorcana.fandom.com/wiki/Special:FilePath/{SetName}_Logo.png`
+4. **Inline SVG** — A generated Lorcana-themed hexagon with set-specific color and Roman numeral
+
+**Card artwork** loads through a 3-tier fallback system:
+
+1. **Dreamborn CDN** — `https://cdn.dreamborn.ink/images/en/cards/{dreamborn-id}` (extensionless URL, serves JFIF/JPEG)
+2. **Local images** — `Images/lorcana/{set-key}/{number}.jpg` (if you add your own)
+3. **Placeholder** — A generated card back SVG with the card number and name
 
 See [`Images/README.md`](Images/README.md) for details on adding local card images.
 
@@ -186,7 +194,7 @@ Variant eligibility is determined automatically from rarity. Custom set cards co
 - **Storage:** localStorage for offline/local persistence
 - **Images:**
   - Pokemon: Pokemon TCG API CDN (pokemontcg.io), TCGdex CDN (tcgdex.net)
-  - Lorcana: Dreamborn CDN (dreamborn.ink), Lorcania CDN (lorcania.com)
+  - Lorcana: Dreamborn CDN (dreamborn.ink)
 - **Hosting:** GitHub Pages
 - **CI/CD:** GitHub Actions (automated Firebase backups)
 
@@ -215,9 +223,13 @@ All Disney Lorcana card names, images, and related content are © Disney and Rav
 Card data sourced from:
 - [great-illuminary/lorcana-data](https://github.com/great-illuminary/lorcana-data) (GitHub repository)
 
-Card images are sourced from:
+Card images sourced from:
 - [Dreamborn.ink](https://dreamborn.ink/) (dreamborn.ink CDN)
 - [Lorcania](https://lorcania.com/) (lorcania.com CDN)
+
+Set logos sourced from:
+- [Mushu Report Wiki](https://wiki.mushureport.com/) (community Lorcana wiki)
+- [Lorcana Wiki on Fandom](https://lorcana.fandom.com/) (Fandom wiki)
 
 ### Third-Party Services
 - Firebase Realtime Database © Google LLC

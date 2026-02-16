@@ -1,5 +1,7 @@
 # How to Download Lorcana Card Images
 
+> **Note:** Set logos are loaded automatically from public wiki CDNs (Mushu Report and Lorcana Fandom wiki). You do NOT need to download set logos. This guide is only for local card images.
+
 Since public CDNs are blocking automated downloads, you'll need to manually download images. Here's the easiest way:
 
 ## 🚀 Quick Start (5 minutes for testing)
