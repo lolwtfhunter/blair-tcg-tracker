@@ -670,6 +670,12 @@ When implementing a new TCG (e.g., Disney Lorcana), ensure:
 - [ ] Centered alignment
 - [ ] Contextually appropriate messaging
 
+**Layout & Alignment:**
+- [ ] All set and block buttons center-aligned on all screen sizes
+- [ ] Filter buttons, rarity filters, and search bar center-aligned
+- [ ] Grid layouts use fixed max column widths (not `1fr`) with `justify-content: center` so partial rows center instead of left-aligning
+- [ ] Mobile breakpoints override to full-width single columns where appropriate
+
 **Navigation:**
 - [ ] Blocks ordered newest-first chronologically
 - [ ] Sets within blocks ordered newest-first

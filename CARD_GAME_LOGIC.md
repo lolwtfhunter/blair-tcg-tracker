@@ -705,6 +705,7 @@ When adding a new block code:
    - Follow existing pattern of always-visible gradients
    - Apply same hover/active state transitions
    - Ensure mobile responsiveness
+   - All button grids (block buttons, set buttons) must be center-aligned on all screen sizes
 
 5. **Update Block Order:**
    - Insert new blocks at the beginning of `blockOrder` array

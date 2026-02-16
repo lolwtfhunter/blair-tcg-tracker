@@ -793,6 +793,7 @@ As of February 2026, the Pokemon TCG tab uses a two-level hierarchical navigatio
 - Clicking an active block again deselects it and hides all child elements
 - Set buttons are hidden until a block is selected
 - Cards are hidden until a set is selected
+- All buttons, filters, and controls are center-aligned on both desktop and mobile
 
 ### How New Sets Integrate
 
