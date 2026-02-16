@@ -206,10 +206,10 @@ h1 {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* Scarlet & Violet - vibrant purple and scarlet gradient */
+/* Scarlet & Violet - toned-down purple/scarlet */
 .block-btn.block-sv {
-    background: linear-gradient(135deg, #dc143c 0%, #8b008b 50%, #4b0082 100%);
-    border-color: #ff1493;
+    background: linear-gradient(135deg, rgba(220, 20, 60, 0.35) 0%, rgba(139, 0, 139, 0.3) 50%, rgba(75, 0, 130, 0.35) 100%);
+    border-color: rgba(255, 20, 147, 0.5);
 }
 
 .block-btn.block-sv::before {
@@ -219,15 +219,15 @@ h1 {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(255, 20, 147, 0.3), rgba(138, 43, 226, 0.3));
+    background: linear-gradient(135deg, rgba(255, 20, 147, 0.15), rgba(138, 43, 226, 0.15));
     opacity: 0;
     transition: opacity 0.3s;
 }
 
-/* Mega Evolution - energetic orange and gold with shimmer */
+/* Mega Evolution - toned-down orange/gold */
 .block-btn.block-me {
-    background: linear-gradient(135deg, #ff8c00 0%, #ff4500 50%, #ffd700 100%);
-    border-color: #ffa500;
+    background: linear-gradient(135deg, rgba(255, 140, 0, 0.35) 0%, rgba(255, 69, 0, 0.3) 50%, rgba(255, 215, 0, 0.35) 100%);
+    border-color: rgba(255, 165, 0, 0.5);
 }
 
 .block-btn.block-me::before {
@@ -237,15 +237,15 @@ h1 {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(255, 215, 0, 0.4), rgba(255, 140, 0, 0.4));
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 140, 0, 0.2));
     opacity: 0;
     transition: opacity 0.3s;
 }
 
-/* Sword & Shield - regal blue and cyan gradient */
+/* Sword & Shield - toned-down blue/cyan */
 .block-btn.block-swsh {
-    background: linear-gradient(135deg, #1e90ff 0%, #4169e1 50%, #00bfff 100%);
-    border-color: #00d4ff;
+    background: linear-gradient(135deg, rgba(30, 144, 255, 0.35) 0%, rgba(65, 105, 225, 0.3) 50%, rgba(0, 191, 255, 0.35) 100%);
+    border-color: rgba(0, 212, 255, 0.5);
 }
 
 .block-btn.block-swsh::before {
@@ -255,7 +255,7 @@ h1 {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(0, 191, 255, 0.3), rgba(30, 144, 255, 0.3));
+    background: linear-gradient(135deg, rgba(0, 191, 255, 0.15), rgba(30, 144, 255, 0.15));
     opacity: 0;
     transition: opacity 0.3s;
 }
@@ -285,6 +285,21 @@ h1 {
 .block-btn-content {
     position: relative;
     z-index: 1;
+}
+
+.block-btn-logo-wrapper {
+    width: 100%;
+    height: 50px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.block-btn-logo {
+    max-width: 100%;
+    max-height: 50px;
+    object-fit: contain;
 }
 
 .block-btn-name {
@@ -710,7 +725,8 @@ h1 {
     gap: 8px;
 }
 
-.card-item {
+.card-item,
+.card {
     background: rgba(255, 255, 255, 0.08);
     border-radius: 8px;
     padding: 8px;
@@ -721,28 +737,33 @@ h1 {
     cursor: pointer;
 }
 
-.card-item:hover {
+.card-item:hover,
+.card:hover {
     background: rgba(255, 255, 255, 0.12);
     transform: translateY(-1px);
 }
 
-.card-item.all-collected {
+.card-item.all-collected,
+.card.completed {
     background: rgba(0, 255, 136, 0.08);
     border: 1px solid rgba(0, 255, 136, 0.2);
     opacity: 0.55;
     transition: opacity 0.2s;
 }
 
-.card-item.all-collected:hover {
+.card-item.all-collected:hover,
+.card.completed:hover {
     opacity: 0.85;
 }
 
-.card-item.all-collected .card-img-wrapper img {
+.card-item.all-collected .card-img-wrapper img,
+.card.completed .card-img-wrapper img {
     filter: saturate(0.4) brightness(0.85);
     transition: filter 0.2s;
 }
 
-.card-item.all-collected:hover .card-img-wrapper img {
+.card-item.all-collected:hover .card-img-wrapper img,
+.card.completed:hover .card-img-wrapper img {
     filter: saturate(0.7) brightness(0.95);
 }
 
@@ -1055,7 +1076,8 @@ h1 {
     display: block;
     transition: transform 0.3s ease;
 }
-.card-item:hover .card-img-wrapper img {
+.card-item:hover .card-img-wrapper img,
+.card:hover .card-img-wrapper img {
     transform: scale(1.03);
 }
 .card-img-wrapper .card-img-placeholder {
@@ -1080,6 +1102,7 @@ h1 {
 
 .card-info {
     flex: 1;
+    min-width: 0;
 }
 
 .tcgplayer-link {
@@ -1115,6 +1138,9 @@ h1 {
     font-weight: 600;
     margin-bottom: 3px;
     line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .rarity-badge {
@@ -1461,7 +1487,8 @@ h1 {
         gap: 4px;
     }
     .set-buttons { grid-template-columns: 1fr; }
-    .card-item {
+    .card-item,
+    .card {
         padding: 5px;
         font-size: 0.75rem;
     }
