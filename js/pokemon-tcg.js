@@ -178,7 +178,9 @@ function renderSetButtonsForBlock(blockCode) {
 
         btn.innerHTML = `
             <div class="set-btn-logo-wrapper">
-                <img src="${logoUrl}" alt="${setData.displayName}" class="set-btn-logo" style="display: none;">
+                <img src="${logoUrl}" alt="${setData.displayName}" class="set-btn-logo" style="display: none;"
+                     onload="this.style.display='block';this.nextElementSibling.style.display='none'"
+                     onerror="this.style.display='none';this.nextElementSibling.style.display=''">
                 <div class="set-btn-logo-fallback">⚡</div>
             </div>
             <div class="set-btn-name">${setData.displayName}</div>
@@ -188,30 +190,6 @@ function renderSetButtonsForBlock(blockCode) {
                 <div class="set-btn-progress-fill" style="width: ${progress.percentage}%"></div>
             </div>
         `;
-
-        // Set up reliable image loading
-        const img = btn.querySelector('.set-btn-logo');
-        const fallback = btn.querySelector('.set-btn-logo-fallback');
-
-        img.onload = function() {
-            this.style.display = 'block';
-            fallback.style.display = 'none';
-        };
-
-        img.onerror = function() {
-            this.style.display = 'none';
-            fallback.style.display = 'block';
-        };
-
-        // Handle race condition: image may have already loaded/failed
-        // before the onload/onerror handlers were attached above
-        if (img.complete) {
-            if (img.naturalWidth > 0) {
-                img.onload();
-            } else {
-                img.onerror();
-            }
-        }
 
         btn.onclick = () => switchSet(setKey);
         container.appendChild(btn);
