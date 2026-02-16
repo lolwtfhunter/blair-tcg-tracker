@@ -421,6 +421,12 @@ function switchLorcanaSet(setKey) {
     if (!lorcanaCardSets[setKey]) return;
     renderLorcanaCards(setKey);
     updateLorcanaSetButtonProgress();
+
+    // Render rarity filter buttons
+    const setData = lorcanaCardSets[setKey];
+    if (setData && setData.cards) {
+        renderRarityFilters(setKey, setData.cards, LORCANA_RARITY_DISPLAY_NAMES);
+    }
 }
 
 // Render Lorcana cards for a set
@@ -441,6 +447,7 @@ async function renderLorcanaCards(setKey) {
         cardEl.className = 'card';
         cardEl.setAttribute('data-card-number', card.number);
         cardEl.setAttribute('data-card-name', card.name.toLowerCase());
+        cardEl.setAttribute('data-rarity', (card.rarity || 'common').toLowerCase());
 
         const cardProgress = collectionProgress[setKey]?.[card.number] || {};
         const allCollected = cardProgress['single'] || false;
@@ -562,8 +569,14 @@ function updateLorcanaSetButtonProgress() {
     });
 }
 
+// Store active Lorcana filters and searches
+let activeLorcanaFilters = {};
+let activeLorcanaSearches = {};
+
 // Filter Lorcana cards
 function filterLorcanaCards(setKey, filter) {
+    activeLorcanaFilters[setKey] = filter;
+
     const section = document.getElementById(setKey);
     if (!section) return;
 
@@ -571,37 +584,13 @@ function filterLorcanaCards(setKey, filter) {
         btn.classList.toggle('active', btn.textContent.toLowerCase() === filter);
     });
 
-    const cards = section.querySelectorAll('.card');
-    cards.forEach(card => {
-        if (filter === 'all') {
-            card.style.display = '';
-        } else if (filter === 'incomplete') {
-            card.style.display = card.classList.contains('completed') ? 'none' : '';
-        } else if (filter === 'complete') {
-            card.style.display = card.classList.contains('completed') ? '' : 'none';
-        }
-    });
+    applyLorcanaFiltersAndSearch(setKey);
 }
 
 // Search Lorcana cards
 function searchLorcanaCards(setKey, query) {
-    const section = document.getElementById(setKey);
-    if (!section) return;
-
-    const searchQuery = query.toLowerCase().trim();
-    const cards = section.querySelectorAll('.card');
-
-    cards.forEach(card => {
-        const cardName = card.getAttribute('data-card-name');
-        const cardNumber = card.getAttribute('data-card-number');
-
-        if (!searchQuery) {
-            card.style.display = '';
-        } else {
-            const matches = cardName.includes(searchQuery) || cardNumber.includes(searchQuery);
-            card.style.display = matches ? '' : 'none';
-        }
-    });
+    activeLorcanaSearches[setKey] = query.toLowerCase().trim();
+    applyLorcanaFiltersAndSearch(setKey);
 }
 
 // Clear Lorcana search
@@ -612,8 +601,51 @@ function clearLorcanaSearch(setKey) {
     const searchInput = section.querySelector('.search-input');
     if (searchInput) {
         searchInput.value = '';
-        searchLorcanaCards(setKey, '');
     }
+    activeLorcanaSearches[setKey] = '';
+    applyLorcanaFiltersAndSearch(setKey);
+}
+
+// Apply all Lorcana filters (completion + rarity + search) combined
+function applyLorcanaFiltersAndSearch(setKey) {
+    const section = document.getElementById(setKey);
+    if (!section) return;
+
+    const filter = activeLorcanaFilters[setKey] || 'all';
+    const searchQuery = activeLorcanaSearches[setKey] || '';
+    const raritySet = activeRarityFilters[setKey];
+    const hasRarityFilter = raritySet && raritySet.size > 0;
+
+    const cards = section.querySelectorAll('.card');
+    cards.forEach(card => {
+        let show = true;
+
+        // Completion filter
+        if (filter === 'incomplete' && card.classList.contains('completed')) {
+            show = false;
+        } else if (filter === 'complete' && !card.classList.contains('completed')) {
+            show = false;
+        }
+
+        // Rarity filter
+        if (show && hasRarityFilter) {
+            const cardRarity = card.getAttribute('data-rarity');
+            if (!raritySet.has(cardRarity)) {
+                show = false;
+            }
+        }
+
+        // Search filter
+        if (show && searchQuery) {
+            const cardName = card.getAttribute('data-card-name') || '';
+            const cardNumber = card.getAttribute('data-card-number') || '';
+            if (!cardName.includes(searchQuery) && !cardNumber.includes(searchQuery)) {
+                show = false;
+            }
+        }
+
+        card.style.display = show ? '' : 'none';
+    });
 }
 
 // Initialize Lorcana progress
@@ -649,6 +681,7 @@ function initLorcanaSetGrids() {
                     <input type="text" class="search-input" placeholder="Search cards..." oninput="searchLorcanaCards('${setKey}', this.value)" data-set="${setKey}">
                     <button class="search-clear" onclick="clearLorcanaSearch('${setKey}')">×</button>
                 </div>
+                <div class="rarity-filters" id="${setKey}-rarity-filters"></div>
             </div>
             <div class="card-grid" id="${setKey}-grid"></div>
         `;

@@ -9,6 +9,7 @@ let currentSet = null; // No set selected by default
 let currentCustomSet = null;
 let currentLorcanaSet = null; // No Lorcana set selected by default
 let customSetLangFilter = {}; // Per-set language filter: 'EN' or 'JP'
+let activeRarityFilters = {}; // Maps setKey → Set of active rarity strings
 let firebase_db = null;
 let firebase_ref = null;
 

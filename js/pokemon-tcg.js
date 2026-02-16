@@ -323,6 +323,12 @@ function switchSet(setKey) {
     if (grid && grid.children.length === 0) {
         renderCards(setKey);
     }
+
+    // Render rarity filter buttons
+    const setData = cardSets[setKey];
+    if (setData && setData.cards) {
+        renderRarityFilters(setKey, setData.cards, RARITY_DISPLAY_NAMES);
+    }
 }
 
 
@@ -363,6 +369,7 @@ function renderCards(setKey) {
         const cardEl = document.createElement('div');
         cardEl.className = 'card-item' + (allCollected ? ' all-collected' : '');
         cardEl.setAttribute('data-completed', allCollected ? 'true' : 'false');
+        cardEl.setAttribute('data-rarity', card.rarity.toLowerCase());
         cardEl.style.cursor = 'pointer';
         cardEl.onclick = function(e) {
             // Don't open modal if clicking on checkboxes or their containers
@@ -528,6 +535,8 @@ function applyFiltersAndSearch(setKey) {
 
     const filterType = activeFilters[setKey] || 'all';
     const searchQuery = activeSearches[setKey] || '';
+    const raritySet = activeRarityFilters[setKey];
+    const hasRarityFilter = raritySet && raritySet.size > 0;
 
     const cards = grid.querySelectorAll('.card-item');
     cards.forEach(card => {
@@ -539,6 +548,14 @@ function applyFiltersAndSearch(setKey) {
             show = false;
         } else if (filterType === 'complete' && !isCompleted) {
             show = false;
+        }
+
+        // Apply rarity filter
+        if (show && hasRarityFilter) {
+            const cardRarity = card.getAttribute('data-rarity');
+            if (!raritySet.has(cardRarity)) {
+                show = false;
+            }
         }
 
         // Apply search
@@ -555,3 +572,61 @@ function applyFiltersAndSearch(setKey) {
         card.style.display = show ? '' : 'none';
     });
 }
+
+// Render rarity filter buttons for a set by scanning its card data
+function renderRarityFilters(setKey, cardsData, displayNameMap) {
+    const containerId = setKey + '-rarity-filters';
+    const container = document.getElementById(containerId);
+    if (!container) return;
+
+    // Collect unique rarities in order they appear
+    const seen = new Set();
+    const rarities = [];
+    cardsData.forEach(card => {
+        const r = card.rarity.toLowerCase();
+        if (!seen.has(r)) {
+            seen.add(r);
+            rarities.push(r);
+        }
+    });
+
+    if (rarities.length <= 1) {
+        container.innerHTML = '';
+        return;
+    }
+
+    container.innerHTML = rarities.map(r => {
+        const display = (displayNameMap && displayNameMap[r]) || r.toUpperCase().replace(/-/g, ' ');
+        const isActive = activeRarityFilters[setKey] && activeRarityFilters[setKey].has(r);
+        return `<button class="rarity-btn${isActive ? ' active' : ''}" data-rarity="${r}" onclick="toggleRarityFilter('${setKey}', '${r}')">${display}</button>`;
+    }).join('');
+}
+
+// Toggle a rarity in/out of the active set and reapply filters
+window.toggleRarityFilter = function(setKey, rarity) {
+    if (!activeRarityFilters[setKey]) {
+        activeRarityFilters[setKey] = new Set();
+    }
+
+    const raritySet = activeRarityFilters[setKey];
+    if (raritySet.has(rarity)) {
+        raritySet.delete(rarity);
+    } else {
+        raritySet.add(rarity);
+    }
+
+    // Update button active states
+    const container = document.getElementById(setKey + '-rarity-filters');
+    if (container) {
+        container.querySelectorAll('.rarity-btn').forEach(btn => {
+            btn.classList.toggle('active', raritySet.has(btn.getAttribute('data-rarity')));
+        });
+    }
+
+    // Use Lorcana-specific apply function for Lorcana sets
+    if (typeof applyLorcanaFiltersAndSearch === 'function' && lorcanaCardSets[setKey]) {
+        applyLorcanaFiltersAndSearch(setKey);
+    } else {
+        applyFiltersAndSearch(setKey);
+    }
+};

@@ -728,6 +728,42 @@ h1 {
     display: flex;
 }
 
+/* Rarity filter toggle buttons */
+.rarity-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    width: 100%;
+}
+
+.rarity-btn {
+    padding: 4px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(241, 241, 241, 0.6);
+    font-size: 0.65rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.rarity-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: rgba(241, 241, 241, 0.85);
+}
+
+.rarity-btn.active {
+    background: rgba(102, 126, 234, 0.35);
+    border-color: rgba(102, 126, 234, 0.6);
+    color: #f1f1f1;
+    box-shadow: 0 1px 6px rgba(102, 126, 234, 0.25);
+}
+
 .card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -1532,6 +1568,14 @@ h1 {
     .filter-buttons {
         width: 100%;
         justify-content: center;
+    }
+    .rarity-filters {
+        gap: 4px;
+        justify-content: center;
+    }
+    .rarity-btn {
+        padding: 3px 8px;
+        font-size: 0.6rem;
     }
     .filter-btn {
         padding: 6px 12px;

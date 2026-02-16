@@ -130,6 +130,12 @@ function switchCustomSet(setKey) {
     if (grid && grid.children.length === 0) {
         renderCustomCards(setKey);
     }
+
+    // Render rarity filter buttons
+    const setData = customCardSets[setKey];
+    if (setData && setData.cards) {
+        renderRarityFilters('custom-' + setKey, setData.cards, RARITY_DISPLAY_NAMES);
+    }
 }
 
 // Calculate progress for a custom set (respects language filter if set has mixed regions)
@@ -274,6 +280,7 @@ function renderCustomCards(setKey) {
         const cardEl = document.createElement('div');
         cardEl.className = 'card-item' + (allCollected ? ' all-collected' : '');
         cardEl.setAttribute('data-completed', allCollected ? 'true' : 'false');
+        cardEl.setAttribute('data-rarity', card.rarity.toLowerCase());
         cardEl.style.cursor = 'pointer';
         cardEl.onclick = function(e) {
             // Don't open modal if clicking on checkboxes or their containers
@@ -471,6 +478,7 @@ function initCustomSetGrids() {
                     <input type="text" class="search-input" placeholder="Search cards..." oninput="searchCards('custom-${setKey}', this.value)" data-set="custom-${setKey}">
                     <button class="search-clear" onclick="clearSearch('custom-${setKey}')">×</button>
                 </div>
+                <div class="rarity-filters" id="custom-${setKey}-rarity-filters"></div>
             </div>
         `;
 
