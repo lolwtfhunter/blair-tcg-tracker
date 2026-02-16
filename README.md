@@ -75,7 +75,7 @@ The app has three top-level tabs:
 - **Cloud sync** — Shares the same Firebase sync as Pokemon, so all your TCG collections sync together
 - **Includes enchanted cards** — Secret rare cards with alternate art and special foiling (cards 205+ in each set)
 
-For detailed information about Lorcana's rarity system and card variants, see [LORCANA_VARIANTS.md](LORCANA_VARIANTS.md).
+For detailed information about Lorcana's rarity system and card variants, see [LORCANA_VARIANTS.md](docs/LORCANA_VARIANTS.md).
 
 ## Project Structure
 
@@ -146,10 +146,14 @@ blair-pokemon-tracker/
 │   └── persistence.spec.js
 ├── backups/                Automated Firebase backup snapshots
 ├── .github/workflows/      CI/CD (Firebase backup, Playwright test CI)
+├── docs/                   Project documentation
+│   ├── PROJECT_MASTER.md       Detailed project documentation
+│   ├── ADDING_NEW_SETS.md      Guide for adding new sets
+│   ├── CARD_GAME_LOGIC.md      Card game rules and logic reference
+│   ├── RARITY_REFERENCE.md     Rarity types and variant rules
+│   └── LORCANA_VARIANTS.md     Disney Lorcana variant reference
 ├── package.json            Dev dependencies (Playwright only)
-├── playwright.config.js    Test configuration
-├── PROJECT_MASTER.md       Detailed project documentation
-└── RARITY_REFERENCE.md     Rarity types and variant rules reference
+└── playwright.config.js    Test configuration
 ```
 
 ## How It Works
@@ -276,7 +280,7 @@ Pushing to `dev` automatically runs the full Playwright test suite via GitHub Ac
 
 ### Test Infrastructure — Production Data Safety
 
-> **Tests MUST NEVER read, write, or impact production user data.** Every test file uses a catch-all `page.route()` that blocks ALL non-localhost HTTP requests, preventing Firebase sync from reaching production. This route block must be applied before any page navigation. See `PROJECT_MASTER.md` for full details and rules for test authors.
+> **Tests MUST NEVER read, write, or impact production user data.** Every test file uses a catch-all `page.route()` that blocks ALL non-localhost HTTP requests, preventing Firebase sync from reaching production. This route block must be applied before any page navigation. See `docs/PROJECT_MASTER.md` for full details and rules for test authors.
 
 ### Maintaining Tests
 
@@ -287,7 +291,7 @@ When making changes to the app, keep the test suite up to date:
 - **Changing selectors or navigation flow** — update affected test selectors/assertions
 - **Removing a feature** — remove or update the corresponding tests
 
-All new/modified test files must include the catch-all network isolation pattern before any `page.goto()`. See existing specs for the template. After changes, run `npm test` to verify all tests pass, and update the test count tables in this file and `PROJECT_MASTER.md` if tests were added or removed.
+All new/modified test files must include the catch-all network isolation pattern before any `page.goto()`. See existing specs for the template. After changes, run `npm test` to verify all tests pass, and update the test count tables in this file and `docs/PROJECT_MASTER.md` if tests were added or removed.
 
 ### Promoting to Production
 
@@ -299,11 +303,11 @@ git checkout main && git merge dev && git push origin main
 
 For contributors and maintainers:
 
-- **[ADDING_NEW_SETS.md](ADDING_NEW_SETS.md)** - Step-by-step guide for adding new sets to the tracker
-- **[CARD_GAME_LOGIC.md](CARD_GAME_LOGIC.md)** - Comprehensive reference for card game rules, rarities, variants, and logic
-- **[PROJECT_MASTER.md](PROJECT_MASTER.md)** - Detailed project documentation and architecture
-- **[RARITY_REFERENCE.md](RARITY_REFERENCE.md)** - Quick reference for rarity types and variant rules
-- **[LORCANA_VARIANTS.md](LORCANA_VARIANTS.md)** - Disney Lorcana variant and rarity reference guide
+- **[ADDING_NEW_SETS.md](docs/ADDING_NEW_SETS.md)** - Step-by-step guide for adding new sets to the tracker
+- **[CARD_GAME_LOGIC.md](docs/CARD_GAME_LOGIC.md)** - Comprehensive reference for card game rules, rarities, variants, and logic
+- **[PROJECT_MASTER.md](docs/PROJECT_MASTER.md)** - Detailed project documentation and architecture
+- **[RARITY_REFERENCE.md](docs/RARITY_REFERENCE.md)** - Quick reference for rarity types and variant rules
+- **[LORCANA_VARIANTS.md](docs/LORCANA_VARIANTS.md)** - Disney Lorcana variant and rarity reference guide
 
 ## Legal & Attribution
 
