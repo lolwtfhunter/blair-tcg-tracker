@@ -415,10 +415,6 @@ function renderCards(setKey) {
         const primarySrc = apiImgUrl || tcgdexImgUrl || localImgUrl;
         const tcgplayerUrl = getTCGPlayerUrl(card.name, setData.name, setData.setCode, formattedCardNumber);
 
-        // Price display (safe — never blocks card rendering)
-        let priceHtml = '';
-        try { if (typeof cardPriceLoadingHTML === 'function') priceHtml = cardPriceLoadingHTML(setKey, card.number); } catch(e) {}
-
         cardEl.innerHTML = `
             <div class="card-img-wrapper">
                 <img src="${primarySrc}"
@@ -443,7 +439,6 @@ function renderCards(setKey) {
                     </svg>
                 </a>
             </div>
-            ${priceHtml}
             <div class="variants-section">
                 <div class="variants-title">${isSingleVariant ? 'STATUS:' : 'VARIANTS:'}</div>
                 ${variantHTML}
@@ -459,10 +454,6 @@ function renderCards(setKey) {
     // Reapply active filters and search after rendering
     applyFiltersAndSearch(setKey);
 
-    // Fetch and display market prices (non-blocking)
-    if (typeof fetchAndDisplayPokemonPrices === 'function') {
-        fetchAndDisplayPokemonPrices(setKey);
-    }
 }
 
 // Store active filters and searches for each set
