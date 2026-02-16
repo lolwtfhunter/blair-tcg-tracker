@@ -151,10 +151,9 @@ function renderLorcanaSetButtons() {
 
         btn.innerHTML = `
             <div class="set-btn-logo-wrapper">
-                <img src="${localLogoUrl}" alt="${setData.displayName}" class="set-btn-logo" style="display: none;"
-                     onload="this.style.display='block';this.nextElementSibling.style.display='none'"
+                <img src="${localLogoUrl}" alt="${setData.displayName}" class="set-btn-logo"
                      onerror="this.style.display='none';this.nextElementSibling.style.display=''">
-                <div class="set-btn-logo-fallback">&#127183;</div>
+                <div class="set-btn-logo-fallback" style="display:none">&#127183;</div>
             </div>
             <div class="set-btn-name">${setData.displayName}</div>
             ${dateStr ? `<div class="set-release-date">${dateStr}</div>` : ''}

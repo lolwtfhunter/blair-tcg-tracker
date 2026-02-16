@@ -178,10 +178,9 @@ function renderSetButtonsForBlock(blockCode) {
 
         btn.innerHTML = `
             <div class="set-btn-logo-wrapper">
-                <img src="${logoUrl}" alt="${setData.displayName}" class="set-btn-logo" style="display: none;"
-                     onload="this.style.display='block';this.nextElementSibling.style.display='none'"
+                <img src="${logoUrl}" alt="${setData.displayName}" class="set-btn-logo"
                      onerror="this.style.display='none';this.nextElementSibling.style.display=''">
-                <div class="set-btn-logo-fallback">⚡</div>
+                <div class="set-btn-logo-fallback" style="display:none">⚡</div>
             </div>
             <div class="set-btn-name">${setData.displayName}</div>
             ${dateStr ? `<div class="set-release-date">${dateStr}</div>` : ''}
