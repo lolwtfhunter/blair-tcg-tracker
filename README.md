@@ -274,6 +274,10 @@ Pushing to `dev` automatically runs the full Playwright test suite via GitHub Ac
 | `collection.spec.js` | 3 | Variant toggle, progress bar update, soft-lock toast |
 | `persistence.spec.js` | 1 | localStorage save/restore across reload |
 
+### Test Infrastructure — Production Data Safety
+
+> **Tests MUST NEVER read, write, or impact production user data.** Every test file uses a catch-all `page.route()` that blocks ALL non-localhost HTTP requests, preventing Firebase sync from reaching production. This route block must be applied before any page navigation. See `PROJECT_MASTER.md` for full details and rules for test authors.
+
 ### Promoting to Production
 
 ```bash
