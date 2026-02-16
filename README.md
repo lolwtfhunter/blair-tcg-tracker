@@ -1,4 +1,4 @@
-# Blair TCG Set Tracker
+# Blair TCG Tracker
 
 A mobile-friendly web app for tracking trading card collections across multiple TCGs. Supports **Pokemon TCG** and **Disney Lorcana** sets with full variant tracking, cloud sync, card artwork, and advanced filtering. Includes curated custom Pokemon sets for tracking every card featuring a specific Pokemon across all eras, with Japanese-exclusive card support.
 

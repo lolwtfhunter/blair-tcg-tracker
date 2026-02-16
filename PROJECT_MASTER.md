@@ -2810,7 +2810,7 @@ Tapping any card in the grid opens a full-detail modal showing:
 #### 4. Branding Updates
 
 Updated application branding throughout:
-- **Page title:** "Blair Card Tracker" → "Blair TCG Set Tracker"
+- **Page title:** "Blair Card Tracker" → "Blair TCG Set Tracker" → "Blair TCG Tracker"
 - **Header:** Updated to match new title
 - **Tabs renamed:**
   - "Pokemon TCG" → "Pokemon"
