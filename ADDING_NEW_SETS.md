@@ -472,9 +472,13 @@ Follow the same JSON structure as Pokemon official sets, adapting fields as need
 
 4. **Add tab switching logic** (the HTML already has a Lorcana tab placeholder)
 
-### Step 4: Add Image URL Mappings
+### Step 4: Add Image and Logo URL Mappings
 
 Create new mapping objects for the new game's CDN sources.
+
+**Card images:** Identify public CDNs that host card artwork for the new TCG. Build a multi-tier fallback chain similar to the existing implementations (see `getLorcanaCardImageUrl()` or the Pokemon TCG image functions in `index.html`).
+
+**Set logos:** Look for public community wikis (MediaWiki-based sites like Fandom wikis) that host set logos. MediaWiki's `Special:FilePath/{filename}` endpoint provides a stable redirect URL to the actual image file, making it a reliable CDN-like source. See `getLorcanaSetLogoUrls()` in `js/lorcana.js` for the pattern. Always include an inline SVG fallback as the final tier so buttons work even without network access.
 
 ### Step 5: Design Block and Set UI Elements
 
@@ -637,7 +641,7 @@ Before committing your changes, verify:
 - [ ] Clicking block button displays set buttons for that block
 - [ ] Set appears in the correct block's set grid
 - [ ] Set button shows correct name, logo, and metadata
-- [ ] Set logo loads from Pokemon TCG API (or gracefully hides if unavailable)
+- [ ] Set logo loads from CDN (Pokemon: pokemontcg.io; Lorcana: wiki CDNs) or gracefully falls back
 - [ ] Clicking set button displays cards
 - [ ] Cards render with correct information
 - [ ] Images load (or placeholders show)
@@ -723,13 +727,17 @@ Before committing your changes, verify:
 
 ## Quick Reference: File Locations
 
-| Task | File/Directory | Line/Section |
-|------|----------------|--------------|
-| Add official set data | `data/pokemon/official-sets/{set-key}.json` | - |
-| Add custom set data | `data/pokemon/custom-sets/{set-key}.json` | - |
-| Update set list | `index.html` | ~1699 (OFFICIAL_SETS) or ~1812 (CUSTOM_SETS) |
-| Add HTML grid | `index.html` | ~1326 (set sections) |
-| Add image mappings | `index.html` | ~1478 (TCG_API_SET_IDS, TCGDEX_SET_IDS) |
+| Task | File/Directory | Notes |
+|------|----------------|-------|
+| Add official Pokemon set data | `data/pokemon/official-sets/{set-key}.json` | - |
+| Add custom Pokemon set data | `data/pokemon/custom-sets/{set-key}.json` | - |
+| Add Lorcana set data | `data/lorcana/sets/{set-key}.json` | - |
+| Update Pokemon set list | `index.html` | OFFICIAL_SETS or CUSTOM_SETS arrays |
+| Update Lorcana set list | `index.html` | LORCANA_SETS array |
+| Add Pokemon HTML grid | `index.html` | Set sections area |
+| Add Pokemon image mappings | `index.html` | TCG_API_SET_IDS, TCGDEX_SET_IDS |
+| Add Lorcana logo wiki mapping | `js/lorcana.js` | LORCANA_SET_WIKI_NAMES |
+| Add Lorcana logo SVG fallback | `js/lorcana.js` | getLorcanaSetLogoSvg() |
 | Update main docs | `README.md` | Set table section |
 | Update detailed docs | `PROJECT_MASTER.md` | Card sets section |
 
@@ -842,20 +850,33 @@ Each Lorcana set follows the Pokemon pattern but adapted for Lorcana-specific ne
    - Filter/search functions: `filterLorcanaCards()`, `searchLorcanaCards()`, `clearLorcanaSearch()`
 
 #### **Image CDN Configuration**
-Three-tier fallback system:
+
+**Card images** — Three-tier fallback system:
 1. **Dreamborn CDN:** `https://cdn.dreamborn.ink/images/en/cards/{dreambornId}`
 2. **Lorcania CDN:** `https://lorcania.com/cards/{setNum}/{cardNum}.webp`
 3. **Local fallback:** `./Images/lorcana/{setKey}/{number}.jpg`
 
+**Set logos** — Four-tier fallback system (added Feb 2026):
+1. **Local file:** `./Images/lorcana/logos/{setKey}.png`
+2. **Mushu Report wiki:** `https://wiki.mushureport.com/wiki/Special:FilePath/{WikiName}_logo.png`
+3. **Lorcana Fandom wiki:** `https://lorcana.fandom.com/wiki/Special:FilePath/{WikiName}_Logo.png`
+4. **Inline SVG:** Generated hexagon with set-specific color and Roman numeral
+
+The logo system uses MediaWiki's `Special:FilePath` endpoint, which redirects to the actual hosted image file. Wiki names are mapped in `LORCANA_SET_WIKI_NAMES` in `js/lorcana.js`. The `tryNextLorcanaLogo()` function cascades through sources on image load error.
+
+**When adding a new Lorcana set**, add the set's wiki name to `LORCANA_SET_WIKI_NAMES` and its color/label to `getLorcanaSetLogoSvg()` — both in `js/lorcana.js`. Logos will load automatically once community wikis upload them.
+
 #### **Data Sources Used**
 - Card data: [great-illuminary/lorcana-data](https://github.com/great-illuminary/lorcana-data) (YAML converted to JSON)
-- Card images: Dreamborn.ink and Lorcania CDNs
+- Card images: [Dreamborn.ink](https://dreamborn.ink/) and [Lorcania](https://lorcania.com/) CDNs
+- Set logos: [Mushu Report Wiki](https://wiki.mushureport.com/) and [Lorcana Fandom Wiki](https://lorcana.fandom.com/) (via `Special:FilePath`)
 
 #### **Key Differences from Pokemon**
 - Simplified to single "Collected" checkbox (vs multi-variant tracking)
 - Different rarity types and card types
 - Uses `dreambornId` for image mapping instead of set codes
 - No block/hierarchical navigation (flat set list)
+- Set logos sourced from community wikis (Pokemon uses pokemontcg.io CDN)
 
 This implementation demonstrates how to add a new TCG while reusing the existing architecture and patterns.
 
@@ -863,6 +884,7 @@ This implementation demonstrates how to add a new TCG while reusing the existing
 
 ## Version History
 
+- **v2.1** (2026-02-16): Added Lorcana set logo CDN documentation — wiki-based fallback system using Mushu Report and Fandom wikis. Updated Quick Reference table with Lorcana-specific file locations. Added Lessons Learned entry for logo CDN pattern. Updated "Adding a New Card Game" Step 4 with logo sourcing guidance.
 - **v2.0** (2026-02-15): Added "Real-World Example: Disney Lorcana Implementation" section documenting successful addition of Lorcana as a second TCG to the tracker. Updated "Adding a New Card Game" section header to reflect that Lorcana is now implemented.
 - **v1.3** (2026-02-15): Updated hierarchical UI documentation to reflect improved user control model: removed auto-selection behavior, added block deselection capability, clarified that set buttons only appear when block is selected. Added notes about custom sets using flat list (no hierarchy).
 - **v1.2** (2026-02-15): Added "Understanding the Hierarchical UI" section documenting the new two-level block/set navigation system. Updated testing checklist to include block-level UI verification. Added block information notes to JSON structure documentation.
@@ -882,6 +904,18 @@ This implementation demonstrates how to add a new TCG while reusing the existing
 - Used simplified single-checkbox tracking instead of multi-variant system
 
 **Key Takeaway**: The modular data structure (`data/{tcg}/sets/`) makes adding new TCGs straightforward. Core patterns (set selection, card rendering, progress tracking, image fallback) can be adapted for different TCGs while maintaining consistency.
+
+### Lorcana Set Logo CDN (Feb 2026)
+**Success**: Set button logos now load automatically from public community wikis instead of requiring manual image downloads.
+
+**Key Implementation Details**:
+- Used MediaWiki's `Special:FilePath` endpoint on Mushu Report and Lorcana Fandom wikis as stable logo CDN sources
+- Built 4-tier cascading fallback: local file → Mushu Report wiki → Fandom wiki → inline SVG
+- `LORCANA_SET_WIKI_NAMES` maps set keys to wiki filenames for URL construction
+- `tryNextLorcanaLogo()` handles fallback cascading via `onerror` and data attributes
+- Inline SVG (hexagon with set color + Roman numeral) ensures buttons always render, even offline
+
+**Key Takeaway**: Public MediaWiki sites (Fandom, independent wikis) can serve as reliable free CDN sources for TCG set logos via `Special:FilePath`. When adding a new set, just add the wiki name mapping and the logo loads automatically once wiki editors upload it. This pattern can be reused for other TCGs — most have active Fandom or MediaWiki communities.
 
 ### Mega Evolution Set (Feb 2026)
 **Issue**: Initial implementation used a generated/fictional card list that didn't match the actual Pokemon TCG Mega Evolution set. Card names in JSON didn't match images from Pokemon TCG API, causing confusion.

@@ -67,14 +67,50 @@ Card images should be named with **3-digit zero-padded numbers**:
 9. Simba - Heir to Pride Rock
 10. Ursula - Power Hungry
 
-## 🎨 Adding Set Logos
+## 🎨 Set Logos
+
+Set logos are loaded automatically using a **4-tier cascading fallback system** (defined in `js/lorcana.js`):
+
+1. **Local file** — `logos/{set-key}.png` (this directory)
+2. **Mushu Report wiki** — Uses `Special:FilePath/{SetName}_logo.png` URL pattern
+3. **Lorcana Fandom wiki** — Uses `Special:FilePath/{SetName}_Logo.png` URL pattern
+4. **Inline SVG** — Generated hexagon with set-specific color and Roman numeral
+
+**You don't need to download logos manually** — the wiki CDNs handle it automatically. Local files are only needed if you want to override the CDN logos or use them offline.
+
+### How the wiki URLs work
+
+MediaWiki's `Special:FilePath` redirects to the actual hosted image. The URL is constructed from the set's wiki-style display name (defined in `LORCANA_SET_WIKI_NAMES` in `js/lorcana.js`):
+
+| Set Key | Wiki Name | Logo Filename |
+|---------|-----------|---------------|
+| `first-chapter` | `The_First_Chapter` | `The_First_Chapter_logo.png` |
+| `rise-of-the-floodborn` | `Rise_of_the_Floodborn` | `Rise_of_the_Floodborn_logo.png` |
+| `into-the-inklands` | `Into_the_Inklands` | `Into_the_Inklands_logo.png` |
+| `ursulas-return` | `Ursula's_Return` | `Ursula's_Return_logo.png` |
+| `shimmering-skies` | `Shimmering_Skies` | `Shimmering_Skies_logo.png` |
+| `azurite-sea` | `Azurite_Sea` | `Azurite_Sea_logo.png` |
+| `archazias-island` | `Archazia's_Island` | `Archazia's_Island_logo.png` |
+| `fabled` | `Fabled` | `Fabled_logo.png` |
+| `winterspell` | `Winterspell` | `Winterspell_logo.png` |
+| `whispers-in-the-well` | `Whispers_in_the_Well` | `Whispers_in_the_Well_logo.png` |
+
+### Adding a new set's logo
+
+When a new Lorcana set is released:
+
+1. Add its wiki name to `LORCANA_SET_WIKI_NAMES` in `js/lorcana.js`
+2. Add its color/label to `getLorcanaSetLogoSvg()` in `js/lorcana.js`
+3. The logo will automatically load from the wiki CDNs once the wiki editors upload it
+4. Optionally place a local `logos/{set-key}.png` file to override (200-400px wide, transparent PNG)
+
+### Adding local logo overrides (optional)
 
 Place set logos in the `logos/` folder:
 - `first-chapter.png` - The First Chapter logo
 - `whispers-in-the-well.png` - Whispers in the Well logo
-- `lorcana.png` - Generic Lorcana logo (for custom sets)
 
-**Recommended logo size:** 200-400px wide, transparent background (PNG)
+**Recommended:** 200-400px wide, transparent background (PNG)
 
 ## 🔧 Testing Your Images
 
