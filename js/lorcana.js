@@ -28,10 +28,65 @@ function initializeProgress() {
 
 // ==================== LORCANA FUNCTIONS ====================
 
-// Generate inline SVG data URI as fallback logo for Lorcana set buttons.
-// Uses a double-hexagon (Lorcana's signature shape) with set-specific colors
-// and Roman numeral identifiers. Local logo files take priority if they exist.
-function getLorcanaSetLogoFallback(setKey) {
+// Maps set keys to their wiki-style display names for logo URL construction
+const LORCANA_SET_WIKI_NAMES = {
+    'first-chapter':         'The_First_Chapter',
+    'rise-of-the-floodborn': 'Rise_of_the_Floodborn',
+    'into-the-inklands':     'Into_the_Inklands',
+    'ursulas-return':        "Ursula's_Return",
+    'shimmering-skies':      'Shimmering_Skies',
+    'azurite-sea':           'Azurite_Sea',
+    'archazias-island':      "Archazia's_Island",
+    'fabled':                'Fabled',
+    'winterspell':           'Winterspell',
+    'whispers-in-the-well':  'Whispers_in_the_Well'
+};
+
+// Build ordered list of logo URLs to try for a Lorcana set.
+// Tries: local file -> Mushu Report wiki -> Lorcana Fandom wiki -> inline SVG
+function getLorcanaSetLogoUrls(setKey) {
+    const urls = [];
+
+    // 1. Local file (user can manually add logos)
+    urls.push(`./Images/lorcana/logos/${setKey}.png`);
+
+    // 2. Mushu Report wiki (public Lorcana wiki with set logos)
+    const wikiName = LORCANA_SET_WIKI_NAMES[setKey];
+    if (wikiName) {
+        urls.push(`https://wiki.mushureport.com/wiki/Special:FilePath/${wikiName}_logo.png`);
+    }
+
+    // 3. Lorcana Fandom wiki
+    if (wikiName) {
+        urls.push(`https://lorcana.fandom.com/wiki/Special:FilePath/${wikiName}_Logo.png`);
+    }
+
+    // 4. Inline SVG fallback (always works, no network needed)
+    urls.push(getLorcanaSetLogoSvg(setKey));
+
+    return urls;
+}
+
+// Handle Lorcana set logo loading with cascading fallback
+function tryNextLorcanaLogo(img) {
+    const setKey = img.getAttribute('data-logo-set');
+    const idx = parseInt(img.getAttribute('data-logo-idx') || '0') + 1;
+    const urls = getLorcanaSetLogoUrls(setKey);
+
+    if (idx < urls.length) {
+        img.setAttribute('data-logo-idx', idx);
+        img.src = urls[idx];
+    } else {
+        // All sources exhausted - show emoji fallback
+        img.onerror = null;
+        img.style.display = 'none';
+        if (img.nextElementSibling) img.nextElementSibling.style.display = '';
+    }
+}
+
+// Generate inline SVG data URI as last-resort fallback logo.
+// Uses a double-hexagon (Lorcana's signature shape) with set-specific colors.
+function getLorcanaSetLogoSvg(setKey) {
     const setStyles = {
         'first-chapter':         { color: '#c9a84c', label: 'I' },
         'rise-of-the-floodborn': { color: '#3a7bd5', label: 'II' },
@@ -40,8 +95,8 @@ function getLorcanaSetLogoFallback(setKey) {
         'shimmering-skies':      { color: '#00b4d8', label: 'V' },
         'azurite-sea':           { color: '#0077b6', label: 'VI' },
         'archazias-island':      { color: '#e67e22', label: 'VII' },
-        'the-flood':             { color: '#c0392b', label: 'VIII' },
-        'neverland':             { color: '#27ae60', label: 'IX' },
+        'fabled':                { color: '#c0392b', label: 'VIII' },
+        'winterspell':           { color: '#27ae60', label: 'IX' },
         'whispers-in-the-well':  { color: '#7b5ea7', label: 'X' }
     };
     const style = setStyles[setKey] || { color: '#c9a84c', label: '?' };
@@ -172,15 +227,14 @@ function renderLorcanaSetButtons() {
         // Calculate progress
         const progress = getLorcanaSetProgress(setKey);
 
-        // Lorcana logos - try local file first, fall back to inline SVG logo
-        const localLogoUrl = `./Images/lorcana/logos/${setKey}.png`;
-        const fallbackLogoUrl = getLorcanaSetLogoFallback(setKey);
+        // Lorcana logos - cascading fallback: local -> wiki CDNs -> inline SVG
+        const logoUrls = getLorcanaSetLogoUrls(setKey);
 
         btn.innerHTML = `
             <div class="set-btn-logo-wrapper">
-                <img src="${localLogoUrl}" alt="${setData.displayName}" class="set-btn-logo"
-                     data-fallback-src="${fallbackLogoUrl}"
-                     onerror="this.onerror=null;this.src=this.getAttribute('data-fallback-src')">
+                <img src="${logoUrls[0]}" alt="${setData.displayName}" class="set-btn-logo"
+                     data-logo-set="${setKey}" data-logo-idx="0"
+                     onerror="tryNextLorcanaLogo(this)">
                 <div class="set-btn-logo-fallback" style="display:none">&#127183;</div>
             </div>
             <div class="set-btn-name">${setData.displayName}</div>
