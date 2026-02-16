@@ -5,22 +5,18 @@ This folder stores all image assets for the Blair Pokémon TCG Tracker.
 ## Structure
 
 ```
-images/
+Images/
 ├── header/          ← Header banner decoration images
 │   ├── pikachu.png
 │   ├── psyduck.png
 │   ├── togepi.png
 │   └── pokeball.png
 │
-└── cards/           ← Card artwork organized by set
-    ├── prismatic-evolutions/
-    │   ├── 001.png
-    │   ├── 002.png
-    │   └── ...
-    ├── journey-together/
-    ├── destined-rivals/
-    ├── phantasmal-flames/
-    └── ascended-heroes/
+└── cards/           ← Card artwork organized by set (create folders as needed)
+    └── {set-key}/
+        ├── 001.png
+        ├── 002.png
+        └── ...
 ```
 
 ## Card Image Naming Convention

@@ -417,7 +417,10 @@ initializeFirebaseSync();
 }
 ```
 
-### **Card Data (card-data.json)**
+### **Card Data (modular JSON files in `data/`)**
+
+> **Note:** The legacy monolithic `card-data.json` and `custom-sets-data.json` files have been removed. Card data now lives in individual JSON files under `data/pokemon/official-sets/`, `data/pokemon/custom-sets/`, and `data/lorcana/sets/`. See `ADDING_NEW_SETS.md` for the current format.
+
 ```json
 {
   "version": "2.0.0",
@@ -682,9 +685,9 @@ When implementing a new TCG (e.g., Disney Lorcana), ensure:
 ### **GitHub Pages Setup**
 1. Repository: lolwtfhunter/blair-pokemon-tracker
 2. Settings → Pages → Source: main branch, / (root)
-3. Upload both files to root:
-   - index.html
-   - card-data.json
+3. All application files are served from root:
+   - `index.html` (main app)
+   - `data/` directory (modular card JSON files)
 4. Wait 2-3 minutes for deployment
 5. Access at: https://lolwtfhunter.github.io/blair-pokemon-tracker/
 
@@ -709,17 +712,15 @@ When implementing a new TCG (e.g., Disney Lorcana), ensure:
 ## 🔄 UPDATING THE TRACKER
 
 ### **To Add New Sets**
-1. Edit `card-data.json`
-2. Add new set object with metadata
-3. Add set button to index.html (line ~559-563)
-4. Add set section to HTML (line ~573-583)
-5. Commit both files to GitHub
+1. Create a new JSON file in `data/pokemon/official-sets/` (or `custom-sets/` or `data/lorcana/sets/`)
+2. Add the set key to the appropriate array in `index.html` (`OFFICIAL_SETS`, `CUSTOM_SETS`, or `LORCANA_SETS`)
+3. See `ADDING_NEW_SETS.md` for detailed step-by-step instructions
+4. Commit and push to GitHub
 
 ### **To Update Card Lists**
-1. Edit `card-data.json` only
-2. Update EX card arrays, trainer arrays, etc.
-3. Commit to GitHub
-4. Changes apply automatically (no HTML edits needed)
+1. Edit the individual set JSON file in `data/`
+2. Commit to GitHub
+3. Changes apply automatically (no HTML edits needed)
 
 ### **To Change Sync Code**
 1. Edit index.html line ~628: `const VALID_SYNC_CODE = 'NewCode';`
@@ -733,9 +734,8 @@ When implementing a new TCG (e.g., Disney Lorcana), ensure:
 
 ### **Cards Not Displaying**
 - Check browser console for errors
-- Verify card-data.json uploaded to GitHub
+- Verify set JSON files exist in `data/` and the set key is listed in `index.html`
 - Hard refresh browser (Ctrl+Shift+R)
-- Check both files in repository root
 
 ### **Sync Not Working**
 - Verify both devices using same sync code
@@ -744,7 +744,7 @@ When implementing a new TCG (e.g., Disney Lorcana), ensure:
 - Check sync status indicator (top right)
 
 ### **Wrong Variants Showing**
-- Verify card-data.json has correct EX card lists
+- Verify the set JSON file has correct rarity values for each card
 - Check rarity detection logic in index.html
 - Verify set-specific variant rules
 
@@ -779,7 +779,7 @@ When implementing a new TCG (e.g., Disney Lorcana), ensure:
 - Duplicate tracking (# of copies owned)
 
 ### **Technical Improvements**
-- Compress card-data.json for faster loading
+- Modularize index.html (extract CSS, JS modules)
 - Add service worker for offline functionality
 - Implement better error handling
 - Add loading indicators
@@ -811,8 +811,8 @@ When implementing a new TCG (e.g., Disney Lorcana), ensure:
 - **Total Variants:** ~3,000+
 - **Regular Sets:** 7
 - **Custom Sets:** 3
-- **App Size:** ~45KB (index.html)
-- **Card Data:** ~123KB (card-data.json) + ~130KB (custom-sets-data.json)
+- **App Size:** ~170KB (index.html)
+- **Card Data:** 13 modular JSON files in `data/` (~340KB total)
 - **Dependencies:** Firebase SDK only (loaded via CDN)
 
 ---
@@ -820,7 +820,7 @@ When implementing a new TCG (e.g., Disney Lorcana), ensure:
 ## 🔑 KEY CODE FUNCTIONS
 
 ### **loadCardData()**
-Loads card-data.json and builds cardSets object with proper rarities.
+Loads individual set JSON files from `data/pokemon/official-sets/` and builds cardSets object.
 
 ### **getVariants(card, setKey)**
 Determines which variant checkboxes to show based on card rarity and set (regular sets only).
@@ -859,16 +859,16 @@ Displays fullscreen modal requiring valid sync code entry.
 
 ## 🏁 QUICK REFERENCE
 
-**Live URL:** https://lolwtfhunter.github.io/blair-pokemon-tracker/  
-**Sync Code:** Blair2024  
-**Repository:** https://github.com/lolwtfhunter/blair-pokemon-tracker  
-**Files to Upload:** index.html + card-data.json + custom-sets-data.json  
-**Firebase Project:** blair-pokemon-tracker  
+**Live URL:** https://lolwtfhunter.github.io/blair-pokemon-tracker/
+**Sync Code:** Blair2024
+**Repository:** https://github.com/lolwtfhunter/blair-pokemon-tracker
+**Key Files:** `index.html` + `data/` directory (modular JSON files)
+**Firebase Project:** blair-pokemon-tracker
 
-**Logout:** Click 🔄 button  
-**Change Code:** Edit VALID_SYNC_CODE in index.html line ~628  
-**Add Cards:** Edit card-data.json  
-**Support:** Hard refresh browser or re-enter sync code  
+**Logout:** Click 🔄 button
+**Change Code:** Edit VALID_SYNC_CODE in index.html
+**Add Cards:** See `ADDING_NEW_SETS.md`
+**Support:** Hard refresh browser or re-enter sync code
 
 ---
 
@@ -1352,7 +1352,7 @@ Runs JavaScript                     Runs JavaScript
 ### 🔐 **Why They're Independent**
 
 **Netlify's Job:**
-- Host your files (index.html, card-data.json)
+- Host your files (index.html, data/ directory)
 - Make them accessible via URL
 - That's ALL it does
 
@@ -1682,9 +1682,11 @@ const VALID_SYNC_CODE = 'YourNewCode';
 
 #### **Change 2: Add New Card Set**
 
-**File:** `card-data.json`
+> **Note:** The process for adding sets has changed. See `ADDING_NEW_SETS.md` for current step-by-step instructions. The example below shows the legacy format for reference.
 
-**Add new set:**
+**File:** Create new JSON in `data/pokemon/official-sets/` and add set key to `OFFICIAL_SETS` in `index.html`
+
+**Legacy example (for reference only):**
 ```json
 {
   "sets": {
@@ -1727,7 +1729,7 @@ const VALID_SYNC_CODE = 'YourNewCode';
 
 #### **Change 3: Fix EX Card Lists**
 
-**File:** `card-data.json`
+**File:** The individual set JSON file in `data/pokemon/official-sets/`
 
 **Update exCards array:**
 ```json
@@ -1821,7 +1823,7 @@ Changes live in ~30 seconds!
 
 **Scenario: You want to add card names**
 
-**Step 1: Edit card-data.json on GitHub**
+**Step 1: Edit the set's JSON file in `data/pokemon/official-sets/` on GitHub**
 ```json
 "journey-together": {
   "cards": [
@@ -1948,7 +1950,7 @@ Changes live in ~30 seconds!
 ### 📋 **Checklist for Making Changes**
 
 **Before changing:**
-- [ ] Know which file to edit (index.html or card-data.json)
+- [ ] Know which file to edit (index.html or set JSON in `data/`)
 - [ ] Know which line number (check PROJECT_MASTER.md)
 - [ ] Have commit message ready
 
@@ -1968,13 +1970,13 @@ Changes live in ~30 seconds!
 
 ### 🎯 **Quick Reference: Common Edits**
 
-| What to Change | File | Line | Commit Message |
-|----------------|------|------|----------------|
-| Sync code | index.html | ~628 | "Update sync code" |
-| Add card set | card-data.json | - | "Add [Set Name]" |
-| Fix EX cards | card-data.json | - | "Fix EX card list" |
-| Update UI text | index.html | varies | "Update UI text" |
-| Change colors | index.html | ~100-300 | "Update theme colors" |
+| What to Change | File | Commit Message |
+|----------------|------|----------------|
+| Sync code | index.html | "Update sync code" |
+| Add card set | New JSON in `data/` + `index.html` | "Add [Set Name]" |
+| Fix card data | Set JSON in `data/` | "Fix [Set Name] card list" |
+| Update UI text | index.html | "Update UI text" |
+| Change colors | index.html | "Update theme colors" |
 
 ---
 
