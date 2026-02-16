@@ -72,13 +72,13 @@ function renderCustomSetButtons() {
 
         const progress = getCustomSetProgress(setKey);
 
-        // Create button HTML with inline handlers to avoid race conditions
+        // Image visible by default, fallback hidden. onerror swaps them.
         btn.innerHTML = `
             <div class="set-btn-logo-wrapper">
-                <img src="${logoUrl}" alt="${setData.displayName}" class="set-btn-logo" style="display: none;"
-                     onload="this.style.display='block';this.nextElementSibling.style.display='none'"
-                     onerror="this.style.display='none';this.nextElementSibling.style.display=''">
-                <div class="set-btn-logo-fallback">${logoIcon}</div>
+                <img src="${logoUrl}" alt="${setData.displayName}" class="set-btn-logo"
+                     onerror="this.style.display='none';this.nextElementSibling.style.display='';if(window._imgDebug)window._imgDebug('LOGO-ERR','${setKey}: '+this.src)"
+                     onload="if(window._imgDebug)window._imgDebug('LOGO-OK','${setKey}: '+this.src+' w='+this.naturalWidth)">
+                <div class="set-btn-logo-fallback" style="display:none">${logoIcon}</div>
             </div>
             <div class="set-btn-name">${setData.displayName}</div>
             <div class="set-release-date">${dateStr}</div>
