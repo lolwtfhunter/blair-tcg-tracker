@@ -622,3 +622,35 @@ function initializeLorcanaProgress() {
         }
     });
 }
+
+// Create DOM elements for Lorcana set grids (dynamically from loaded data)
+function initLorcanaSetGrids() {
+    const container = document.getElementById('lorcana-content');
+    if (!container) return;
+
+    // Remove any existing set-section elements (avoid duplicates on re-init)
+    container.querySelectorAll('.set-section').forEach(el => el.remove());
+
+    Object.keys(lorcanaCardSets).forEach(setKey => {
+        const section = document.createElement('div');
+        section.id = setKey;
+        section.className = 'set-section';
+
+        section.innerHTML = `
+            <div class="card-controls">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" onclick="filterLorcanaCards('${setKey}', 'all')">All</button>
+                    <button class="filter-btn" onclick="filterLorcanaCards('${setKey}', 'incomplete')">Incomplete</button>
+                    <button class="filter-btn" onclick="filterLorcanaCards('${setKey}', 'complete')">Complete</button>
+                </div>
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Search cards..." oninput="searchLorcanaCards('${setKey}', this.value)" data-set="${setKey}">
+                    <button class="search-clear" onclick="clearLorcanaSearch('${setKey}')">×</button>
+                </div>
+            </div>
+            <div class="card-grid" id="${setKey}-grid"></div>
+        `;
+
+        container.appendChild(section);
+    });
+}

@@ -54,12 +54,13 @@ window.addEventListener('load', async function() {
             console.log('ERROR in custom sets: ' + e.message);
         }
 
-        // Initialize Lorcana set buttons
+        // Initialize Lorcana set grids and buttons
         console.log('Initializing Lorcana sets...');
         try {
+            initLorcanaSetGrids();
             renderLorcanaSetButtons();
             // Lorcana set cards will render on-demand when user selects a set
-            console.log('✓ Lorcana set buttons ready');
+            console.log('✓ Lorcana set grids and buttons ready');
         } catch (e) {
             console.log('ERROR in Lorcana sets: ' + e.message);
         }
