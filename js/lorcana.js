@@ -109,85 +109,38 @@ function getLorcanaSetLogoSvg(setKey) {
     return 'data:image/svg+xml;base64,' + btoa(svg);
 }
 
-// Get image URL for Lorcana cards with multiple CDN fallbacks
-function getLorcanaCardImageUrl(card, setKey) {
-    const setData = lorcanaCardSets[setKey];
-    if (!setData) return null;
+// Build ordered list of image URLs to try for a Lorcana card.
+// Dreamborn CDN serves images WITHOUT file extensions (returns JFIF/JPEG).
+// Lorcania uses complex slug-based URLs that can't be constructed from card number alone.
+function buildLorcanaImageUrls(dreambornId, setKey, cardNumber) {
+    const urls = [];
+    const paddedNumber = String(cardNumber).padStart(3, '0');
 
-    const setCode = setData.setCode;
-    const cardNumber = card.number;
-    const dreambornId = card.dreambornId || '';
-
-    // Build array of image URLs to try (in order of preference)
-    const imageUrls = [];
-
+    // Tier 1: Dreamborn CDN (extensionless - this is the correct format)
     if (dreambornId) {
-        const parts = dreambornId.split('-');
-        const setNum = parts.length >= 2 ? parseInt(parts[0]) : null;
-        const cardNum = parts.length >= 2 ? parseInt(parts[1]) : null;
-
-        // Tier 1: Dreamborn CDN with various extensions
-        imageUrls.push(`https://cdn.dreamborn.ink/images/en/cards/${dreambornId}.webp`);
-        imageUrls.push(`https://cdn.dreamborn.ink/images/en/cards/${dreambornId}.png`);
-        imageUrls.push(`https://cdn.dreamborn.ink/images/en/cards/${dreambornId}.jpg`);
-        imageUrls.push(`https://cdn.dreamborn.ink/images/en/cards/${dreambornId}`);
-
-        // Tier 2: Lorcania CDN
-        if (setNum && cardNum) {
-            imageUrls.push(`https://lorcania.com/cards/${setNum}/${cardNum}.webp`);
-            imageUrls.push(`https://lorcania.com/cards/${setNum}/${cardNum}.jpg`);
-            imageUrls.push(`https://lorcania.com/cards/${setNum}/${cardNum}.png`);
-        }
+        urls.push(`https://cdn.dreamborn.ink/images/en/cards/${dreambornId}`);
     }
 
-    // Tier 3: Direct card number fallback
-    const paddedNumber = String(cardNumber).padStart(3, '0');
-    imageUrls.push(`./Images/lorcana/${setKey}/${paddedNumber}.jpg`);
-    imageUrls.push(`./Images/lorcana/${setKey}/${paddedNumber}.png`);
-    imageUrls.push(`./Images/lorcana/${setKey}/${paddedNumber}.webp`);
+    // Tier 2: Local files
+    urls.push(`./Images/lorcana/${setKey}/${paddedNumber}.jpg`);
+    urls.push(`./Images/lorcana/${setKey}/${paddedNumber}.png`);
+    urls.push(`./Images/lorcana/${setKey}/${paddedNumber}.webp`);
 
-    // Return the first URL (browser will try fallbacks via onerror)
-    return imageUrls.length > 0 ? imageUrls[0] : null;
+    return urls;
 }
 
-// Handle Lorcana image loading with multi-tier CDN fallback
+// Get primary image URL for a Lorcana card
+function getLorcanaCardImageUrl(card, setKey) {
+    const urls = buildLorcanaImageUrls(card.dreambornId || '', setKey, card.number);
+    return urls.length > 0 ? urls[0] : null;
+}
+
+// Handle Lorcana image loading with cascading fallback
 function tryNextLorcanaImage(img, card, setKey, attemptIndex = 0) {
-    const setData = lorcanaCardSets[setKey];
-    if (!setData) return;
+    const urls = buildLorcanaImageUrls(card.dreambornId || '', setKey, card.number);
 
-    const dreambornId = card.dreambornId || '';
-    const paddedNumber = String(card.number).padStart(3, '0');
-
-    // Build fallback URLs (matching getLorcanaCardImageUrl)
-    const fallbackUrls = [];
-
-    if (dreambornId) {
-        const parts = dreambornId.split('-');
-        const setNum = parts.length >= 2 ? parseInt(parts[0]) : null;
-        const cardNum = parts.length >= 2 ? parseInt(parts[1]) : null;
-
-        // Dreamborn CDN with various extensions
-        fallbackUrls.push(`https://cdn.dreamborn.ink/images/en/cards/${dreambornId}.webp`);
-        fallbackUrls.push(`https://cdn.dreamborn.ink/images/en/cards/${dreambornId}.png`);
-        fallbackUrls.push(`https://cdn.dreamborn.ink/images/en/cards/${dreambornId}.jpg`);
-        fallbackUrls.push(`https://cdn.dreamborn.ink/images/en/cards/${dreambornId}`);
-
-        // Lorcania CDN
-        if (setNum && cardNum) {
-            fallbackUrls.push(`https://lorcania.com/cards/${setNum}/${cardNum}.webp`);
-            fallbackUrls.push(`https://lorcania.com/cards/${setNum}/${cardNum}.jpg`);
-            fallbackUrls.push(`https://lorcania.com/cards/${setNum}/${cardNum}.png`);
-        }
-    }
-
-    // Local fallbacks
-    fallbackUrls.push(`./Images/lorcana/${setKey}/${paddedNumber}.jpg`);
-    fallbackUrls.push(`./Images/lorcana/${setKey}/${paddedNumber}.png`);
-    fallbackUrls.push(`./Images/lorcana/${setKey}/${paddedNumber}.webp`);
-
-    // Try next URL
-    if (attemptIndex < fallbackUrls.length) {
-        img.src = fallbackUrls[attemptIndex];
+    if (attemptIndex < urls.length) {
+        img.src = urls[attemptIndex];
         img.onerror = function() {
             tryNextLorcanaImage(img, card, setKey, attemptIndex + 1);
         };

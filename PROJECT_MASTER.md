@@ -201,9 +201,8 @@ The project includes comprehensive reference documents for development and maint
 **Total Lorcana Cards**: 408 cards across 2 sets
 
 **Lorcana Image Sources:**
-- Primary: Dreamborn CDN (`https://cdn.dreamborn.ink/images/en/cards/{dreambornId}`)
-- Secondary: Lorcania CDN (`https://lorcania.com/cards/{setNum}/{cardNum}.webp`)
-- Tertiary: Local images fallback
+- Primary: Dreamborn CDN (`https://cdn.dreamborn.ink/images/en/cards/{dreambornId}`) — extensionless URLs serving JFIF/JPEG
+- Secondary: Local images fallback (`./Images/lorcana/{setKey}/{number}.jpg`)
 
 **Lorcana Tracking Model:**
 - Single "Collected" checkbox per card (simplified vs Pokemon's multi-variant system)

@@ -841,7 +841,7 @@ Each Lorcana set follows the Pokemon pattern but adapted for Lorcana-specific ne
 2. **Constants:** `LORCANA_SETS` array listing set keys
 3. **Functions implemented:**
    - `loadLorcanaData()` - Loads Lorcana JSON files
-   - `getLorcanaCardImageUrl()` - Multi-tier CDN fallback (Dreamborn → Lorcania → Local)
+   - `getLorcanaCardImageUrl()` / `buildLorcanaImageUrls()` - CDN fallback (Dreamborn → Local)
    - `renderLorcanaSetButtons()` - Displays set selection buttons
    - `renderLorcanaCards()` - Renders card grid
    - `switchLorcanaSet()` - Set navigation
@@ -851,10 +851,9 @@ Each Lorcana set follows the Pokemon pattern but adapted for Lorcana-specific ne
 
 #### **Image CDN Configuration**
 
-**Card images** — Three-tier fallback system:
-1. **Dreamborn CDN:** `https://cdn.dreamborn.ink/images/en/cards/{dreambornId}`
-2. **Lorcania CDN:** `https://lorcania.com/cards/{setNum}/{cardNum}.webp`
-3. **Local fallback:** `./Images/lorcana/{setKey}/{number}.jpg`
+**Card images** — Dreamborn CDN + local fallback:
+1. **Dreamborn CDN:** `https://cdn.dreamborn.ink/images/en/cards/{dreambornId}` (extensionless URL, serves JFIF/JPEG)
+2. **Local fallback:** `./Images/lorcana/{setKey}/{number}.jpg`
 
 **Set logos** — Four-tier fallback system (added Feb 2026):
 1. **Local file:** `./Images/lorcana/logos/{setKey}.png`
@@ -868,7 +867,7 @@ The logo system uses MediaWiki's `Special:FilePath` endpoint, which redirects to
 
 #### **Data Sources Used**
 - Card data: [great-illuminary/lorcana-data](https://github.com/great-illuminary/lorcana-data) (YAML converted to JSON)
-- Card images: [Dreamborn.ink](https://dreamborn.ink/) and [Lorcania](https://lorcania.com/) CDNs
+- Card images: [Dreamborn.ink](https://dreamborn.ink/) CDN (extensionless URLs serving JFIF/JPEG)
 - Set logos: [Mushu Report Wiki](https://wiki.mushureport.com/) and [Lorcana Fandom Wiki](https://lorcana.fandom.com/) (via `Special:FilePath`)
 
 #### **Key Differences from Pokemon**

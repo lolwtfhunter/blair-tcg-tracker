@@ -108,26 +108,20 @@ This would match the Pokemon TCG tracking model but adapted for Lorcana's simple
 https://cdn.dreamborn.ink/images/en/cards/{dreambornId}
 ```
 
+**Important:** URLs are extensionless (no `.webp`, `.png`, `.jpg`). The CDN serves JFIF/JPEG content directly.
+
 **Format:** `{setCode}-{cardNumber}` (e.g., `001-001`, `001-205`, `010-100`)
 - Set 1 (The First Chapter): `001-XXX`
 - Set 10 (Whispers in the Well): `010-XXX`
 - Most reliable source for Lorcana card images
 
-### Lorcania CDN (Secondary)
-```
-https://lorcania.com/cards/{setNum}/{cardNum}.webp
-https://lorcania.com/cards/{setNum}/{cardNum}.jpg
-```
-
-**Example:**
-- dreambornId `001-050` → `https://lorcania.com/cards/1/50.webp`
-- Set number extracted from first 3 digits, card number from last digits
-
-### Local Fallback (Tertiary)
+### Local Fallback (Secondary)
 ```
 ./Images/lorcana/{setKey}/{cardNumber}.jpg
 ./Images/lorcana/{setKey}/{cardNumber}.png
 ```
+
+**Note:** Lorcania (`images.lorcania.com`) uses complex slug-based URLs that require card name data to construct (e.g., `33_en_four_dozen_eggs-716.webp`), so it cannot be used as a simple numbered fallback.
 
 ---
 

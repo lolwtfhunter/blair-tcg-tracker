@@ -60,7 +60,7 @@ The app has three top-level tabs:
 
 - **Simple collection tracking** — Single "Collected" checkbox per card (Lorcana uses foil/non-foil variants rather than multiple variant types like Pokemon)
 - **Set logos** — Official set logos load automatically from public wiki sources ([Mushu Report](https://wiki.mushureport.com/), [Lorcana Wiki](https://lorcana.fandom.com/)), with cascading fallback to local files and inline SVG
-- **Card images** — Artwork loads from [Dreamborn.ink](https://dreamborn.ink/) CDN, with fallback to [Lorcania](https://lorcania.com/) CDN, then local images, then placeholder
+- **Card images** — Artwork loads from [Dreamborn.ink](https://dreamborn.ink/) CDN, with fallback to local images, then placeholder
 - **Filter & search** — Same powerful filtering and search as Pokemon TCG
 - **Progress tracking** — Real-time progress bars and completion statistics
 - **Cloud sync** — Shares the same Firebase sync as Pokemon, so all your TCG collections sync together
@@ -161,10 +161,9 @@ Card artwork loads through a 4-tier fallback system:
 
 **Card artwork** loads through a 3-tier fallback system:
 
-1. **Dreamborn CDN** — `https://cdn.dreamborn.ink/images/en/cards/{dreamborn-id}` (primary source)
-2. **Lorcania CDN** — `https://lorcania.com/cards/{set-num}/{card-num}.webp` (secondary)
-3. **Local images** — `Images/lorcana/{set-key}/{number}.jpg` (tertiary)
-4. **Placeholder** — A generated card back SVG with the card number and name
+1. **Dreamborn CDN** — `https://cdn.dreamborn.ink/images/en/cards/{dreamborn-id}` (extensionless URL, serves JFIF/JPEG)
+2. **Local images** — `Images/lorcana/{set-key}/{number}.jpg` (if you add your own)
+3. **Placeholder** — A generated card back SVG with the card number and name
 
 See [`Images/README.md`](Images/README.md) for details on adding local card images.
 
@@ -195,7 +194,7 @@ Variant eligibility is determined automatically from rarity. Custom set cards co
 - **Storage:** localStorage for offline/local persistence
 - **Images:**
   - Pokemon: Pokemon TCG API CDN (pokemontcg.io), TCGdex CDN (tcgdex.net)
-  - Lorcana: Dreamborn CDN (dreamborn.ink), Lorcania CDN (lorcania.com)
+  - Lorcana: Dreamborn CDN (dreamborn.ink)
 - **Hosting:** GitHub Pages
 - **CI/CD:** GitHub Actions (automated Firebase backups)
 
