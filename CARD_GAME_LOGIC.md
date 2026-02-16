@@ -444,7 +444,7 @@ if (card.apiId) {
 
 ## Lorcana Image URL Mapping
 
-Disney Lorcana card images use Dreamborn CDN with local file fallback. The URL construction is handled by `buildLorcanaImageUrls()` in `js/lorcana.js`.
+Disney Lorcana card images use a 4-tier fallback system. The URL construction is handled by `buildLorcanaImageUrls()` in `js/lorcana.js`.
 
 ### 1. Dreamborn CDN (Primary)
 ```
@@ -455,14 +455,24 @@ https://cdn.dreamborn.ink/images/en/cards/{dreambornId}
 - Format: `{setCode}-{cardNumber}` (e.g., `001-001`, `010-050`)
 - **Important:** URLs are extensionless — no `.webp`, `.png`, or `.jpg` suffix. The CDN serves JFIF/JPEG content directly.
 
-### 2. Local Images (Secondary)
+### 2. Lorcast API (Secondary)
+```
+https://api.lorcast.com/v0/sets/{lorcastSetCode}/cards
+```
+
+- Image URLs are fetched from the Lorcast API and cached per set via `fetchLorcastImageUrls()` in `js/lorcana.js`
+- Set codes mapped in `LORCAST_SET_CODES` in `js/config.js` (e.g., `'first-chapter': '1'`, `'winterspell': '11'`)
+- Non-blocking fire-and-forget fetch: `renderLorcanaCards()` calls `fetchLorcastImageUrls(setKey)` without awaiting, so cards render immediately with Dreamborn CDN while Lorcast URLs become available as fallbacks
+- Returns AVIF image URLs
+
+### 3. Local Images (Tertiary)
 ```
 ./Images/lorcana/{setKey}/{cardNumber}.jpg
 ```
 
 - Fallback for offline/custom hosting
 
-### 3. Placeholder (Fallback)
+### 4. Placeholder (Fallback)
 - Generated SVG when all sources fail
 
 **Note:** Lorcania (`images.lorcania.com`) uses complex slug-based URLs (e.g., `33_en_four_dozen_eggs-716.webp`) that require card name data to construct, so it cannot be used as a simple CDN fallback.

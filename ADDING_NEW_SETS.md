@@ -451,13 +451,22 @@ mkdir -p data/magic/sets/
 
 Follow the same JSON structure as Pokemon official sets, adapting fields as needed.
 
-### Step 3: Update index.html
+### Step 3: Update js/config.js
 
-1. **Create a new constants array:**
+1. **Add the set key to the constants array** (defined in `js/config.js`, not `index.html`):
    ```javascript
    const LORCANA_SETS = [
        'first-chapter',
-       'rise-of-the-floodborn'
+       'rise-of-the-floodborn',
+       'into-the-inklands',
+       'ursulas-return',
+       'shimmering-skies',
+       'azurite-sea',
+       'archazias-island',
+       'reign-of-jafar',
+       'fabled',
+       'whispers-in-the-well',
+       'winterspell'
    ];
    ```
 
@@ -825,8 +834,17 @@ Disney Lorcana was added to the Blair TCG Tracker following the pattern describe
 ```
 data/lorcana/
 └── sets/
-    ├── first-chapter.json        (204 cards)
-    └── whispers-in-the-well.json (204 cards)
+    ├── first-chapter.json         (216 cards)
+    ├── rise-of-the-floodborn.json (216 cards)
+    ├── into-the-inklands.json     (223 cards)
+    ├── ursulas-return.json        (225 cards)
+    ├── shimmering-skies.json      (223 cards)
+    ├── azurite-sea.json           (222 cards)
+    ├── archazias-island.json      (224 cards)
+    ├── reign-of-jafar.json        (224 cards)
+    ├── fabled.json                (242 cards)
+    ├── whispers-in-the-well.json  (242 cards)
+    └── winterspell.json           (242 cards)
 ```
 
 #### **JSON Structure**
@@ -851,9 +869,11 @@ Each Lorcana set follows the Pokemon pattern but adapted for Lorcana-specific ne
 
 #### **Image CDN Configuration**
 
-**Card images** — Dreamborn CDN + local fallback:
+**Card images** — 4-tier fallback (Dreamborn CDN + Lorcast API + local + placeholder):
 1. **Dreamborn CDN:** `https://cdn.dreamborn.ink/images/en/cards/{dreambornId}` (extensionless URL, serves JFIF/JPEG)
-2. **Local fallback:** `./Images/lorcana/{setKey}/{number}.jpg`
+2. **Lorcast API:** Image URLs fetched from `api.lorcast.com` and cached; non-blocking fire-and-forget fetch. Set codes mapped in `LORCAST_SET_CODES` in `js/config.js`.
+3. **Local fallback:** `./Images/lorcana/{setKey}/{number}.jpg`
+4. **Placeholder:** Generated SVG card back
 
 **Set logos** — Four-tier fallback system (added Feb 2026):
 1. **Local file:** `./Images/lorcana/logos/{setKey}.png`
@@ -897,8 +917,8 @@ This implementation demonstrates how to add a new TCG while reusing the existing
 
 **Key Implementation Details**:
 - Sourced authentic card data from great-illuminary/lorcana-data repository
-- Added dreambornId field to all 408 Lorcana cards for CDN image mapping
-- Implemented multi-tier image CDN fallback (Dreamborn → Lorcania → Local)
+- Added dreambornId field to all Lorcana cards across 11 sets for CDN image mapping
+- Implemented multi-tier image CDN fallback (Dreamborn → Lorcast API → Local → Placeholder)
 - Created Lorcana-specific functions while reusing core UI patterns
 - Used simplified single-checkbox tracking instead of multi-variant system
 

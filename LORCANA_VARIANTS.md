@@ -112,10 +112,23 @@ https://cdn.dreamborn.ink/images/en/cards/{dreambornId}
 
 **Format:** `{setCode}-{cardNumber}` (e.g., `001-001`, `001-205`, `010-100`)
 - Set 1 (The First Chapter): `001-XXX`
+- Set 2 (Rise of the Floodborn): `002-XXX`
+- Set 3 (Into the Inklands): `003-XXX`
+- Set 4 (Ursula's Return): `004-XXX`
+- Set 5 (Shimmering Skies): `005-XXX`
+- Set 6 (Azurite Sea): `006-XXX`
+- Set 7 (Archazia's Island): `007-XXX`
+- Set 8 (Reign of Jafar): `008-XXX`
+- Set 9 (Fabled): `009-XXX`
 - Set 10 (Whispers in the Well): `010-XXX`
+- Set 11 (Winterspell): `011-XXX`
 - Most reliable source for Lorcana card images
 
-### Local Fallback (Secondary)
+### Lorcast API (Secondary)
+
+Image URLs fetched from Lorcast API (`api.lorcast.com`) and cached via `fetchLorcastImageUrls()` in `js/lorcana.js`. Set codes mapped in `LORCAST_SET_CODES` in `js/config.js`. Non-blocking fetch; Lorcast URLs become available as fallbacks if Dreamborn images fail.
+
+### Local Fallback (Tertiary)
 ```
 ./Images/lorcana/{setKey}/{cardNumber}.jpg
 ./Images/lorcana/{setKey}/{cardNumber}.png
@@ -135,6 +148,55 @@ https://cdn.dreamborn.ink/images/en/cards/{dreambornId}
 - **Set Code:** `tfc`
 - **Enchanted Distribution:** 2 enchanted cards per ink color (6 ink colors × 2 = 12)
 
+### Rise of the Floodborn (Set 2)
+- **Main Set:** Cards 1-204
+- **Enchanted Cards:** Cards 205-216 (12 enchanted)
+- **Total:** 216 cards
+- **Release:** November 17, 2023
+- **Set Code:** `rotf`
+
+### Into the Inklands (Set 3)
+- **Main Set:** Cards 1-204
+- **Total:** 223 cards
+- **Release:** February 23, 2024
+- **Set Code:** `iti`
+
+### Ursula's Return (Set 4)
+- **Main Set:** Cards 1-204
+- **Total:** 225 cards
+- **Release:** May 17, 2024
+- **Set Code:** `urr`
+
+### Shimmering Skies (Set 5)
+- **Main Set:** Cards 1-204
+- **Total:** 223 cards
+- **Release:** August 9, 2024
+- **Set Code:** `ssk`
+
+### Azurite Sea (Set 6)
+- **Main Set:** Cards 1-204
+- **Total:** 222 cards
+- **Release:** November 15, 2024
+- **Set Code:** `azu`
+
+### Archazia's Island (Set 7)
+- **Main Set:** Cards 1-204
+- **Total:** 224 cards
+- **Release:** March 7, 2025
+- **Set Code:** `arc`
+
+### Reign of Jafar (Set 8)
+- **Main Set:** Cards 1-204
+- **Total:** 224 cards
+- **Release:** May 30, 2025
+- **Set Code:** `roj`
+
+### Fabled (Set 9)
+- **Main Set:** Cards 1-204
+- **Total:** 242 cards
+- **Release:** August 8, 2025
+- **Set Code:** `fab`
+
 ### Whispers in the Well (Set 10)
 - **Main Set:** Cards 1-204
 - **Epic Cards:** Cards 205-222 (18 epic)
@@ -143,6 +205,12 @@ https://cdn.dreamborn.ink/images/en/cards/{dreambornId}
 - **Total:** 242 cards
 - **Release:** November 14, 2025
 - **Set Code:** `whi`
+
+### Winterspell (Set 11)
+- **Main Set:** Cards 1-204
+- **Total:** 242 cards
+- **Release:** February 13, 2026
+- **Set Code:** `win`
 
 ---
 

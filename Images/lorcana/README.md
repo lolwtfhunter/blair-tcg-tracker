@@ -6,10 +6,21 @@ This directory contains local card images for Disney Lorcana TCG sets.
 
 ```
 Images/lorcana/
-├── first-chapter/          # The First Chapter (Set 1) cards
-├── whispers-in-the-well/   # Whispers in the Well (Set 10) cards
-└── logos/                  # Set logos for buttons
+├── first-chapter/              # The First Chapter (Set 1) cards
+├── rise-of-the-floodborn/     # Rise of the Floodborn (Set 2) cards
+├── into-the-inklands/         # Into the Inklands (Set 3) cards
+├── ursulas-return/            # Ursula's Return (Set 4) cards
+├── shimmering-skies/          # Shimmering Skies (Set 5) cards
+├── azurite-sea/               # Azurite Sea (Set 6) cards
+├── archazias-island/          # Archazia's Island (Set 7) cards
+├── reign-of-jafar/            # Reign of Jafar (Set 8) cards
+├── fabled/                    # Fabled (Set 9) cards
+├── whispers-in-the-well/     # Whispers in the Well (Set 10) cards
+├── winterspell/               # Winterspell (Set 11) cards
+└── logos/                     # Set logos for buttons
 ```
+
+**Note:** You typically don't need to download card images manually. The app automatically loads images from Dreamborn CDN (primary) and Lorcast API (secondary fallback). Local images are only needed for offline use or if both CDN sources fail.
 
 ## 🖼️ Adding Card Images
 

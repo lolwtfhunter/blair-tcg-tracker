@@ -378,23 +378,9 @@ h1 {
     transform: none;
 }
 
-/* Tint logo on active button so red gradient shows through opaque logos */
+/* Keep logo fully visible on active button — active state indicated by border/glow */
 .set-btn.active .set-btn-logo {
-    opacity: 0.5;
-}
-
-/* Red overlay ensures active state is visible regardless of logo backgrounds */
-.set-btn.active .set-btn-logo-wrapper::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255, 107, 107, 0.25);
-    border-radius: 6px;
-    z-index: 3;
-    pointer-events: none;
+    opacity: 1;
 }
 
 .set-btn-logo-wrapper {
@@ -421,7 +407,7 @@ h1 {
 
 .set-btn-logo-fallback {
     font-size: 2.5rem;
-    opacity: 0.6;
+    opacity: 0.9;
     filter: grayscale(30%);
     z-index: 1;
     display: block;
