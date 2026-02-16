@@ -114,8 +114,8 @@ function getCustomCardPrice(card) {
     if (!card.apiId) return null;
     const sourceSetId = card.apiId.replace(/-[^-]+$/, '');
     const cacheKey = '_src:' + sourceSetId;
-    const cardNum = parseInt(card.apiId.split('-').pop());
-    return getCardPrice(cacheKey, cardNum);
+    const cardId = card.apiId.split('-').pop();
+    return getCardPrice(cacheKey, cardId);
 }
 
 // ==================== FETCH ORCHESTRATION ====================
@@ -234,17 +234,23 @@ async function fetchTcgcsvPricesRaw(cacheKey, categoryId, groupId) {
         }
     }
 
-    // Map productId -> card number from products
-    const productToCard = {};
+    // Map productId -> card number keys from products
+    // Each product maps to an array of keys: the raw value (e.g., "SM65", "TG05")
+    // plus the parsed integer if it starts with digits (e.g., "58/102" → 58)
+    const productToCardKeys = {};
     const products = productsData.results || productsData || [];
     (Array.isArray(products) ? products : []).forEach(product => {
         const extData = product.extendedData || [];
         const numberEntry = extData.find(d => d.displayName === 'Number' || d.displayName === 'Card Number');
         if (numberEntry && numberEntry.value) {
-            const match = numberEntry.value.match(/^(\d+)/);
-            if (match) {
-                productToCard[product.productId] = parseInt(match[1]);
+            const raw = numberEntry.value.trim();
+            const keys = [raw];
+            // Also store under the leading integer for official set lookups (e.g., "58/102" → 58)
+            const intMatch = raw.match(/^(\d+)/);
+            if (intMatch) {
+                keys.push(parseInt(intMatch[1]));
             }
+            productToCardKeys[product.productId] = keys;
         }
     });
 
@@ -268,9 +274,9 @@ async function fetchTcgcsvPricesRaw(cacheKey, categoryId, groupId) {
 
     const prices = {};
     for (const [pid, data] of Object.entries(bestByProduct)) {
-        const cardNum = productToCard[pid];
-        if (cardNum) {
-            prices[cardNum] = data.price;
+        const keys = productToCardKeys[pid];
+        if (keys) {
+            keys.forEach(key => { prices[key] = data.price; });
         }
     }
 
