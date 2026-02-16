@@ -1,6 +1,6 @@
 # Blair TCG Collection Tracker - Project Master Document
 
-**Version:** 4.2.0
+**Version:** 5.0.0
 **Last Updated:** February 16, 2026
 **Live URL:** https://lolwtfhunter.github.io/blair-pokemon-tracker/
 **Sync Code:** Blair2024
@@ -12,12 +12,12 @@
 A web-based multi-TCG collection tracker for tracking 4,000+ cards across **Pokemon TCG** and **Disney Lorcana** with real-time cloud sync between devices. Built for Blair and family to track their master set collection with proper variant tracking, card images from multiple CDN sources, and advanced filtering.
 
 ### **Supported Trading Card Games**
-- ✅ **Pokemon TCG** - 8 official sets + 3 custom curated sets (1,529 cards)
+- ✅ **Pokemon TCG** - 132 official sets across 15 eras + 3 custom curated sets (18,707+ cards)
 - ✅ **Disney Lorcana** - 11 sets (2,499 cards)
 
 ### **Core Features**
-- ✅ Track 4,028+ cards across multiple TCGs
-  - Pokemon: 1,529 cards (8 official sets + 3 custom sets)
+- ✅ Track 21,600+ cards across multiple TCGs
+  - Pokemon: 18,707 cards (132 official sets across 15 eras + 3 custom sets)
   - Lorcana: 2,499 cards (11 sets)
 - ✅ Modular data structure for better performance and scalability
 - ✅ Japanese-exclusive Pokemon card tracking with JP badges and EN/JP subtabs
@@ -78,7 +78,7 @@ Custom set cards originate from 109 unique Pokemon TCG source sets. Each card's 
 
 ### **Required Files (Must Upload to GitHub)**
 1. **index.html** (~140KB) - Main application
-2. **data/pokemon/official-sets/** - Modular card data for 8 official Pokemon TCG sets
+2. **data/pokemon/official-sets/** - Modular card data for 132 official Pokemon TCG sets
 3. **data/pokemon/custom-sets/** - Modular custom curated sets (Pikachu, Psyduck, Togepi)
 4. **data/lorcana/sets/** - Modular card data for Disney Lorcana sets
 
@@ -210,9 +210,9 @@ The project includes comprehensive reference documents for development and maint
 - Variants: Regular + Reverse Holo (EX/Secrets = single checkbox)
 
 ### **Total Pokemon Collection**
-- 1,529 total Pokemon cards across 8 official sets
+- 18,707 total Pokemon cards across 132 official sets (15 eras from Base Set through Mega Evolution)
 - 437 total Pokemon cards across 3 custom sets
-- ~2,800+ total variants to track (Pokemon only)
+- ~30,000+ total variants to track (Pokemon only)
 
 ### **Custom Sets**
 
@@ -510,7 +510,7 @@ The Pokemon TCG tab uses a two-level navigation system with explicit user contro
   - Number of sets in the block
   - Aggregate progress across all sets (variants collected/total)
   - Progress bar reflecting overall block completion
-  - Distinctive color gradient (SV=red/purple, ME=orange/gold, SWSH=blue)
+  - Distinctive color gradient per era (15 blocks from Base Set to Mega Evolution, styled via CSS `--block-color` variable)
   - Active state with border and shadow when selected
   - Click active block again to deselect
 
@@ -925,14 +925,15 @@ This pattern must be applied **before** navigating to any page. It intercepts Fi
 
 ## 📊 PROJECT STATISTICS
 
-- **Regular Set Cards:** 1,341
+- **Official Pokemon Set Cards:** 18,707 (132 sets across 15 eras)
 - **Custom Set Cards:** 437 (371 Pikachu + 42 Psyduck + 24 Togepi)
-- **Total Cards:** 1,778
-- **Total Variants:** ~3,000+
-- **Regular Sets:** 7
+- **Lorcana Cards:** 2,499 (11 sets)
+- **Total Cards:** 21,643
+- **Total Variants:** ~30,000+
+- **Official Pokemon Sets:** 132
 - **Custom Sets:** 3
 - **App Size:** ~170KB (index.html)
-- **Card Data:** 13 modular JSON files in `data/` (~340KB total)
+- **Card Data:** 146 modular JSON files in `data/` (~3MB total)
 - **Dependencies:** Firebase SDK only (loaded via CDN)
 
 ---

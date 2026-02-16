@@ -80,8 +80,12 @@ test.describe('Pricing', () => {
   test('price cache stores both string and integer keys for card numbers', async ({ page }) => {
     await navigateToCustomSet(page);
 
-    // Wait for price fetching to complete
-    await page.waitForTimeout(2000);
+    // Wait for price fetching to complete — poll until cache has _src: entries
+    await page.waitForFunction(() => {
+      const cache = JSON.parse(localStorage.getItem('blair_price_cache') || '{}');
+      const prices = cache.prices || {};
+      return Object.keys(prices).some(k => k.startsWith('_src:'));
+    }, null, { timeout: 10000 });
 
     // Check the price cache structure
     const cacheCheck = await page.evaluate(() => {
@@ -108,7 +112,12 @@ test.describe('Pricing', () => {
 
   test('getCustomCardPrice resolves numeric apiId correctly', async ({ page }) => {
     await navigateToCustomSet(page);
-    await page.waitForTimeout(2000);
+    // Wait for price cache to be populated
+    await page.waitForFunction(() => {
+      const cache = JSON.parse(localStorage.getItem('blair_price_cache') || '{}');
+      const prices = cache.prices || {};
+      return Object.keys(prices).some(k => k.startsWith('_src:'));
+    }, null, { timeout: 10000 });
 
     const price = await page.evaluate(() => {
       // Test with a numeric card number
@@ -124,7 +133,12 @@ test.describe('Pricing', () => {
 
   test('getCustomCardPrice resolves alphanumeric apiId without error', async ({ page }) => {
     await navigateToCustomSet(page);
-    await page.waitForTimeout(2000);
+    // Wait for price cache to be populated
+    await page.waitForFunction(() => {
+      const cache = JSON.parse(localStorage.getItem('blair_price_cache') || '{}');
+      const prices = cache.prices || {};
+      return Object.keys(prices).some(k => k.startsWith('_src:'));
+    }, null, { timeout: 10000 });
 
     const results = await page.evaluate(() => {
       if (typeof getCustomCardPrice !== 'function') return { available: false };
@@ -154,30 +168,36 @@ test.describe('Pricing', () => {
 
   test('custom set card modal displays price when available', async ({ page }) => {
     await navigateToCustomSet(page);
-    await page.waitForTimeout(2000);
 
-    // Find a card that has a loaded price
-    const priceTagsWithPrice = page.locator('#custom-sets-grids .set-section.active .price-tag.loaded');
-    const loadedCount = await priceTagsWithPrice.count();
-
-    if (loadedCount > 0) {
-      // Click the card that has a price to open modal
-      const cardWithPrice = priceTagsWithPrice.first().locator('ancestor::div.card-item');
-      // Use a more reliable selector — find the card-item ancestor
-      const firstPriceTag = priceTagsWithPrice.first();
-      const cardItem = page.locator('#custom-sets-grids .set-section.active .card-item').filter({ has: firstPriceTag });
-      await cardItem.first().locator('.card-img-wrapper').click();
-
-      const modal = page.locator('#cardModal');
-      await expect(modal).toHaveClass(/visible/, { timeout: 3000 });
-
-      const modalPrice = page.locator('#modalCardPrice');
-      // Modal price element should be visible (not display:none) when card has a price
-      await expect(modalPrice).toBeVisible();
-      const priceText = await modalPrice.locator('.modal-price-value').textContent();
-      expect(priceText).toMatch(/^\$/);
+    // Wait for at least one price tag to become loaded (or timeout gracefully)
+    try {
+      await page.waitForSelector('#custom-sets-grids .set-section.active .price-tag.loaded', { timeout: 5000 });
+    } catch {
+      // No prices loaded — mock may not match real source sets, test still passes
+      return;
     }
-    // If no prices loaded (mock may not match real source sets), test still passes
+
+    // Find the first card-item that contains a loaded price tag using evaluate for reliable DOM traversal
+    const cardIndex = await page.evaluate(() => {
+      const cards = document.querySelectorAll('#custom-sets-grids .set-section.active .card-item');
+      for (let i = 0; i < cards.length; i++) {
+        if (cards[i].querySelector('.price-tag.loaded')) return i;
+      }
+      return -1;
+    });
+
+    if (cardIndex < 0) return;
+
+    // Click the card to open the modal
+    await page.locator('#custom-sets-grids .set-section.active .card-item').nth(cardIndex).locator('.card-img-wrapper').click();
+
+    const modal = page.locator('#cardModal');
+    await expect(modal).toHaveClass(/visible/, { timeout: 3000 });
+
+    const modalPrice = page.locator('#modalCardPrice');
+    await expect(modalPrice).toBeVisible();
+    const priceText = await modalPrice.locator('.modal-price-value').textContent();
+    expect(priceText).toMatch(/^\$/);
   });
 
   test('fetchTcgcsvPricesRaw stores alphanumeric keys in cache', async ({ page }) => {
@@ -237,8 +257,8 @@ test.describe('Pricing', () => {
     await page.locator('#pokemon-tcg-content .set-buttons.active .set-btn').first().click();
     await page.waitForSelector('#pokemon-tcg-content .set-section.active .card-item');
 
-    // Wait for price fetch
-    await page.waitForTimeout(2000);
+    // Wait for price tags to load on official set cards
+    await page.waitForSelector('#pokemon-tcg-content .set-section.active .price-tag.loaded', { timeout: 10000 });
 
     // Verify price tags exist on official set cards
     const priceTags = page.locator('#pokemon-tcg-content .set-section.active .price-tag');

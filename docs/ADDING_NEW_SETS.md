@@ -273,10 +273,11 @@ Follow these steps in order to add a new official Pokemon TCG set:
    **Important: Block Information**
    - The `block` and `blockCode` fields determine how the set appears in the hierarchical UI
    - Sets are automatically grouped by `blockCode` in the block selection interface
-   - Current block codes:
-     - `sv` - Scarlet & Violet (red/purple gradient)
-     - `me` - Mega Evolution (orange/gold gradient)
-     - `swsh` - Sword & Shield (blue gradient)
+   - Current block codes (15 eras):
+     - `base` - Base Set, `gym` - Gym, `neo` - Neo, `lc` - Legendary Collection
+     - `ecard` - e-Card, `ex` - EX, `dp` - Diamond & Pearl, `pl` - Platinum
+     - `hgss` - HeartGold SoulSilver, `bw` - Black & White, `xy` - XY
+     - `sm` - Sun & Moon, `swsh` - Sword & Shield, `sv` - Scarlet & Violet, `me` - Mega Evolution
    - If adding a new block, the UI will automatically create a block button for it
    - Block buttons show aggregate progress across all sets with the same blockCode
 
@@ -292,45 +293,19 @@ Follow these steps in order to add a new official Pokemon TCG set:
    - ✅ Rarities match official sources
    - ✅ Main set size is correct (before secret rares)
 
-### Step 3: Update index.html
+### Step 3: Update js/config.js
 
-1. **Add the set to the OFFICIAL_SETS array** (around line 1699):
+All set configuration is in `js/config.js`. The Pokemon tab HTML is dynamically generated — no HTML changes needed.
+
+1. **Add the set to the OFFICIAL_SETS array:**
    ```javascript
    const OFFICIAL_SETS = [
-       'celebrations',
-       'mega-evolution',
-       'phantasmal-flames',
-       'ascended-heroes',
-       'surging-sparks',
-       'prismatic-evolutions',
-       'journey-together',
-       'destined-rivals',
-       'my-new-set'  // Add your new set here
+       // ... existing sets ...
+       'my-new-set'  // Add your new set here, ordered by era (newest first)
    ];
    ```
 
-2. **Add the set's HTML grid section** (around line 1326, in chronological order):
-   ```html
-   <div id="my-new-set" class="set-section">
-       <div class="card-controls">
-           <div class="filter-buttons">
-               <button class="filter-btn active" onclick="filterCards('my-new-set', 'all')">All</button>
-               <button class="filter-btn" onclick="filterCards('my-new-set', 'incomplete')">Incomplete</button>
-               <button class="filter-btn" onclick="filterCards('my-new-set', 'complete')">Complete</button>
-           </div>
-           <div class="search-container">
-               <input type="text" class="search-input" placeholder="Search cards..." oninput="searchCards('my-new-set', this.value)" data-set="my-new-set">
-               <button class="search-clear" onclick="clearSearch('my-new-set')">×</button>
-           </div>
-           <div class="rarity-filters" id="my-new-set-rarity-filters"></div>
-       </div>
-       <div class="card-grid" id="my-new-set-grid"></div>
-   </div>
-   ```
-
-   > **Note:** The `rarity-filters` div is required for rarity toggle buttons to appear. These buttons are dynamically generated from the set's card data when the set is selected — no manual button creation needed.
-
-3. **Add image URL mappings** (around line 1478):
+2. **Add image URL mappings:**
 
    For **Pokemon TCG API** (TCG_API_SET_IDS):
    ```javascript
@@ -347,6 +322,16 @@ Follow these steps in order to add a new official Pokemon TCG set:
        'my-new-set': { series: 'sv', set: 'sv11' }  // Add your set's TCGdex mapping
    };
    ```
+
+3. **Add TCGCSV group ID for pricing** (see [Adding Pricing for New Sets](#adding-pricing-for-new-sets)):
+   ```javascript
+   const TCGCSV_POKEMON_GROUP_IDS = {
+       // ... existing sets ...
+       'my-new-set': 12345  // Look up at https://tcgcsv.com/tcgplayer/3/groups
+   };
+   ```
+
+   > **Note:** The Pokemon tab's block containers, set sections, and card grids are all generated dynamically by `initPokemonBlockContainers()` and `initPokemonSetGrids()` in `js/pokemon-tcg.js`. No HTML changes are needed when adding sets.
 
 ### Step 3: Update Documentation
 
@@ -416,9 +401,9 @@ Custom sets are cross-era collections (like "It's Pikachu!" tracking all Pikachu
    }
    ```
 
-### Step 2: Update index.html
+### Step 2: Update js/config.js
 
-1. **Add to CUSTOM_SETS array** (around line 1812):
+1. **Add to CUSTOM_SETS array** in `js/config.js`:
    ```javascript
    const CUSTOM_SETS = [
        'its-pikachu',
@@ -693,9 +678,9 @@ Before committing your changes, verify:
 - [ ] Types are valid (pokemon, trainer, energy)
 
 ### Code Changes
-- [ ] Set key added to appropriate array (OFFICIAL_SETS or CUSTOM_SETS)
-- [ ] HTML grid section added (official sets only)
-- [ ] Image URL mappings added (TCG_API_SET_IDS and TCGDEX_SET_IDS)
+- [ ] Set key added to appropriate array in `js/config.js` (OFFICIAL_SETS or CUSTOM_SETS)
+- [ ] Image URL mappings added (TCG_API_SET_IDS and TCGDEX_SET_IDS) in `js/config.js`
+- [ ] TCGCSV group ID added for pricing (TCGCSV_POKEMON_GROUP_IDS) in `js/config.js`
 - [ ] No syntax errors in JavaScript
 - [ ] No duplicate set keys
 
@@ -810,10 +795,10 @@ Before committing your changes, verify:
 | Add official Pokemon set data | `data/pokemon/official-sets/{set-key}.json` | - |
 | Add custom Pokemon set data | `data/pokemon/custom-sets/{set-key}.json` | - |
 | Add Lorcana set data | `data/lorcana/sets/{set-key}.json` | - |
-| Update Pokemon set list | `index.html` | OFFICIAL_SETS or CUSTOM_SETS arrays |
-| Update Lorcana set list | `index.html` | LORCANA_SETS array |
-| Add Pokemon HTML grid | `index.html` | Set sections area (include `rarity-filters` div) |
-| Add Pokemon image mappings | `index.html` | TCG_API_SET_IDS, TCGDEX_SET_IDS |
+| Update Pokemon set list | `js/config.js` | OFFICIAL_SETS or CUSTOM_SETS arrays |
+| Update Lorcana set list | `js/config.js` | LORCANA_SETS array |
+| Add Pokemon image mappings | `js/config.js` | TCG_API_SET_IDS, TCGDEX_SET_IDS |
+| Add pricing group ID | `js/config.js` | TCGCSV_POKEMON_GROUP_IDS |
 | Add Lorcana logo wiki mapping | `js/lorcana.js` | LORCANA_SET_WIKI_NAMES |
 | Add Lorcana logo SVG fallback | `js/lorcana.js` | getLorcanaSetLogoSvg() |
 | Update main docs | `README.md` | Set table section |
@@ -828,10 +813,11 @@ As of February 2026, the Pokemon TCG tab uses a two-level hierarchical navigatio
 ### Level 1: Block Selection
 
 - **What it is:** Large, visually distinct buttons for each TCG block/era
-- **Current blocks:**
-  - Scarlet & Violet (blockCode: `sv`) - 4 sets
-  - Mega Evolution (blockCode: `me`) - 3 sets
-  - Sword & Shield (blockCode: `swsh`) - 1 set
+- **Current blocks (15 eras):**
+  - Base Set (`base`), Gym (`gym`), Neo (`neo`), Legendary Collection (`lc`)
+  - e-Card (`ecard`), EX (`ex`), Diamond & Pearl (`dp`), Platinum (`pl`)
+  - HeartGold SoulSilver (`hgss`), Black & White (`bw`), XY (`xy`)
+  - Sun & Moon (`sm`), Sword & Shield (`swsh`), Scarlet & Violet (`sv`), Mega Evolution (`me`)
 - **What they show:**
   - Block name (from `block` field in JSON)
   - Number of sets in the block
@@ -884,14 +870,24 @@ If you're adding a set from a completely new TCG block (e.g., Sun & Moon):
    "blockCode": "sm"
    ```
 
-2. **Add CSS styling for the block color** in `index.html` (around line 234):
-   ```css
-   .block-btn.block-sm::before {
-       background: linear-gradient(135deg, #your-color1, #your-color2);
-   }
+2. **Add the block's theme color** to `BLOCK_THEME_COLORS` in `js/pokemon-tcg.js`:
+   ```javascript
+   const BLOCK_THEME_COLORS = {
+       // ... existing blocks ...
+       'sm': '#ff6347'  // Add your block's color
+   };
+   ```
+   Block buttons use a CSS `--block-color` variable — no per-block CSS classes needed.
+
+3. **Add the block's logo set** to `BLOCK_LOGO_SET_IDS` in `js/pokemon-tcg.js`:
+   ```javascript
+   const BLOCK_LOGO_SET_IDS = {
+       // ... existing blocks ...
+       'sm': 'sm1'  // First set in the block, used for logo
+   };
    ```
 
-3. The block button will automatically appear in the UI
+4. The block button will automatically appear in the UI
 
 ---
 
@@ -974,6 +970,7 @@ This implementation demonstrates how to add a new TCG while reusing the existing
 
 ## Version History
 
+- **v3.0** (2026-02-16): Updated for dynamic HTML generation — Pokemon tab no longer requires HTML changes for new sets. All config now in `js/config.js`. Updated block list to 15 eras. Updated Quick Reference table. Block styling now uses CSS `--block-color` variable.
 - **v2.3** (2026-02-16): Added "Adding Pricing for New Sets" section covering Pokemon, Lorcana, custom set, and new TCG pricing setup with group ID lookup instructions.
 - **v2.2** (2026-02-16): Updated HTML template to include `rarity-filters` div placeholder. Updated testing checklist with rarity filter verification steps. Updated Quick Reference table.
 - **v2.1** (2026-02-16): Added Lorcana set logo CDN documentation — wiki-based fallback system using Mushu Report and Fandom wikis. Updated Quick Reference table with Lorcana-specific file locations. Added Lessons Learned entry for logo CDN pattern. Updated "Adding a New Card Game" Step 4 with logo sourcing guidance.

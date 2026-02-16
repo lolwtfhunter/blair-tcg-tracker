@@ -584,6 +584,7 @@ const TCGCSV_POKEMON_GROUP_IDS = {
     'plasma-freeze': 1382,
     'plasma-blast': 1370,
     'legendary-treasures': 1409,
+    'dragon-vault': 1426,
     'bw-promos': 1407,
     // XY era
     'kalos-starter-set': 1522,
@@ -646,6 +647,8 @@ const TCGCSV_POKEMON_GROUP_IDS = {
     'paradox-rift': 23286,
     'paldean-fates': 23353,
     'temporal-forces': 23381,
+    'twilight-masquerade': 23473,
+    'stellar-crown': 23537,
     'surging-sparks': 23651,
     'prismatic-evolutions': 23821,
     'journey-together': 24073,
@@ -701,7 +704,8 @@ const TCGCSV_SOURCE_SET_GROUP_IDS = {
     // Black & White Era
     'bw1': 1400,  'bw2': 1424,  'bw3': 1385,  'bw4': 1412,
     'bw5': 1386,  'bw6': 1394,  'bw7': 1408,  'bw8': 1413,
-    'bw9': 1382,  'bw10': 1370, 'bw11': 1409, 'bwp': 1407,
+    'bw9': 1382,  'bw10': 1370, 'bw11': 1409, 'dv1': 1426,
+    'bwp': 1407,
     // XY Era
     'xy0': 1522,  'xy1': 1387,  'xy2': 1464,  'xy3': 1481,
     'xy4': 1494,  'xy5': 1509,  'xy6': 1534,  'xy7': 1576,
@@ -723,10 +727,11 @@ const TCGCSV_SOURCE_SET_GROUP_IDS = {
     // Scarlet & Violet Era
     'sv1': 22873,   'sv2': 23120,   'sv3': 23228,   'sv3pt5': 23237,
     'sv4': 23286,   'sv4pt5': 23353, 'sv5': 23381,
-    'sv8': 23651,   'sv8pt5': 23821, 'sv10': 24269,
+    'sv6': 23473,   'sv7': 23537,   'sv8': 23651,
+    'sv8pt5': 23821, 'sv9': 24073,  'sv10': 24269,
     'svp': 22872,   'cel25': 2867,  'cel25c': 2931,
     // Mega Evolution Era
-    'me2pt5': 24541, 'mep': 24451,
+    'me1': 24380,  'me2': 24448,  'me2pt5': 24541, 'mep': 24451,
     // POP Series
     'pop2': 1447, 'pop3': 1442, 'pop4': 1452,
     'pop5': 1439, 'pop6': 1432, 'pop9': 1446,
