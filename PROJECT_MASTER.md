@@ -9,16 +9,16 @@
 
 ## 📋 PROJECT OVERVIEW
 
-A web-based multi-TCG collection tracker for tracking 2,000+ cards across **Pokemon TCG** and **Disney Lorcana** with real-time cloud sync between devices. Built for Blair and family to track their master set collection with proper variant tracking, card images from multiple CDN sources, and advanced filtering.
+A web-based multi-TCG collection tracker for tracking 4,000+ cards across **Pokemon TCG** and **Disney Lorcana** with real-time cloud sync between devices. Built for Blair and family to track their master set collection with proper variant tracking, card images from multiple CDN sources, and advanced filtering.
 
 ### **Supported Trading Card Games**
 - ✅ **Pokemon TCG** - 8 official sets + 3 custom curated sets (1,529 cards)
-- ✅ **Disney Lorcana** - 2 sets (408 cards)
+- ✅ **Disney Lorcana** - 11 sets (2,499 cards)
 
 ### **Core Features**
-- ✅ Track 1,937+ cards across multiple TCGs
+- ✅ Track 4,028+ cards across multiple TCGs
   - Pokemon: 1,529 cards (8 official sets + 3 custom sets)
-  - Lorcana: 408 cards (2 sets)
+  - Lorcana: 2,499 cards (11 sets)
 - ✅ Modular data structure for better performance and scalability
 - ✅ Japanese-exclusive Pokemon card tracking with JP badges and EN/JP subtabs
 - ✅ Variant tracking per card:
@@ -35,7 +35,7 @@ A web-based multi-TCG collection tracker for tracking 2,000+ cards across **Poke
 - ✅ Lazy loading for performance
 - ✅ Multi-CDN image sources with automatic fallback:
   - Pokemon: Pokemon TCG API → TCGdex → Local → Placeholder
-  - Lorcana: Dreamborn → Lorcania → Local → Placeholder
+  - Lorcana: Dreamborn → Lorcast API → Local → Placeholder
 
 ---
 
@@ -195,14 +195,24 @@ The project includes comprehensive reference documents for development and maint
 
 | Set | Cards | Release | Set Code | Features |
 |-----|-------|---------|----------|----------|
-| The First Chapter | 204 | Aug 2023 | tfc | Set 1, features Disney characters from Frozen, Aladdin, The Lion King, etc. |
-| Whispers in the Well | 204 | Nov 2025 | whi | Set 10, features characters from Zootopia and other Disney franchises |
+| The First Chapter | 216 | Aug 2023 | tfc | Set 1, features Disney characters from Frozen, Aladdin, The Lion King, etc. |
+| Rise of the Floodborn | 216 | Nov 2023 | rotf | Set 2 |
+| Into the Inklands | 223 | Feb 2024 | iti | Set 3 |
+| Ursula's Return | 225 | May 2024 | urr | Set 4 |
+| Shimmering Skies | 223 | Aug 2024 | ssk | Set 5 |
+| Azurite Sea | 222 | Nov 2024 | azu | Set 6 |
+| Archazia's Island | 224 | Mar 2025 | arc | Set 7 |
+| Reign of Jafar | 224 | May 2025 | roj | Set 8 |
+| Fabled | 242 | Aug 2025 | fab | Set 9 |
+| Whispers in the Well | 242 | Nov 2025 | whi | Set 10, features characters from Zootopia and other Disney franchises |
+| Winterspell | 242 | Feb 2026 | win | Set 11 |
 
-**Total Lorcana Cards**: 408 cards across 2 sets
+**Total Lorcana Cards**: 2,499 cards across 11 sets
 
 **Lorcana Image Sources:**
-- Primary: Dreamborn CDN (`https://cdn.dreamborn.ink/images/en/cards/{dreambornId}`) — extensionless URLs serving JFIF/JPEG
-- Secondary: Local images fallback (`./Images/lorcana/{setKey}/{number}.jpg`)
+- Tier 1: Dreamborn CDN (`https://cdn.dreamborn.ink/images/en/cards/{dreambornId}`) — extensionless URLs serving JFIF/JPEG
+- Tier 2: Lorcast API (`https://api.lorcast.com/`) — image URLs fetched and cached via non-blocking fire-and-forget call; set codes mapped in `LORCAST_SET_CODES` in `js/config.js`
+- Tier 3: Local images fallback (`./Images/lorcana/{setKey}/{number}.jpg`)
 
 **Lorcana Tracking Model:**
 - Single "Collected" checkbox per card (simplified vs Pokemon's multi-variant system)
@@ -846,6 +856,7 @@ Displays fullscreen modal requiring valid sync code entry.
 
 ## 📅 VERSION HISTORY
 
+- **v4.0.0** (Feb 2026) - Expanded Disney Lorcana from 2 to 11 sets (2,499 cards); added Lorcast API as Tier 2 image fallback; dynamic set section creation via `initLorcanaSetGrids()`; scoped `.set-section` selectors to prevent cross-tab interference; `LORCAST_SET_CODES` config mapping; non-blocking Lorcast fetch for instant card rendering
 - **v3.2.0** (Feb 15, 2026) - Computed variant logic for custom sets, card data fixes, variant rule corrections
 - **v3.1.1** (Feb 15, 2026) - Added Psyduck and Togepi custom sets (55 new cards)
 - **v3.1.0** (Feb 15, 2026) - UX improvements: Filter/search controls, card detail modal, lazy loading, updated branding

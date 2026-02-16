@@ -51,16 +51,25 @@ The app has three top-level tabs:
 
 ### Disney Lorcana
 
-- **2 supported sets** with full card lists:
+- **11 supported sets** spanning all released Lorcana chapters:
 
   | Set | Cards | Release |
   |-----|-------|---------|
   | The First Chapter | 216 | Aug 2023 |
-  | Whispers in the Well | 240 | Nov 2025 |
+  | Rise of the Floodborn | 216 | Nov 2023 |
+  | Into the Inklands | 223 | Feb 2024 |
+  | Ursula's Return | 225 | May 2024 |
+  | Shimmering Skies | 223 | Aug 2024 |
+  | Azurite Sea | 222 | Nov 2024 |
+  | Archazia's Island | 224 | Mar 2025 |
+  | Reign of Jafar | 224 | May 2025 |
+  | Fabled | 242 | Aug 2025 |
+  | Whispers in the Well | 242 | Nov 2025 |
+  | Winterspell | 242 | Feb 2026 |
 
 - **Simple collection tracking** — Single "Collected" checkbox per card (Lorcana uses foil/non-foil variants rather than multiple variant types like Pokemon)
 - **Set logos** — Official set logos load automatically from public wiki sources ([Mushu Report](https://wiki.mushureport.com/), [Lorcana Wiki](https://lorcana.fandom.com/)), with cascading fallback to local files and inline SVG
-- **Card images** — Artwork loads from [Dreamborn.ink](https://dreamborn.ink/) CDN, with fallback to local images, then placeholder
+- **Card images** — Artwork loads from [Dreamborn.ink](https://dreamborn.ink/) CDN, with fallback to [Lorcast API](https://api.lorcast.com/), then local images, then placeholder
 - **Filter & search** — Same powerful filtering and search as Pokemon TCG
 - **Progress tracking** — Real-time progress bars and completion statistics
 - **Cloud sync** — Shares the same Firebase sync as Pokemon, so all your TCG collections sync together
@@ -88,10 +97,19 @@ blair-pokemon-tracker/
 │   │       ├── its-pikachu.json
 │   │       ├── psyduck.json
 │   │       └── togepi.json
-│   └── lorcana/            Disney Lorcana sets
+│   └── lorcana/            Disney Lorcana sets (11 sets)
 │       └── sets/
 │           ├── first-chapter.json
-│           └── whispers-in-the-well.json
+│           ├── rise-of-the-floodborn.json
+│           ├── into-the-inklands.json
+│           ├── ursulas-return.json
+│           ├── shimmering-skies.json
+│           ├── azurite-sea.json
+│           ├── archazias-island.json
+│           ├── reign-of-jafar.json
+│           ├── fabled.json
+│           ├── whispers-in-the-well.json
+│           └── winterspell.json
 ├── restore.html            Backup restore utility
 ├── test.html               Test page
 ├── test-card-data.html     Card data validation page
@@ -108,7 +126,16 @@ blair-pokemon-tracker/
 │       ├── ascended-heroes/
 │       └── lorcana/         Lorcana card images (optional)
 │           ├── first-chapter/
+│           ├── rise-of-the-floodborn/
+│           ├── into-the-inklands/
+│           ├── ursulas-return/
+│           ├── shimmering-skies/
+│           ├── azurite-sea/
+│           ├── archazias-island/
+│           ├── reign-of-jafar/
+│           ├── fabled/
 │           ├── whispers-in-the-well/
+│           ├── winterspell/
 │           └── logos/          Set logos (optional, CDN fallback exists)
 ├── backups/                Automated Firebase backup snapshots
 ├── .github/workflows/      CI/CD (Firebase backup workflow)
@@ -159,11 +186,12 @@ Card artwork loads through a 4-tier fallback system:
 3. **Lorcana Fandom wiki** — `lorcana.fandom.com/wiki/Special:FilePath/{SetName}_Logo.png`
 4. **Inline SVG** — A generated Lorcana-themed hexagon with set-specific color and Roman numeral
 
-**Card artwork** loads through a 3-tier fallback system:
+**Card artwork** loads through a 4-tier fallback system:
 
 1. **Dreamborn CDN** — `https://cdn.dreamborn.ink/images/en/cards/{dreamborn-id}` (extensionless URL, serves JFIF/JPEG)
-2. **Local images** — `Images/lorcana/{set-key}/{number}.jpg` (if you add your own)
-3. **Placeholder** — A generated card back SVG with the card number and name
+2. **Lorcast API** — Card image URLs fetched from `https://api.lorcast.com/` and cached (non-blocking background fetch)
+3. **Local images** — `Images/lorcana/{set-key}/{number}.jpg` (if you add your own)
+4. **Placeholder** — A generated card back SVG with the card number and name
 
 See [`Images/README.md`](Images/README.md) for details on adding local card images.
 
@@ -194,7 +222,7 @@ Variant eligibility is determined automatically from rarity. Custom set cards co
 - **Storage:** localStorage for offline/local persistence
 - **Images:**
   - Pokemon: Pokemon TCG API CDN (pokemontcg.io), TCGdex CDN (tcgdex.net)
-  - Lorcana: Dreamborn CDN (dreamborn.ink)
+  - Lorcana: Dreamborn CDN (dreamborn.ink), Lorcast API (api.lorcast.com)
 - **Hosting:** GitHub Pages
 - **CI/CD:** GitHub Actions (automated Firebase backups)
 
@@ -225,6 +253,7 @@ Card data sourced from:
 
 Card images sourced from:
 - [Dreamborn.ink](https://dreamborn.ink/) (dreamborn.ink CDN)
+- [Lorcast API](https://api.lorcast.com/) (lorcast.com API)
 - [Lorcania](https://lorcania.com/) (lorcania.com CDN)
 
 Set logos sourced from:
