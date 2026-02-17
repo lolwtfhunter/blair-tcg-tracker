@@ -16,11 +16,6 @@
 </head>
 <body>
     <div class="container">
-        <div class="sync-status">
-            <div class="sync-indicator" id="syncIndicator"></div>
-            <span id="syncStatus">Offline</span>
-        </div>
-
         <!-- User bar (shown when logged in) -->
         <div class="user-bar" id="userBar">
             <div class="user-bar-left">
@@ -28,6 +23,10 @@
                 <span class="user-collection-name" id="activeCollectionName"></span>
             </div>
             <div class="user-bar-right">
+                <div class="sync-status" id="syncStatusContainer">
+                    <div class="sync-indicator" id="syncIndicator"></div>
+                    <span id="syncStatus">Offline</span>
+                </div>
                 <button class="user-bar-btn gear" onclick="toggleCollectionPanel()" title="Collections">&#9881;</button>
                 <button class="user-bar-btn" onclick="signOut()">Sign Out</button>
             </div>
