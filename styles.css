@@ -922,6 +922,7 @@ h1 {
     box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
     transform: scale(0.9);
     transition: transform 0.3s ease;
+    touch-action: pan-y pinch-zoom;
 }
 
 .card-modal.visible .card-modal-content {
