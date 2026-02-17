@@ -173,6 +173,10 @@ function getCustomCardImageUrl(card) {
         const parts = card.apiId.split('-');
         const setId = parts.slice(0, -1).join('-');
         const num = parts[parts.length - 1];
+        // Skip all CDNs for sets where no source has real images
+        if (typeof NO_IMAGE_SETS !== 'undefined' && NO_IMAGE_SETS.has(setId)) {
+            return null;
+        }
         // Use Scrydex for sets where pokemontcg.io serves placeholder images
         if (typeof SCRYDEX_PRIMARY_SETS !== 'undefined' && SCRYDEX_PRIMARY_SETS.has(setId)) {
             return `https://images.scrydex.com/pokemon/${setId}-${num}/large`;
