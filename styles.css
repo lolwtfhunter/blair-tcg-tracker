@@ -197,15 +197,20 @@ h1 {
 
 @media (max-width: 767px) {
     .block-buttons {
-        flex-wrap: nowrap;
-        justify-content: flex-start;
-        padding-bottom: 8px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        overflow-x: visible;
     }
     .block-btn {
-        min-width: 220px;
-        scroll-snap-align: start;
-        flex-shrink: 0;
+        min-width: unset;
+        padding: 10px;
     }
+    .block-btn-logo-wrapper { height: 35px; margin-bottom: 4px; }
+    .block-btn-logo { max-height: 35px; }
+    .block-btn-name { font-size: 0.8rem; margin-bottom: 4px; }
+    .block-btn-stats { font-size: 0.65rem; }
+    .block-btn-progress { margin-top: 6px; }
 }
 
 @media (min-width: 768px) {
@@ -274,6 +279,13 @@ h1 {
     transform: scale(0.98);
 }
 
+@media (max-width: 767px) {
+    .block-btn.active {
+        transform: none;
+        box-shadow: 0 0 0 2px var(--block-color), 0 4px 16px rgba(0,0,0,0.5);
+    }
+}
+
 .block-btn-content {
     position: relative;
     z-index: 1;
@@ -317,6 +329,11 @@ h1 {
     gap: 12px;
     margin-bottom: 20px;
     justify-content: center;
+}
+
+/* Custom Sets centering fix — auto-fit ensures columns collapse to center with few items */
+#custom-sets-content .set-buttons {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 260px));
 }
 
 /* Hierarchical set buttons for Pokemon TCG (hidden until block selected) */
@@ -1050,25 +1067,14 @@ h1 {
 
 /* Responsive design for block and set buttons */
 @media (max-width: 768px) {
-    .block-buttons {
-        grid-template-columns: 1fr;
-    }
-
     .set-buttons {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 8px;
     }
-
-    .set-btn-logo {
-        height: 60px;
-    }
-
-    .block-btn {
-        padding: 16px;
-    }
-
-    .block-btn-name {
-        font-size: 1rem;
-    }
+    .set-btn { padding: 10px 8px; }
+    .set-btn-logo-wrapper { height: 45px; }
+    .set-btn-logo { height: 45px; }
+    .set-btn-name { font-size: 0.8rem; }
 }
 
 /* Card image support */
