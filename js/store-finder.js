@@ -8,11 +8,12 @@ const SF_CONFIG = {
     DEFAULT_ZOOM: 4,
     SEARCH_ZOOM: 12,
     OVERPASS_SHOP_TAGS: ['games', 'hobby', 'comic', 'toys'],
+    KM_PER_MILE: 1.60934,
 };
 
 let sfMap, sfMarkers = [], sfCurrentLat, sfCurrentLng, sfInitialized = false;
 let sfLeafletLoaded = false, sfGoogleLoaded = false;
-let sfCurrentRadiusKm = 25;
+let sfCurrentRadiusMiles = 15;
 
 // --- Activation & lazy loading ---
 
@@ -152,7 +153,7 @@ function sfGeocodeNominatim(query) {
 // --- Radius change ---
 
 function sfRadiusChanged() {
-    sfCurrentRadiusKm = parseInt(document.getElementById('sfRadiusSelect').value, 10);
+    sfCurrentRadiusMiles = parseInt(document.getElementById('sfRadiusSelect').value, 10);
     if (sfCurrentLat != null && sfCurrentLng != null) {
         sfSearchNear(sfCurrentLat, sfCurrentLng);
     }
@@ -175,7 +176,9 @@ function sfSearchNear(lat, lng) {
     sfMarkers.forEach(m => sfMap && sfMap.removeLayer(m));
     sfMarkers = [];
 
-    const radiusMeters = sfCurrentRadiusKm * 1000;
+    // Convert miles to meters for API queries
+    const radiusKm = sfCurrentRadiusMiles * SF_CONFIG.KM_PER_MILE;
+    const radiusMeters = radiusKm * 1000;
 
     if (SF_CONFIG.GOOGLE_API_KEY && sfGoogleLoaded && window.google && google.maps && google.maps.places) {
         sfSearchGooglePlaces(lat, lng, radiusMeters,
@@ -184,7 +187,7 @@ function sfSearchNear(lat, lng) {
                     sfDisplayResults(stores, lat, lng);
                 } else {
                     // Google returned nothing — try Overpass
-                    sfSearchOverpass(lat, lng, sfCurrentRadiusKm,
+                    sfSearchOverpass(lat, lng, radiusKm,
                         stores2 => sfDisplayResults(stores2, lat, lng, true),
                         () => sfDisplayResults([], lat, lng)
                     );
@@ -192,7 +195,7 @@ function sfSearchNear(lat, lng) {
             },
             () => {
                 // Google failed — fallback to Overpass
-                sfSearchOverpass(lat, lng, sfCurrentRadiusKm,
+                sfSearchOverpass(lat, lng, radiusKm,
                     stores2 => sfDisplayResults(stores2, lat, lng, true),
                     () => sfDisplayResults([], lat, lng)
                 );
@@ -200,7 +203,7 @@ function sfSearchNear(lat, lng) {
         );
     } else {
         // No Google API key — go straight to Overpass
-        sfSearchOverpass(lat, lng, sfCurrentRadiusKm,
+        sfSearchOverpass(lat, lng, radiusKm,
             stores => sfDisplayResults(stores, lat, lng, true),
             () => sfDisplayResults([], lat, lng)
         );
@@ -228,6 +231,7 @@ function sfSearchGooglePlaces(lat, lng, radiusMeters, onSuccess, onError) {
                     lng: p.geometry.location.lng(),
                     distance: sfHaversineKm(lat, lng, p.geometry.location.lat(), p.geometry.location.lng()),
                     hours: p.opening_hours ? (p.opening_hours.isOpen() ? 'Open now' : 'Closed') : '',
+                    website: p.website || '',
                     source: 'google',
                 }));
                 onSuccess(stores);
@@ -276,6 +280,7 @@ function sfSearchOverpass(lat, lng, radiusKm, onSuccess, onError) {
                 lng: el.lon,
                 distance: sfHaversineKm(lat, lng, el.lat, el.lon),
                 hours: (el.tags && el.tags.opening_hours) || '',
+                website: (el.tags && el.tags.website) || '',
                 source: 'osm',
             });
         });
@@ -302,18 +307,19 @@ function sfDisplayResults(stores, lat, lng, isOsm) {
     // Sort by distance
     stores.sort((a, b) => a.distance - b.distance);
 
-    // Filter to radius
-    stores = stores.filter(s => s.distance <= sfCurrentRadiusKm);
+    // Filter to radius (distance is in km, convert radius miles to km)
+    const radiusKm = sfCurrentRadiusMiles * SF_CONFIG.KM_PER_MILE;
+    stores = stores.filter(s => s.distance <= radiusKm);
 
     const header = document.getElementById('sfListHeader');
     if (stores.length === 0) {
-        header.textContent = 'No TCG retailers found within ' + sfCurrentRadiusKm + ' km. Try a larger radius or different location.';
+        header.textContent = 'No TCG retailers found within ' + sfCurrentRadiusMiles + ' miles. Try a larger radius or different location.';
         document.getElementById('sfStoreList').innerHTML = '';
         return;
     }
 
     const sourceLabel = isOsm ? ' (via OpenStreetMap)' : '';
-    header.textContent = stores.length + ' store' + (stores.length !== 1 ? 's' : '') + ' found within ' + sfCurrentRadiusKm + ' km' + sourceLabel;
+    header.textContent = stores.length + ' store' + (stores.length !== 1 ? 's' : '') + ' found within ' + sfCurrentRadiusMiles + ' mi' + sourceLabel;
 
     // Place markers
     stores.forEach((store, idx) => sfAddStoreMarker(store, idx));
@@ -330,11 +336,17 @@ function sfDisplayResults(stores, lat, lng, isOsm) {
 function sfAddStoreMarker(store, idx) {
     if (!sfMap || typeof L === 'undefined') return;
     const marker = L.marker([store.lat, store.lng]).addTo(sfMap);
+    const distMi = sfKmToMiles(store.distance).toFixed(1);
+    const mapsUrl = sfGoogleMapsUrl(store);
     const popupHtml = '<div class="sf-popup">' +
         '<div class="sf-popup-name">' + sfEscape(store.name) + '</div>' +
         (store.address ? '<div class="sf-popup-addr">' + sfEscape(store.address) + '</div>' : '') +
-        '<div class="sf-popup-dist">' + store.distance.toFixed(1) + ' km away</div>' +
+        '<div class="sf-popup-dist">' + distMi + ' mi away</div>' +
         (store.hours ? '<div class="sf-popup-hours">' + sfEscape(store.hours) + '</div>' : '') +
+        '<div class="sf-popup-links">' +
+            (store.website ? '<a href="' + sfEscape(store.website) + '" target="_blank" rel="noopener">Website</a> · ' : '') +
+            '<a href="' + sfEscape(mapsUrl) + '" target="_blank" rel="noopener">Google Maps</a>' +
+        '</div>' +
         '</div>';
     marker.bindPopup(popupHtml);
     sfMarkers.push(marker);
@@ -342,16 +354,23 @@ function sfAddStoreMarker(store, idx) {
 
 function sfRenderStoreList(stores) {
     const list = document.getElementById('sfStoreList');
-    list.innerHTML = stores.map((store, idx) =>
-        '<div class="sf-store-item" onclick="sfFocusMarker(' + (idx + 1) + ')">' +
+    list.innerHTML = stores.map((store, idx) => {
+        const distMi = sfKmToMiles(store.distance).toFixed(1);
+        const mapsUrl = sfGoogleMapsUrl(store);
+        const linkHtml = store.website
+            ? '<a href="' + sfEscape(store.website) + '" target="_blank" rel="noopener" class="sf-store-link" onclick="event.stopPropagation()">Website</a>'
+            + '<a href="' + sfEscape(mapsUrl) + '" target="_blank" rel="noopener" class="sf-store-link" onclick="event.stopPropagation()">Google Maps</a>'
+            : '<a href="' + sfEscape(mapsUrl) + '" target="_blank" rel="noopener" class="sf-store-link" onclick="event.stopPropagation()">Google Maps</a>';
+        return '<div class="sf-store-item" onclick="sfFocusMarker(' + (idx + 1) + ')">' +
             '<div class="sf-store-row">' +
                 '<div class="sf-store-name">' + sfEscape(store.name) + '</div>' +
-                '<div class="sf-store-dist">' + store.distance.toFixed(1) + ' km</div>' +
+                '<div class="sf-store-dist">' + distMi + ' mi</div>' +
             '</div>' +
             (store.address ? '<div class="sf-store-addr">' + sfEscape(store.address) + '</div>' : '') +
             (store.hours ? '<div class="sf-store-hours">' + sfEscape(store.hours) + '</div>' : '') +
-        '</div>'
-    ).join('');
+            '<div class="sf-store-links">' + linkHtml + '</div>' +
+        '</div>';
+    }).join('');
 }
 
 function sfFocusMarker(idx) {
@@ -372,6 +391,14 @@ function sfHaversineKm(lat1, lng1, lat2, lng2) {
               Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
               Math.sin(dLng / 2) * Math.sin(dLng / 2);
     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function sfKmToMiles(km) {
+    return km / SF_CONFIG.KM_PER_MILE;
+}
+
+function sfGoogleMapsUrl(store) {
+    return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(store.name + ' ' + store.address);
 }
 
 function sfEscape(str) {

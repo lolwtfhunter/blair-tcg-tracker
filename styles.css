@@ -478,6 +478,25 @@ h1 {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
+.top-tab-divider {
+    width: 1px;
+    align-self: stretch;
+    margin: 6px 2px;
+    background: rgba(255, 255, 255, 0.12);
+    flex-shrink: 0;
+}
+
+.top-tab-utility {
+    flex: 0 1 auto;
+    font-size: 0.85rem;
+    color: rgba(241, 241, 241, 0.4);
+}
+
+.top-tab-utility.active {
+    background: rgba(37, 99, 235, 0.25);
+    color: #93bbfc;
+}
+
 .top-tab-content {
     display: none;
     overflow: hidden;
@@ -1897,6 +1916,49 @@ h1 {
     font-size: 0.75rem;
     color: rgba(255, 255, 255, 0.4);
     margin-top: 2px;
+}
+
+/* Store links */
+.sf-store-links {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.sf-store-link {
+    font-size: 0.75rem;
+    color: rgba(100, 181, 246, 0.8);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.sf-store-link:hover {
+    color: #64b5f6;
+    text-decoration: underline;
+}
+
+/* Popup links */
+.sf-popup-links {
+    margin-top: 6px;
+    font-size: 0.8rem;
+}
+
+.sf-popup-links a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.sf-popup-links a:hover {
+    text-decoration: underline;
+}
+
+/* Disclaimer */
+.sf-disclaimer {
+    text-align: center;
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.35);
+    padding: 10px 16px;
+    font-style: italic;
 }
 
 /* Leaflet popup overrides */

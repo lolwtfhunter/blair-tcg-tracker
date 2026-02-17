@@ -22,8 +22,8 @@ test.describe('Navigation', () => {
     const tabs = page.locator('.top-tab');
     await expect(tabs).toHaveCount(4);
     await expect(tabs.nth(0)).toHaveText('Pokemon');
-    await expect(tabs.nth(1)).toHaveText('Custom Sets');
-    await expect(tabs.nth(2)).toHaveText('Disney Lorcana');
+    await expect(tabs.nth(1)).toHaveText('Disney Lorcana');
+    await expect(tabs.nth(2)).toHaveText('Custom Sets');
     await expect(tabs.nth(3)).toHaveText('Store Finder');
 
     await expect(page.locator('.top-tab').first()).toHaveClass(/active/);

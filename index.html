@@ -69,9 +69,10 @@
         <!-- Top-level tab navigation -->
         <div class="top-tabs">
             <button class="top-tab active" data-tab="pokemon-tcg" onclick="switchTopTab('pokemon-tcg')">Pokemon</button>
-            <button class="top-tab" data-tab="custom-sets" onclick="switchTopTab('custom-sets')">Custom Sets</button>
             <button class="top-tab" data-tab="lorcana" onclick="switchTopTab('lorcana')">Disney Lorcana</button>
-            <button class="top-tab" data-tab="store-finder" onclick="switchTopTab('store-finder'); sfActivate();">Store Finder</button>
+            <button class="top-tab" data-tab="custom-sets" onclick="switchTopTab('custom-sets')">Custom Sets</button>
+            <div class="top-tab-divider"></div>
+            <button class="top-tab top-tab-utility" data-tab="store-finder" onclick="switchTopTab('store-finder'); sfActivate();">Store Finder</button>
         </div>
 
         <!-- Pokemon TCG tab content -->
@@ -116,9 +117,10 @@
                 <div class="sf-radius-wrap">
                     <label for="sfRadiusSelect">Radius:</label>
                     <select id="sfRadiusSelect" class="sf-radius-select" onchange="sfRadiusChanged()">
-                        <option value="10">10 km</option>
-                        <option value="25" selected>25 km</option>
-                        <option value="50">50 km</option>
+                        <option value="5">5 mi</option>
+                        <option value="15" selected>15 mi</option>
+                        <option value="30">30 mi</option>
+                        <option value="50">50 mi</option>
                     </select>
                 </div>
             </div>
@@ -135,6 +137,7 @@
                 </div>
                 <div class="sf-store-list" id="sfStoreList"></div>
             </div>
+            <div class="sf-disclaimer">Results are best estimates based on available map data. Please verify store details, hours, and inventory before visiting.</div>
         </div>
 
     </div>
