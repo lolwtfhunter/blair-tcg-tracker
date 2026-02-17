@@ -366,14 +366,14 @@ return ['regular', 'reverse-holo'];
 
 ## Image URL Mapping
 
-Card images use a 4-tier fallback system:
+Card images use a 5-tier fallback system:
 
-### 1. Pokemon TCG API (Primary)
+### 1. Pokemon TCG API (Primary — most sets)
 ```
 https://images.pokemontcg.io/{setCode}/{cardNumber}.png
 ```
 
-**Mapping:** Uses `TCG_API_SET_IDS` object in `index.html`
+**Mapping:** Uses `TCG_API_SET_IDS` object in `js/config.js`
 
 ```javascript
 const TCG_API_SET_IDS = {
@@ -385,18 +385,46 @@ const TCG_API_SET_IDS = {
     'ascended-heroes': 'me2pt5',
     'celebrations': 'cel25',
     'surging-sparks': 'sv8'
+    // ... 132 total sets
 };
 ```
 
 **Special Cases:**
 - Celebrations Classic Collection: `cel25c/{imageId}.png` (uses imageId field)
 
-### 2. TCGdex CDN (Secondary)
+**⚠️ Known Issue — Broken Sets on pokemontcg.io:**
+
+Some newer sets return HTTP 200 with a **placeholder image** (not a real 404) from pokemontcg.io. Since the browser receives a valid image response, `onerror` never fires, making fallback-based approaches ineffective.
+
+These sets are listed in `SCRYDEX_PRIMARY_SETS` in `js/image-utils.js` and skip pokemontcg.io entirely, using Scrydex as the primary source instead:
+
+```javascript
+// Sets where pokemontcg.io returns a placeholder image (HTTP 200) instead of real cards.
+const SCRYDEX_PRIMARY_SETS = new Set(['me2pt5', 'mep']);
+```
+
+**How to detect:** `curl -sI "https://images.pokemontcg.io/{setCode}/1.png"` — if it returns 200 but the image is ~186KB (the generic placeholder), add the set ID to `SCRYDEX_PRIMARY_SETS`.
+
+### 2. Scrydex CDN (Secondary — or Primary for broken pokemontcg.io sets)
+```
+https://images.scrydex.com/pokemon/{setCode}-{cardNumber}/large
+```
+
+**When to use:**
+- As automatic fallback when pokemontcg.io fails with a real HTTP error
+- As **primary source** for sets in `SCRYDEX_PRIMARY_SETS` (pokemontcg.io returns fake 200)
+- Logo URL: `https://images.scrydex.com/pokemon/{setCode}-logo/logo`
+
+**Implementation:** `getScrydexImageUrl()` and `getCustomCardScrydexUrl()` in `js/image-utils.js`
+
+**Added:** February 2026. The pokemontcg.io data repo has been migrating newer sets to Scrydex. When adding new sets, check both CDNs.
+
+### 3. TCGdex CDN (Tertiary)
 ```
 https://assets.tcgdex.net/en/{series}/{set}/{cardNumber}/high.png
 ```
 
-**Mapping:** Uses `TCGDEX_SET_IDS` object
+**Mapping:** Uses `TCGDEX_SET_IDS` object in `js/config.js`
 
 ```javascript
 const TCGDEX_SET_IDS = {
@@ -408,10 +436,13 @@ const TCGDEX_SET_IDS = {
     'ascended-heroes':      { series: 'me', set: 'me02.5' },
     'celebrations':         { series: 'swsh', set: 'cel25' },
     'surging-sparks':       { series: 'sv', set: 'sv08' }
+    // ... 132 total sets
 };
 ```
 
-### 3. Local Images (Tertiary)
+**TCGdex API for card data:** TCGdex also provides card data (names, rarities, categories) via `https://api.tcgdex.net/v2/en/sets/{setId}` and `https://api.tcgdex.net/v2/en/cards/{setId}-{number}`. This is useful for verifying/correcting card lists when pokemontcg.io API doesn't have the set yet.
+
+### 4. Local Images (Quaternary)
 ```
 Images/cards/{set-key}/{cardNumber}.png
 ```
@@ -420,25 +451,47 @@ Images/cards/{set-key}/{cardNumber}.png
 - Card numbers are zero-padded to 3 digits (e.g., `001.png`, `025.png`, `188.png`)
 - Set key matches the JSON file name
 
-### 4. Placeholder (Fallback)
+### 5. Placeholder (Final Fallback)
 - Generated SVG Pokeball with card number and name
 - Used when all other sources fail
 
 ### Custom Set Image URLs
 
-For custom sets, the `getCustomCardImageUrl(card)` function uses the `apiId` field:
+For custom sets, the `getCustomCardImageUrl(card)` function in `js/data-loader.js` uses the `apiId` field:
 
 ```javascript
 // apiId format: "setId-number"
 // Example: "base1-58" → https://images.pokemontcg.io/base1/58.png
+// But for sets in SCRYDEX_PRIMARY_SETS:
+// Example: "me2pt5-1" → https://images.scrydex.com/pokemon/me2pt5-1/large
 
 if (card.apiId) {
     const parts = card.apiId.split('-');
     const setId = parts.slice(0, -1).join('-');
     const num = parts[parts.length - 1];
+    if (SCRYDEX_PRIMARY_SETS.has(setId)) {
+        return `https://images.scrydex.com/pokemon/${setId}-${num}/large`;
+    }
     return `https://images.pokemontcg.io/${setId}/${num}.png`;
 }
 ```
+
+### Fallback Chain Implementation
+
+The fallback logic is in `handleImgError()` in `js/image-utils.js`. Each `<img>` tag carries data attributes for fallback sources:
+
+- `data-scrydex-src` — Scrydex URL
+- `data-tcgdex-src` — TCGdex URL
+- `data-local-src` — Local file URL
+
+### Set Logo Fallback
+
+Set button logos also use a two-tier fallback:
+1. **Primary:** pokemontcg.io (or Scrydex for `SCRYDEX_PRIMARY_SETS`)
+2. **Fallback:** Scrydex (or pokemontcg.io if Scrydex was primary)
+3. **Final:** Hide logo, show emoji fallback
+
+Block button logos follow the same pattern.
 
 ---
 

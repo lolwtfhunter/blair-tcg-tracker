@@ -36,7 +36,7 @@ A web-based multi-TCG collection tracker for tracking 4,000+ cards across **Poke
 - ✅ Lazy loading for performance
 - ✅ Market pricing via TCGCSV (CDN-backed TCGPlayer data) with 6hr TTL localStorage cache
 - ✅ Multi-CDN image sources with automatic fallback:
-  - Pokemon: Pokemon TCG API → TCGdex → Local → Placeholder
+  - Pokemon: Pokemon TCG API → Scrydex → TCGdex → Local → Placeholder
   - Lorcana: Dreamborn → Lorcast API → Local → Placeholder
 
 ---
@@ -2823,7 +2823,7 @@ Each card shows its original set/promo source below the name, helping collectors
 1. **JP card images** - No free CDN exists for Japanese promo card images. Would require manual image collection or a paid/custom image hosting solution.
 2. **Completeness** - The 112 JP-exclusive count is a strong baseline but likely not exhaustive. Unnumbered promos from 1996-2005 are particularly difficult to catalog.
 3. **Card details** - HP, attacks, and card text not included. Would need per-card API queries to pokemontcg.io (English only) or manual data entry (JP).
-4. **Destined Rivals / Ascended Heroes set codes** - Not yet confirmed on pokemontcg.io; using best-guess codes with fallback.
+4. **Destined Rivals set codes** - Not yet confirmed on pokemontcg.io; using best-guess codes with fallback.
 
 ### **Version History Update**
 

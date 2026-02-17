@@ -55,6 +55,15 @@ These sources provide official, accurate card data and should be your first stop
   - **Use for**: Programmatic access to card data, images, rarities
   - **Reliability**: 99% - Official API with comprehensive data
 
+#### 1b. **TCGdex API** ⭐ BEST FOR NEW SETS
+- **URL**: https://tcgdex.dev/
+  - Set endpoint: `https://api.tcgdex.net/v2/en/sets/{setId}` (e.g., `me02.5`)
+  - Card endpoint: `https://api.tcgdex.net/v2/en/cards/{setId}-{number}`
+  - **Use for**: Card names, rarities, categories — especially for sets not yet on pokemontcg.io API
+  - **Reliability**: 95% - Community-maintained, generally accurate for released English sets
+  - **Best for**: Verifying secret rare card data (cards beyond mainSet) for newly released sets
+  - **Rarity values**: `Common`, `Uncommon`, `Rare`, `Illustration rare`, `Ultra Rare`, `Special illustration rare`, `Mega Hyper Rare` — map to our lowercase-hyphenated format
+
 #### 2. **PokeBeach** ⭐ HIGHLY RELIABLE
 - **URL**: https://www.pokebeach.com/
 - Search for: `"{Set Name}" set guide card list`
@@ -125,6 +134,13 @@ Follow this process IN ORDER:
    - Try: `https://api.pokemontcg.io/v2/cards?q=set.id:{setCode}&pageSize=250`
    - This gives you programmatic access to all card data
    - Can be used to generate the JSON file automatically
+   - **Note:** Newer sets (especially Mega Evolution era) may not be on this API yet. If it returns 404, use TCGdex instead (step 3b).
+
+3b. **Use TCGdex API (if pokemontcg.io unavailable)**
+   - Set list: `https://api.tcgdex.net/v2/en/sets/{tcgdexSetId}` (e.g., `me02.5`)
+   - Individual card: `https://api.tcgdex.net/v2/en/cards/{tcgdexSetId}-{number}`
+   - Provides card names, rarities, categories, and illustrator info
+   - **Best for:** Verifying/correcting card lists for sets not yet on pokemontcg.io API
 
 4. **Cross-reference with JustInBasil**
    - Check the visual set list to verify card count and order
@@ -690,7 +706,7 @@ Before committing your changes, verify:
 - [ ] Clicking block button displays set buttons for that block
 - [ ] Set appears in the correct block's set grid
 - [ ] Set button shows correct name, logo, and metadata
-- [ ] Set logo loads from CDN (Pokemon: pokemontcg.io; Lorcana: wiki CDNs) or gracefully falls back
+- [ ] Set logo loads from CDN (Pokemon: pokemontcg.io or Scrydex; Lorcana: wiki CDNs) or gracefully falls back
 - [ ] Clicking set button displays cards
 - [ ] Cards render with correct information
 - [ ] Images load (or placeholders show)
@@ -740,12 +756,24 @@ Before committing your changes, verify:
 **Symptoms:** Cards display but show placeholders instead of images
 
 **Solutions:**
-1. Verify set is added to TCG_API_SET_IDS and TCGDEX_SET_IDS
+1. Verify set is added to TCG_API_SET_IDS and TCGDEX_SET_IDS in `js/config.js`
 2. Check that setCode in JSON matches CDN expectations
-3. Test image URLs manually in browser:
-   - Pokemon TCG API: `https://images.pokemontcg.io/{setCode}/{cardNumber}.png`
-   - TCGdex: `https://assets.tcgdex.net/en/{series}/{set}/{cardNumber}/high.png`
-4. Consider adding local images to `Images/cards/{set-key}/`
+3. Test image URLs manually:
+   - Pokemon TCG API: `curl -sI "https://images.pokemontcg.io/{setCode}/1.png"`
+   - Scrydex: `curl -sI "https://images.scrydex.com/pokemon/{setCode}-1/large"`
+   - TCGdex: `curl -sI "https://assets.tcgdex.net/en/{series}/{set}/1/high.png"`
+4. **Check for fake 200s from pokemontcg.io:** Some sets return HTTP 200 with a ~186KB generic placeholder image instead of a real 404. If this happens, add the set's API ID to `SCRYDEX_PRIMARY_SETS` in `js/image-utils.js` so Scrydex is used as the primary image source.
+5. Consider adding local images to `Images/cards/{set-key}/`
+
+### Issue: Images load but show wrong card
+
+**Symptoms:** Card names in the tracker don't match the card images displayed
+
+**Solutions:**
+1. The card data JSON likely has incorrect names/numbers for some cards
+2. Verify card data against TCGdex API: `curl -s "https://api.tcgdex.net/v2/en/sets/{tcgdexSetId}"` to get the authoritative card list
+3. For individual card verification: `curl -s "https://api.tcgdex.net/v2/en/cards/{tcgdexSetId}-{number}"` returns name, rarity, and category
+4. Secret rare sections (cards beyond mainSet) are especially prone to pre-release data inaccuracies — always verify against the actual English release
 
 ### Issue: Variants not showing correctly
 
@@ -798,6 +826,7 @@ Before committing your changes, verify:
 | Update Pokemon set list | `js/config.js` | OFFICIAL_SETS or CUSTOM_SETS arrays |
 | Update Lorcana set list | `js/config.js` | LORCANA_SETS array |
 | Add Pokemon image mappings | `js/config.js` | TCG_API_SET_IDS, TCGDEX_SET_IDS |
+| Mark broken pokemontcg.io sets | `js/image-utils.js` | SCRYDEX_PRIMARY_SETS |
 | Add pricing group ID | `js/config.js` | TCGCSV_POKEMON_GROUP_IDS |
 | Add Lorcana logo wiki mapping | `js/lorcana.js` | LORCANA_SET_WIKI_NAMES |
 | Add Lorcana logo SVG fallback | `js/lorcana.js` | getLorcanaSetLogoSvg() |
@@ -830,7 +859,7 @@ As of February 2026, the Pokemon TCG tab uses a two-level hierarchical navigatio
 - **What it is:** Grid of set buttons that appears only when a block is selected
 - **How it appears:** Click a block → "Select a Set" header and set buttons slide into view
 - **What they show:**
-  - Official set logo (from `https://images.pokemontcg.io/{setCode}/logo.png`)
+  - Official set logo (from pokemontcg.io or Scrydex CDN, with automatic fallback)
   - Set name (from `displayName` field in JSON)
   - Release date (from `releaseDate` field in JSON)
   - Individual set progress (variants collected/total)
@@ -850,7 +879,7 @@ When you add a new **official set**:
 1. **Automatic block grouping:** The set is automatically grouped with other sets sharing the same `blockCode`
 2. **Block button updates:** If the block already exists, it updates to show the new set count and aggregate progress
 3. **New block creation:** If you use a new `blockCode`, a new block button is automatically created (though you may want to add CSS styling for the new block's color gradient)
-4. **Set logo display:** The set button will attempt to load the set logo from `https://images.pokemontcg.io/{setCode}/logo.png`. If unavailable, the logo image gracefully hides and only the set name displays.
+4. **Set logo display:** The set button will attempt to load the set logo from pokemontcg.io (or Scrydex for `SCRYDEX_PRIMARY_SETS` sets), falling back to the other CDN, then hiding gracefully if both fail.
 
 When you add a **custom set**:
 
@@ -970,6 +999,7 @@ This implementation demonstrates how to add a new TCG while reusing the existing
 
 ## Version History
 
+- **v3.1** (2026-02-16): Added Scrydex CDN documentation, TCGdex API as data source, `SCRYDEX_PRIMARY_SETS` guidance, "wrong card images" troubleshooting, and Ascended Heroes lessons learned.
 - **v3.0** (2026-02-16): Updated for dynamic HTML generation — Pokemon tab no longer requires HTML changes for new sets. All config now in `js/config.js`. Updated block list to 15 eras. Updated Quick Reference table. Block styling now uses CSS `--block-color` variable.
 - **v2.3** (2026-02-16): Added "Adding Pricing for New Sets" section covering Pokemon, Lorcana, custom set, and new TCG pricing setup with group ID lookup instructions.
 - **v2.2** (2026-02-16): Updated HTML template to include `rarity-filters` div placeholder. Updated testing checklist with rarity filter verification steps. Updated Quick Reference table.
@@ -1005,6 +1035,21 @@ This implementation demonstrates how to add a new TCG while reusing the existing
 - Inline SVG (hexagon with set color + Roman numeral) ensures buttons always render, even offline
 
 **Key Takeaway**: Public MediaWiki sites (Fandom, independent wikis) can serve as reliable free CDN sources for TCG set logos via `Special:FilePath`. When adding a new set, just add the wiki name mapping and the logo loads automatically once wiki editors upload it. This pattern can be reused for other TCGs — most have active Fandom or MediaWiki communities.
+
+### Ascended Heroes Image Fix & Card Data Correction (Feb 2026)
+**Issue 1 — Images not loading**: Ascended Heroes (`me2pt5`) and ME Promos (`mep`) card images showed placeholders because pokemontcg.io returns HTTP 200 with a generic placeholder image (~186KB) instead of a real 404. This meant the `onerror` fallback chain never fired.
+
+**Resolution 1**: Added `images.scrydex.com` as a new CDN source. For sets in `SCRYDEX_PRIMARY_SETS`, Scrydex is used as the **primary** image source, skipping pokemontcg.io entirely. For all other sets, Scrydex serves as a fallback between pokemontcg.io and TCGdex.
+
+**Issue 2 — Wrong card data**: Cards 249-295 (secret rares) had incorrect names and rarities based on pre-release data. For example, card #276 was listed as "Mega Feraligatr ex" but the actual card is "Pikachu ex".
+
+**Resolution 2**: Fetched authoritative card data from TCGdex API (`https://api.tcgdex.net/v2/en/sets/me02.5`) and replaced all 47 incorrect cards. Multiple new cards were found that weren't in the original data (Sprigatito ex, Mega Diancie ex, Marnie's Grimmsnarl ex, Steven's Metagross ex, etc.).
+
+**Key Takeaways**:
+1. pokemontcg.io can return fake 200s with placeholder images — always test with `curl -sI` and check the content-length (~186KB = placeholder)
+2. TCGdex API is a reliable alternative for card data when pokemontcg.io API doesn't have the set (returns 404 on API queries)
+3. Secret rare sections are especially prone to pre-release inaccuracies — verify the full card list against the actual English release, not just the main set
+4. When adding new sets, test both CDNs: `images.pokemontcg.io` and `images.scrydex.com`
 
 ### Mega Evolution Set (Feb 2026)
 **Issue**: Initial implementation used a generated/fictional card list that didn't match the actual Pokemon TCG Mega Evolution set. Card names in JSON didn't match images from Pokemon TCG API, causing confusion.
