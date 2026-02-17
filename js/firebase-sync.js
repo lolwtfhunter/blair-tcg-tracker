@@ -95,11 +95,6 @@ function initializeFirebase(collectionId) {
                 console.log('No custom sets in this collection.');
             }
             rebuildCustomSetsUI();
-
-            // Run legacy migration after custom sets are loaded
-            if (typeof migrateCustomSetDefinitions === 'function') {
-                migrateCustomSetDefinitions(collectionId);
-            }
         });
 
         // Listen for collection progress data
@@ -121,8 +116,9 @@ function initializeFirebase(collectionId) {
 
                 updateSyncStatus('Synced', 'synced');
             } else {
-                // No data yet, upload current progress and render cards
-                firebase_ref.set(collectionProgress);
+                // New collection with no data — start fresh (do NOT upload stale localStorage)
+                collectionProgress = {};
+                localStorage.setItem('pokemonVariantProgress', JSON.stringify(collectionProgress));
 
                 // Ensure cards are rendered even if no Firebase data
                 Object.keys(cardSets).forEach(setKey => {

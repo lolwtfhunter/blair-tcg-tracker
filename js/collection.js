@@ -33,8 +33,12 @@ function migrateEditionVariants() {
     localStorage.setItem('edition-migration-v1', 'done');
 }
 
-// Migrate legacy custom set definitions (JSON files) into Firebase customSets/ node
-// Only runs once per collection that has legacy progress data
+// Migrate legacy custom set definitions (JSON files) into Firebase customSets/ node.
+// NO LONGER AUTO-CALLED — the Family Collection migration is complete.
+// Kept for reference; was previously triggered from the customSets listener in firebase-sync.js.
+// Removed because it incorrectly migrated legacy sets into ALL collections that had
+// progress data for custom-its-pikachu/psyduck/togepi (which was every user under the
+// old global custom sets system), not just the Family Collection.
 async function migrateCustomSetDefinitions(collectionId) {
     // Don't migrate if custom sets already exist in Firebase for this collection
     if (Object.keys(customCardSets).length > 0) {
