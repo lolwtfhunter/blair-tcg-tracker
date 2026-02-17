@@ -7,63 +7,16 @@ function updateSyncStatus(text, status) {
     indicator.className = 'sync-indicator ' + status;
 }
 
-// Show sync code modal
-function showSyncModal() {
-    const modal = document.createElement('div');
-    modal.className = 'modal';
-    modal.innerHTML = `
-        <div class="modal-content">
-            <div class="modal-title">🔐 Enter Sync Code</div>
-            <div class="modal-text">Enter your family sync code to enable cloud synchronization across devices.</div>
-            <input type="text" class="modal-input" id="syncCodeInput" placeholder="Enter sync code..." autocomplete="off">
-            <div class="error-text" id="syncError"></div>
-            <div class="modal-buttons">
-                <button class="modal-btn primary" onclick="verifySyncCode()">Sync</button>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(modal);
-
-    document.getElementById('syncCodeInput').focus();
-    document.getElementById('syncCodeInput').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') verifySyncCode();
-    });
+// Detach current Firebase listener and reset ref
+function detachFirebaseListener() {
+    if (firebase_ref) {
+        firebase_ref.off();
+        firebase_ref = null;
+    }
 }
 
-// Verify sync code
-window.verifySyncCode = function() {
-    console.log('verifySyncCode called');
-    const input = document.getElementById('syncCodeInput');
-    const code = input.value.trim();
-
-    console.log(`Code entered: "${code}"`);
-    console.log(`Expected: "${SYNC_CODE}"`);
-
-    if (code === SYNC_CODE) {
-        console.log('✓ Code valid!');
-        localStorage.setItem(SYNC_CODE_KEY, code);
-        document.querySelector('.modal').remove();
-
-        // Render cards immediately BEFORE Firebase
-        console.log('Rendering cards now...');
-        Object.keys(cardSets).forEach(setKey => {
-            console.log(`Calling renderCards(${setKey})`);
-            renderCards(setKey);
-        });
-        updateSetButtonProgress();
-
-        console.log('Starting Firebase...');
-        // Then initialize Firebase
-        initializeFirebase();
-    } else {
-        console.log('✗ Invalid code');
-        document.getElementById('syncError').textContent = 'Invalid sync code. Please try again.';
-        input.value = '';
-    }
-};
-
-// Initialize Firebase
-function initializeFirebase() {
+// Initialize Firebase and set up real-time sync on a collection
+function initializeFirebase(collectionId) {
     try {
         const config = {
             apiKey: "AIzaSyDUZwwGKYfRzvj13bKTkYecIH19ge8oWZw",
@@ -80,7 +33,19 @@ function initializeFirebase() {
         }
 
         firebase_db = firebase.database();
-        firebase_ref = firebase_db.ref('collections/' + SYNC_CODE);
+
+        // Detach any existing listener before attaching new one
+        detachFirebaseListener();
+
+        firebase_ref = firebase_db.ref('collections/' + collectionId + '/data');
+
+        // Update collection name in header
+        firebase_db.ref('collections/' + collectionId + '/meta/name').once('value').then((snap) => {
+            const name = snap.val();
+            if (name && typeof updateCollectionNameHeader === 'function') {
+                updateCollectionNameHeader(name);
+            }
+        });
 
         updateSyncStatus('Connecting...', 'syncing');
 
@@ -100,7 +65,7 @@ function initializeFirebase() {
                 });
                 updateCustomSetButtonProgress();
 
-                updateSyncStatus('Synced ✓', 'synced');
+                updateSyncStatus('Synced', 'synced');
             } else {
                 // No data yet, upload current progress and render cards
                 firebase_ref.set(collectionProgress);
@@ -115,7 +80,7 @@ function initializeFirebase() {
                 });
                 updateCustomSetButtonProgress();
 
-                updateSyncStatus('Synced ✓', 'synced');
+                updateSyncStatus('Synced', 'synced');
             }
         });
 

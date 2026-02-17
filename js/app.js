@@ -85,16 +85,11 @@ window.addEventListener('load', async function() {
             console.log('ERROR in Lorcana sets: ' + e.message);
         }
 
-        console.log('Checking sync code...');
-        // Check for sync code
-        const savedCode = localStorage.getItem(SYNC_CODE_KEY);
-        if (savedCode === SYNC_CODE) {
-            console.log('Saved code found, initializing Firebase');
-            initializeFirebase();
-        } else {
-            console.log('No saved code, showing modal');
-            showSyncModal();
-        }
+        console.log('Initializing auth...');
+        // Clean up legacy sync code from localStorage
+        localStorage.removeItem(LEGACY_SYNC_CODE_KEY);
+        // Initialize authentication (will show auth modal or load user)
+        initAuth();
     } catch (error) {
         console.log('FATAL ERROR: ' + error.message);
         console.error('Fatal error:', error);

@@ -13,8 +13,10 @@ let activeRarityFilters = {}; // Maps setKey → Set of active rarity strings
 let firebase_db = null;
 let firebase_ref = null;
 
-const SYNC_CODE = 'Blair2024';
-const SYNC_CODE_KEY = 'blair_sync_code';
+// Auth & collections constants
+const SHARE_CODE_LENGTH = 6;
+const MIGRATION_SOURCE = 'Blair2024';
+const LEGACY_SYNC_CODE_KEY = 'blair_sync_code';
 
 // Pokemon TCG API set ID mapping (for card images from pokemontcg.io CDN)
 const TCG_API_SET_IDS = {

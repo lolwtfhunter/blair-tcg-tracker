@@ -42,9 +42,11 @@ async function setupWithMockPricing(page) {
     }
     return route.fulfill({ body: '', contentType: 'text/plain' });
   });
+  await page.addInitScript(() => {
+    window.__TEST_AUTH_USER = { uid: 'test-123', email: 'test@test.com', displayName: 'Test' };
+  });
   await page.goto('/about.html');
   await page.evaluate(() => {
-    localStorage.setItem('blair_sync_code', 'Blair2024');
     localStorage.removeItem('pokemonVariantProgress');
     localStorage.removeItem('blair_price_cache');
   });
