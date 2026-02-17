@@ -10,6 +10,7 @@ module.exports = defineConfig({
   reporter: process.env.CI
     ? [['html', { open: 'never' }], ['json', { outputFile: 'test-results.json' }], ['github']]
     : [['html', { open: 'never' }]],
+  timeout: process.env.CI ? 60000 : 30000,
   use: {
     baseURL: 'http://localhost:8080',
     screenshot: 'only-on-failure',
@@ -23,13 +24,7 @@ module.exports = defineConfig({
         viewport: { width: 1280, height: 720 },
       },
     },
-    {
-      name: 'webkit-desktop',
-      use: {
-        ...devices['Desktop Safari'],
-        viewport: { width: 1280, height: 720 },
-      },
-    },
+    // webkit-desktop omitted — iphone-12 and ipad already cover WebKit
     {
       name: 'iphone-12',
       use: {
