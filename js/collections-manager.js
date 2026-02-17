@@ -12,21 +12,17 @@ async function createCollection(ownerUid, name) {
         ? (currentUser.displayName || currentUser.email || 'Trainer')
         : 'Trainer';
 
-    await collectionRef.set({
-        meta: {
-            name: name,
-            createdAt: firebase.database.ServerValue.TIMESTAMP,
-            ownerId: ownerUid,
-            shareCode: shareCode
-        },
-        members: {
-            [ownerUid]: {
-                role: 'owner',
-                displayName: displayName,
-                joinedAt: firebase.database.ServerValue.TIMESTAMP
-            }
-        },
-        data: {}
+    // Write sub-paths individually (security rules are per sub-path, not collection root)
+    await collectionRef.child('meta').set({
+        name: name,
+        createdAt: firebase.database.ServerValue.TIMESTAMP,
+        ownerId: ownerUid,
+        shareCode: shareCode
+    });
+    await collectionRef.child('members/' + ownerUid).set({
+        role: 'owner',
+        displayName: displayName,
+        joinedAt: firebase.database.ServerValue.TIMESTAMP
     });
 
     // Register share code for O(1) lookup

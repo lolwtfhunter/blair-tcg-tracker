@@ -316,46 +316,56 @@ function friendlyAuthError(code) {
 
 // ── Migration ──────────────────────────────────────────────────────
 async function attemptMigration(user) {
-    // Check if Blair2024 legacy data exists and is unclaimed
-    const claimedRef = firebase.database().ref('migrationClaimed/' + MIGRATION_SOURCE);
-    const claimedSnap = await claimedRef.once('value');
-    if (claimedSnap.exists()) return false;
+    try {
+        // Check if Blair2024 legacy data exists and is unclaimed
+        const claimedRef = firebase.database().ref('migrationClaimed/' + MIGRATION_SOURCE);
+        const claimedSnap = await claimedRef.once('value');
+        if (claimedSnap.exists()) return false;
 
-    const legacyRef = firebase.database().ref('collections/' + MIGRATION_SOURCE);
-    const legacySnap = await legacyRef.once('value');
-    const legacyData = legacySnap.val();
-    if (!legacyData) return false;
+        const legacyRef = firebase.database().ref('collections/' + MIGRATION_SOURCE);
+        const legacySnap = await legacyRef.once('value');
+        const legacyData = legacySnap.val();
+        if (!legacyData) return false;
 
-    // Show migration prompt
-    const shouldImport = await showMigrationPrompt();
-    if (!shouldImport) return false;
+        // Show migration prompt
+        const shouldImport = await showMigrationPrompt();
+        if (!shouldImport) return false;
 
-    // Create new collection with imported data
-    const collectionId = await createCollection(user.uid, 'Family Collection');
+        console.log('Migration: creating collection...');
+        const collectionId = await createCollection(user.uid, 'Family Collection');
+        console.log('Migration: collection created:', collectionId);
 
-    // Copy legacy data to new collection's data node
-    const dataRef = firebase.database().ref('collections/' + collectionId + '/data');
-    await dataRef.set(legacyData);
+        // Copy legacy data to new collection's data node
+        console.log('Migration: copying legacy data...');
+        const dataRef = firebase.database().ref('collections/' + collectionId + '/data');
+        await dataRef.set(legacyData);
+        console.log('Migration: data copied');
 
-    // Mark migration as claimed
-    await claimedRef.set({
-        claimedBy: user.uid,
-        claimedAt: firebase.database.ServerValue.TIMESTAMP
-    });
+        // Mark migration as claimed
+        await claimedRef.set({
+            claimedBy: user.uid,
+            claimedAt: firebase.database.ServerValue.TIMESTAMP
+        });
+        console.log('Migration: claimed');
 
-    // Set as active
-    await firebase.database().ref('users/' + user.uid).update({
-        activeCollectionId: collectionId
-    });
+        // Set as active
+        await firebase.database().ref('users/' + user.uid).update({
+            activeCollectionId: collectionId
+        });
 
-    // Record collection in user's list
-    await firebase.database().ref('users/' + user.uid + '/collections/' + collectionId).set({
-        role: 'owner',
-        name: 'Family Collection',
-        joinedAt: firebase.database.ServerValue.TIMESTAMP
-    });
+        // Record collection in user's list
+        await firebase.database().ref('users/' + user.uid + '/collections/' + collectionId).set({
+            role: 'owner',
+            name: 'Family Collection',
+            joinedAt: firebase.database.ServerValue.TIMESTAMP
+        });
 
-    return true;
+        console.log('Migration: complete');
+        return true;
+    } catch (err) {
+        console.error('Migration failed:', err);
+        return false;
+    }
 }
 
 function showMigrationPrompt() {
