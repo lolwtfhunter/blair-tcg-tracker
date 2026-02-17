@@ -42,8 +42,15 @@ function openCustomSetEditor(setKey) {
                             <input type="color" id="cseThemeColor" class="cse-color-input" value="${existingData ? (existingData.themeColor || '#ff9500') : '#ff9500'}">
                         </div>
                         <div class="cse-form-group">
-                            <label for="cseLogoUrl">Logo URL (optional)</label>
-                            <input type="text" id="cseLogoUrl" class="cse-input" placeholder="https://..." value="${existingData ? (existingData.logoUrl || '') : ''}">
+                            <label for="cseSetDate">Set Date (optional)</label>
+                            <input type="date" id="cseSetDate" class="cse-input" value="${existingData ? (existingData.setDate || '') : ''}">
+                        </div>
+                    </div>
+                    <div class="cse-form-group">
+                        <label for="cseLogoUrl">Logo Image URL (optional)</label>
+                        <div class="cse-logo-input-row">
+                            <input type="text" id="cseLogoUrl" class="cse-input" placeholder="https://..." value="${existingData ? (existingData.logoUrl || '') : ''}" oninput="cseUpdateLogoPreview(this.value)">
+                            <div class="cse-logo-preview" id="cseLogoPreview">${existingData && existingData.logoUrl ? `<img src="${existingData.logoUrl}" alt="Logo preview" onerror="this.parentElement.innerHTML='No preview'">` : ''}</div>
                         </div>
                     </div>
                     <div class="cse-form-group">
@@ -104,12 +111,23 @@ function cseGoToMeta() {
     document.getElementById('cseStepMeta').classList.add('active');
 }
 
-// Populate official set dropdown grouped by block
+// Update logo preview when URL changes
+function cseUpdateLogoPreview(url) {
+    const preview = document.getElementById('cseLogoPreview');
+    if (!preview) return;
+    if (url && url.trim()) {
+        preview.innerHTML = `<img src="${url.trim()}" alt="Logo preview" onerror="this.parentElement.innerHTML='Invalid URL'">`;
+    } else {
+        preview.innerHTML = '';
+    }
+}
+
+// Populate official set dropdown grouped by block (Pokemon + Lorcana)
 function csePopulateSetDropdown() {
     const select = document.getElementById('cseSetSelect');
     if (!select) return;
 
-    // Group sets by block
+    // Group Pokemon sets by block
     const blockGroups = {};
     Object.keys(cardSets).forEach(setKey => {
         const setData = cardSets[setKey];
@@ -118,7 +136,7 @@ function csePopulateSetDropdown() {
         blockGroups[block].push({ key: setKey, name: setData.displayName || setData.name });
     });
 
-    // Add optgroups
+    // Add Pokemon optgroups
     Object.keys(blockGroups).forEach(block => {
         const group = document.createElement('optgroup');
         group.label = block;
@@ -130,30 +148,62 @@ function csePopulateSetDropdown() {
         });
         select.appendChild(group);
     });
+
+    // Add Lorcana sets as a separate group
+    if (typeof lorcanaCardSets !== 'undefined' && Object.keys(lorcanaCardSets).length > 0) {
+        const lorcanaGroup = document.createElement('optgroup');
+        lorcanaGroup.label = 'Disney Lorcana';
+        Object.keys(lorcanaCardSets).forEach(setKey => {
+            const setData = lorcanaCardSets[setKey];
+            const opt = document.createElement('option');
+            opt.value = 'lorcana:' + setKey;
+            opt.textContent = setData.displayName || setData.name;
+            lorcanaGroup.appendChild(opt);
+        });
+        select.appendChild(lorcanaGroup);
+    }
 }
 
-// Load cards from an official set into the picker grid
+// Load cards from an official set into the picker grid (Pokemon or Lorcana)
 function cseLoadOfficialSet(setKey) {
     const grid = document.getElementById('csePickerGrid');
     if (!grid) return;
     grid.innerHTML = '';
 
-    if (!setKey || !cardSets[setKey]) return;
+    if (!setKey) return;
 
-    const setData = cardSets[setKey];
+    // Check if it's a Lorcana set (prefixed with "lorcana:")
+    const isLorcana = setKey.startsWith('lorcana:');
+    const actualSetKey = isLorcana ? setKey.replace('lorcana:', '') : setKey;
+
+    const setData = isLorcana ? lorcanaCardSets[actualSetKey] : cardSets[actualSetKey];
+    if (!setData) return;
+
     const setDisplayName = setData.displayName || setData.name;
-    const apiSetId = TCG_API_SET_IDS[setKey] || setKey;
 
     setData.cards.forEach(card => {
-        const apiId = `${apiSetId}-${card.number}`;
+        let apiId, imgUrl;
+
+        if (isLorcana) {
+            apiId = `lorcana-${actualSetKey}-${card.number}`;
+            // Use Dreamborn CDN for Lorcana card images
+            if (card.dreambornId) {
+                imgUrl = `https://cdn.dreamborn.ink/images/en/cards/${card.dreambornId}`;
+            } else {
+                imgUrl = '';
+            }
+        } else {
+            const apiSetId = TCG_API_SET_IDS[actualSetKey] || actualSetKey;
+            apiId = `${apiSetId}-${card.number}`;
+            imgUrl = `https://images.pokemontcg.io/${apiSetId}/${card.number}.png`;
+        }
+
         const isSelected = Object.values(_editorSelectedCards).some(c => c.apiId === apiId);
 
         const cardEl = document.createElement('div');
         cardEl.className = 'cse-picker-card' + (isSelected ? ' selected' : '');
         cardEl.setAttribute('data-card-name', card.name.toLowerCase());
         cardEl.setAttribute('data-card-number', card.number);
-
-        const imgUrl = `https://images.pokemontcg.io/${apiSetId}/${card.number}.png`;
 
         cardEl.innerHTML = `
             <div class="cse-picker-card-img">
@@ -177,13 +227,16 @@ function cseLoadOfficialSet(setKey) {
                     number: _editorCardCounter++,
                     name: card.name,
                     rarity: card.rarity,
-                    type: card.type || 'pokemon',
-                    setOrigin: `${setDisplayName} (${apiSetId})`,
+                    type: card.type || (isLorcana ? 'character' : 'pokemon'),
+                    setOrigin: `${setDisplayName}`,
                     apiId: apiId,
                     releaseDate: setData.releaseDate || '',
                     originalNumber: String(card.number),
                     region: ''
                 };
+                if (isLorcana && card.dreambornId) {
+                    newCard.dreambornId = card.dreambornId;
+                }
                 _editorSelectedCards[newCard.number] = newCard;
                 cardEl.classList.add('selected');
             }
@@ -230,6 +283,7 @@ async function cseSaveSet() {
     const themeColor = document.getElementById('cseThemeColor').value;
     const logoUrl = document.getElementById('cseLogoUrl').value.trim();
     const description = document.getElementById('cseDescription').value.trim();
+    const setDate = document.getElementById('cseSetDate').value;
 
     // Determine set key
     const setKey = _editorSetKey || cseSlugify(name);
@@ -251,6 +305,9 @@ async function cseSaveSet() {
         if (card.variants && Array.isArray(card.variants)) {
             cardsObj[card.number].variants = card.variants;
         }
+        if (card.dreambornId) {
+            cardsObj[card.number].dreambornId = card.dreambornId;
+        }
     });
 
     const fbSet = {
@@ -261,6 +318,7 @@ async function cseSaveSet() {
         singleVariantOnly: true,
         themeColor: themeColor,
         logoUrl: logoUrl,
+        setDate: setDate,
         updatedAt: firebase.database.ServerValue.TIMESTAMP,
         createdBy: currentUser ? currentUser.uid : 'unknown',
         cards: cardsObj

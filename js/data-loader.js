@@ -150,6 +150,9 @@ function parseCustomSetFromFirebase(setKey, fbData) {
             if (cardData.variants && Array.isArray(cardData.variants)) {
                 cardObj.variants = cardData.variants;
             }
+            if (cardData.dreambornId) {
+                cardObj.dreambornId = cardData.dreambornId;
+            }
             cards.push(cardObj);
         }
     }
@@ -161,14 +164,23 @@ function parseCustomSetFromFirebase(setKey, fbData) {
         singleVariantOnly: fbData.singleVariantOnly !== false,
         themeColor: fbData.themeColor || '#ff9500',
         logoUrl: fbData.logoUrl || '',
+        setDate: fbData.setDate || '',
         createdBy: fbData.createdBy || '',
         cards: cards
     };
 }
 
-// Get image URL for a custom set card using its apiId
+// Get image URL for a custom set card using its apiId or dreambornId
 function getCustomCardImageUrl(card) {
+    // Lorcana cards use dreambornId for images
+    if (card.dreambornId) {
+        return `https://cdn.dreamborn.ink/images/en/cards/${card.dreambornId}`;
+    }
     if (card.apiId) {
+        // Lorcana cards with lorcana- prefix in apiId
+        if (card.apiId.startsWith('lorcana-')) {
+            return null;
+        }
         // apiId format is "setId-number", e.g. "base1-58"
         const parts = card.apiId.split('-');
         const setId = parts.slice(0, -1).join('-');

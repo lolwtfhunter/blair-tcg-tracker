@@ -34,6 +34,13 @@ test.describe('Custom Set Editor', () => {
     await expect(page.locator('#cseThemeColor')).toBeVisible();
   });
 
+  test('editor shows date and logo URL fields', async ({ page }) => {
+    await page.locator('.new-set-btn').click();
+    await expect(page.locator('#cseSetDate')).toBeVisible();
+    await expect(page.locator('#cseLogoUrl')).toBeVisible();
+    await expect(page.locator('#cseLogoPreview')).toBeVisible();
+  });
+
   test('editor navigates between meta and card picker steps', async ({ page }) => {
     await page.locator('.new-set-btn').click();
     await expect(page.locator('#cseStepMeta')).toHaveClass(/active/);
@@ -75,7 +82,7 @@ test.describe('Custom Set Editor', () => {
     expect(await deleteBtns.count()).toBeGreaterThanOrEqual(1);
   });
 
-  test('set picker dropdown is populated with official sets', async ({ page }) => {
+  test('set picker dropdown includes Pokemon and Lorcana sets', async ({ page }) => {
     await page.locator('.new-set-btn').click();
     await page.fill('#cseSetName', 'Test');
     await page.locator('.cse-btn.primary', { hasText: 'Next: Add Cards' }).click();
@@ -84,5 +91,24 @@ test.describe('Custom Set Editor', () => {
     const count = await options.count();
     // Should have many official sets + the placeholder
     expect(count).toBeGreaterThan(10);
+
+    // Check that Lorcana optgroup exists
+    const lorcanaGroup = page.locator('#cseSetSelect optgroup[label="Disney Lorcana"]');
+    await expect(lorcanaGroup).toBeAttached();
+    const lorcanaOptions = lorcanaGroup.locator('option');
+    expect(await lorcanaOptions.count()).toBeGreaterThanOrEqual(1);
+  });
+
+  test('logo preview updates when URL is entered', async ({ page }) => {
+    await page.locator('.new-set-btn').click();
+    const preview = page.locator('#cseLogoPreview');
+
+    // Initially empty
+    await expect(preview).toBeVisible();
+
+    // Enter a URL - preview should get an img element
+    await page.fill('#cseLogoUrl', 'https://example.com/logo.png');
+    const previewImg = preview.locator('img');
+    await expect(previewImg).toBeAttached();
   });
 });
