@@ -22,25 +22,28 @@ function renderCustomSetButtons() {
         let logoUrl = setData.logoUrl || './Images/header/pokeball.png';
         let logoIcon = '⚡';
 
-        // Find earliest card date from cards if available
-        let earliestDate = null;
-        if (setData.cards && setData.cards.length > 0) {
-            setData.cards.forEach(card => {
-                if (card.releaseDate) {
-                    const cardDate = new Date(card.releaseDate);
-                    if (!earliestDate || cardDate < earliestDate) {
-                        earliestDate = cardDate;
-                    }
-                }
-            });
-        }
-
-        // Format date
+        // Use the user-provided set date, otherwise find earliest card date
         let dateStr = '';
-        if (earliestDate) {
-            dateStr = earliestDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        if (setData.setDate) {
+            const d = new Date(setData.setDate + 'T00:00:00');
+            dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
         } else {
-            dateStr = `${setData.totalCards || setData.cards.length} cards`;
+            let earliestDate = null;
+            if (setData.cards && setData.cards.length > 0) {
+                setData.cards.forEach(card => {
+                    if (card.releaseDate) {
+                        const cardDate = new Date(card.releaseDate);
+                        if (!earliestDate || cardDate < earliestDate) {
+                            earliestDate = cardDate;
+                        }
+                    }
+                });
+            }
+            if (earliestDate) {
+                dateStr = earliestDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+            } else {
+                dateStr = `${setData.totalCards || setData.cards.length} cards`;
+            }
         }
 
         const progress = getCustomSetProgress(setKey);
