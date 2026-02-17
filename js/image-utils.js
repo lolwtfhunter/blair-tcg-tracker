@@ -83,6 +83,10 @@ function getCustomCardTcgdexUrl(card) {
 // These must use Scrydex as the primary image source since onerror won't fire.
 const SCRYDEX_PRIMARY_SETS = new Set(['me2pt5', 'mep']);
 
+// Sets where BOTH pokemontcg.io and Scrydex return placeholder images.
+// No CDN has real card art, so skip all image sources and show styled placeholder.
+const NO_IMAGE_SETS = new Set(['mcd14', 'mcd15', 'mcd17', 'mcd18']);
+
 // Get card image URL from Pokemon TCG API (pokemontcg.io)
 function getCardImageUrl(setKey, cardNumber, imageId) {
     // Celebrations Classic Collection cards use cel25c with original set numbering
@@ -113,6 +117,9 @@ function getCustomCardScrydexUrl(card) {
     const parts = card.apiId.split('-');
     const setId = parts.slice(0, -1).join('-');
     const num = parts[parts.length - 1];
+
+    // Skip Scrydex for sets where it also returns placeholder images
+    if (NO_IMAGE_SETS.has(setId)) return null;
 
     return `https://images.scrydex.com/pokemon/${setId}-${num}/large`;
 }
