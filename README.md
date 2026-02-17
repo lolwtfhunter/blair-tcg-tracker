@@ -2,7 +2,7 @@
 
 A mobile-friendly web app for tracking trading card collections across multiple TCGs with cloud sync, card artwork, variant tracking, and market pricing.
 
-**Live:** [GitHub Pages](https://lolwtfhunter.github.io/blair-pokemon-tracker/)
+**Live:** [GitHub Pages](https://lolwtfhunter.github.io/blair-tcg-tracker/)
 
 ## What's Tracked
 
@@ -77,7 +77,7 @@ The First Chapter, Rise of the Floodborn, Into the Inklands, Ursula's Return, Sh
 ## Project Structure
 
 ```
-blair-pokemon-tracker/
+blair-tcg-tracker/
 ├── index.html                 Main app (single-page)
 ├── js/                        JavaScript modules
 │   ├── config.js              Set IDs, CDN mappings, pricing group IDs

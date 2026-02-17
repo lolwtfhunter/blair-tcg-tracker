@@ -2,7 +2,7 @@
 
 **Version:** 5.0.0
 **Last Updated:** February 16, 2026
-**Live URL:** https://lolwtfhunter.github.io/blair-pokemon-tracker/
+**Live URL:** https://lolwtfhunter.github.io/blair-tcg-tracker/
 **Sync Code:** Blair2024
 
 ---
@@ -83,7 +83,7 @@ Custom set cards originate from 109 unique Pokemon TCG source sets. Each card's 
 4. **data/lorcana/sets/** - Modular card data for Disney Lorcana sets
 
 ### **File Locations**
-- Repository: https://github.com/lolwtfhunter/blair-pokemon-tracker
+- Repository: https://github.com/lolwtfhunter/blair-tcg-tracker
 - Data files are organized by TCG in `data/` directory for better scalability and multi-game support
 
 ### **Reference Documentation**
@@ -734,13 +734,13 @@ When implementing a new TCG (e.g., Disney Lorcana), ensure:
 ## 🚀 DEPLOYMENT
 
 ### **GitHub Pages Setup**
-1. Repository: lolwtfhunter/blair-pokemon-tracker
+1. Repository: lolwtfhunter/blair-tcg-tracker
 2. Settings → Pages → Source: main branch, / (root)
 3. All application files are served from root:
    - `index.html` (main app)
    - `data/` directory (modular card JSON files)
 4. Wait 2-3 minutes for deployment
-5. Access at: https://lolwtfhunter.github.io/blair-pokemon-tracker/
+5. Access at: https://lolwtfhunter.github.io/blair-tcg-tracker/
 
 ### **Firebase Setup**
 1. Project: blair-pokemon-tracker
@@ -910,13 +910,13 @@ This pattern must be applied **before** navigating to any page. It intercepts Fi
 ## 📞 SUPPORT INFORMATION
 
 ### **For Users (Blair & Family)**
-- **Access URL:** https://lolwtfhunter.github.io/blair-pokemon-tracker/
+- **Access URL:** https://lolwtfhunter.github.io/blair-tcg-tracker/
 - **Sync Code:** Blair2024
 - **Logout:** Click 🔄 button next to "Synced ✓"
 - **Problem?** Refresh page or re-enter sync code
 
 ### **For Developers**
-- **GitHub Repo:** https://github.com/lolwtfhunter/blair-pokemon-tracker
+- **GitHub Repo:** https://github.com/lolwtfhunter/blair-tcg-tracker
 - **Firebase Project:** blair-pokemon-tracker
 - **Tech Stack:** HTML/CSS/JS + Firebase Realtime Database
 - **CDN Dependencies:** Firebase SDK v10.7.1
@@ -981,9 +981,9 @@ Displays fullscreen modal requiring valid sync code entry.
 
 ## 🏁 QUICK REFERENCE
 
-**Live URL:** https://lolwtfhunter.github.io/blair-pokemon-tracker/
+**Live URL:** https://lolwtfhunter.github.io/blair-tcg-tracker/
 **Sync Code:** Blair2024
-**Repository:** https://github.com/lolwtfhunter/blair-pokemon-tracker
+**Repository:** https://github.com/lolwtfhunter/blair-tcg-tracker
 **Key Files:** `index.html` + `data/` directory (modular JSON files)
 **Firebase Project:** blair-pokemon-tracker
 
@@ -1121,7 +1121,7 @@ Replace sync code with proper user authentication.
 4. Select your repo (grant Netlify access)
 5. Build settings: Leave empty (it's just HTML)
 6. Click "Deploy"
-7. Done! Get URL like `blair-pokemon-tracker.netlify.app`
+7. Done! Get URL like `blair-tcg-tracker.netlify.app`
 
 **Make Repo Private:**
 1. GitHub repo → Settings → Danger Zone
@@ -1182,7 +1182,7 @@ This makes it harder to find but doesn't make repo private.
 1. Click "Add new site" → "Import an existing project"
 2. Click "Deploy with GitHub"
 3. Grant Netlify access to your repositories
-4. Select `lolwtfhunter/blair-pokemon-tracker`
+4. Select `lolwtfhunter/blair-tcg-tracker`
 5. Build settings:
    - Branch: `main`
    - Build command: (leave empty)
@@ -1196,8 +1196,8 @@ This makes it harder to find but doesn't make repo private.
 #### **Step 4: Customize URL (Optional)**
 1. Site settings → Domain management
 2. Click "Options" → "Edit site name"
-3. Change to: `blair-pokemon-tracker`
-4. New URL: `blair-pokemon-tracker.netlify.app`
+3. Change to: `blair-tcg-tracker`
+4. New URL: `blair-tcg-tracker.netlify.app`
 
 #### **Step 5: Make Repo Private**
 1. GitHub repo → Settings
@@ -1208,8 +1208,8 @@ This makes it harder to find but doesn't make repo private.
 6. Netlify still works! (It has access)
 
 #### **Step 6: Update Bookmark**
-- Old: `https://lolwtfhunter.github.io/blair-pokemon-tracker/`
-- New: `https://blair-pokemon-tracker.netlify.app`
+- Old: `https://lolwtfhunter.github.io/blair-tcg-tracker/`
+- New: `https://blair-tcg-tracker.netlify.app`
 - Bookmark new URL on both phones
 
 **Done! Private repo, free hosting, same functionality!**
@@ -1404,8 +1404,8 @@ Better than plaintext, but not real security.
 ### 🔄 **What Changes vs What Stays the Same**
 
 #### **CHANGES (Hosting Only):**
-- ❌ Old URL: `lolwtfhunter.github.io/blair-pokemon-tracker/`
-- ✅ New URL: `blair-pokemon-tracker.netlify.app`
+- ❌ Old URL: `lolwtfhunter.github.io/blair-tcg-tracker/`
+- ✅ New URL: `blair-tcg-tracker.netlify.app`
 - That's it!
 
 #### **STAYS EXACTLY THE SAME:**
@@ -1451,16 +1451,16 @@ Runs JavaScript                     Runs JavaScript
 ### 📱 **Migration Test - What You'll Experience**
 
 #### **Before Migration:**
-1. You: Open `lolwtfhunter.github.io/blair-pokemon-tracker/`
+1. You: Open `lolwtfhunter.github.io/blair-tcg-tracker/`
 2. You: Check card #24 ✓
 3. Wife: Opens same URL
 4. Wife: Sees card #24 already checked ✓
 5. Firebase sync working!
 
 #### **After Migration to Netlify:**
-1. You: Open `blair-pokemon-tracker.netlify.app`
+1. You: Open `blair-tcg-tracker.netlify.app`
 2. You: Check card #50 ✓
-3. Wife: Opens `blair-pokemon-tracker.netlify.app`
+3. Wife: Opens `blair-tcg-tracker.netlify.app`
 4. Wife: Sees card #50 already checked ✓
 5. Firebase sync STILL working!
 
@@ -1566,7 +1566,7 @@ Response: ✓ Saved, sync to other devices
 
 **After Migration:**
 ```
-Request from: blair-pokemon-tracker.netlify.app
+Request from: blair-tcg-tracker.netlify.app
 User: Blair2024
 Action: Check card #51
 Response: ✓ Saved, sync to other devices
@@ -1623,7 +1623,7 @@ A: Switch back to GitHub Pages (make repo public again). Firebase data never tou
 1. **Deploy to Netlify** (GitHub repo still public)
    - Now you have TWO working URLs
    - Old: `lolwtfhunter.github.io/...`
-   - New: `blair-pokemon-tracker.netlify.app`
+   - New: `blair-tcg-tracker.netlify.app`
 
 2. **Test Netlify URL**
    - Open new URL on your phone
@@ -1723,7 +1723,7 @@ With Netlify connected to your GitHub repo, changes are **incredibly easy**:
 **Example: Changing the sync code**
 
 1. **Go to your GitHub repo:**
-   - https://github.com/lolwtfhunter/blair-pokemon-tracker
+   - https://github.com/lolwtfhunter/blair-tcg-tracker
 
 2. **Click on `index.html`**
 
@@ -1756,8 +1756,8 @@ With Netlify connected to your GitHub repo, changes are **incredibly easy**:
 
 1. **Clone the repo** (one-time setup):
    ```bash
-   git clone https://github.com/lolwtfhunter/blair-pokemon-tracker.git
-   cd blair-pokemon-tracker
+   git clone https://github.com/lolwtfhunter/blair-tcg-tracker.git
+   cd blair-tcg-tracker
    ```
 
 2. **Make changes:**
@@ -1881,7 +1881,7 @@ const VALID_SYNC_CODE = 'YourNewCode';
 **After committing, check deployment:**
 
 1. **Go to:** https://app.netlify.com
-2. **Click your site:** blair-pokemon-tracker
+2. **Click your site:** blair-tcg-tracker
 3. **See "Deploys" tab**
 
 **You'll see:**
@@ -1993,7 +1993,7 @@ Changes live in ~30 seconds!
 3. **Create Pull Request on GitHub**
 
 4. **Netlify automatically creates preview:**
-   - Preview URL: `deploy-preview-123--blair-pokemon-tracker.netlify.app`
+   - Preview URL: `deploy-preview-123--blair-tcg-tracker.netlify.app`
    - Test without affecting production
 
 5. **If good, merge PR:**
@@ -2048,7 +2048,7 @@ Changes live in ~30 seconds!
 
 1. **Clone repo:**
    ```bash
-   git clone https://github.com/lolwtfhunter/blair-pokemon-tracker.git
+   git clone https://github.com/lolwtfhunter/blair-tcg-tracker.git
    ```
 
 2. **Open index.html in browser:**
@@ -2165,7 +2165,7 @@ Since Netlify is hosting your site, you can safely make the GitHub repo private!
 **Steps:**
 
 1. **Go to your GitHub repo:**
-   - https://github.com/lolwtfhunter/blair-pokemon-tracker
+   - https://github.com/lolwtfhunter/blair-tcg-tracker
 
 2. **Click "Settings"** (top right of repo)
 
@@ -2176,7 +2176,7 @@ Since Netlify is hosting your site, you can safely make the GitHub repo private!
 5. **Select "Make private"**
 
 6. **Type repo name to confirm:**
-   - Type: `blair-pokemon-tracker`
+   - Type: `blair-tcg-tracker`
 
 7. **Click "I understand, make this repository private"**
 
@@ -2189,7 +2189,7 @@ Since Netlify is hosting your site, you can safely make the GitHub repo private!
 **Netlify:**
 - ✅ Keeps working (you already granted it access)
 - ✅ Auto-deploys still work
-- ✅ Your site stays live at `blair-pokemon-tracker.netlify.app`
+- ✅ Your site stays live at `blair-tcg-tracker.netlify.app`
 
 **GitHub Pages:**
 - ❌ Stops working (GitHub Pages requires public repo on free plan)
@@ -2206,10 +2206,10 @@ Since Netlify is hosting your site, you can safely make the GitHub repo private!
 ### 📱 **For Users**
 
 **Old URL stops working:**
-- `https://lolwtfhunter.github.io/blair-pokemon-tracker/` → 404 error
+- `https://lolwtfhunter.github.io/blair-tcg-tracker/` → 404 error
 
 **New URL keeps working:**
-- `https://blair-pokemon-tracker.netlify.app` → Works perfectly!
+- `https://blair-tcg-tracker.netlify.app` → Works perfectly!
 
 **Action needed:**
 - Update bookmarks on both phones to Netlify URL
@@ -2222,7 +2222,7 @@ Since Netlify is hosting your site, you can safely make the GitHub repo private!
 **BEFORE (Public Repo):**
 ```
 Anyone can:
-- Browse to github.com/lolwtfhunter/blair-pokemon-tracker
+- Browse to github.com/lolwtfhunter/blair-tcg-tracker
 - View index.html
 - See line 628: const VALID_SYNC_CODE = 'Blair2024';
 - Know your sync code
@@ -2266,7 +2266,7 @@ If you make repo private BEFORE setting up Netlify:
 
 **Verify Netlify works:**
 
-1. Open Netlify URL: `https://blair-pokemon-tracker.netlify.app`
+1. Open Netlify URL: `https://blair-tcg-tracker.netlify.app`
 2. Enter "Blair2024"
 3. See all your cards and progress ✓
 4. Check a card
@@ -2321,7 +2321,7 @@ If you need to make repo public again:
 ### ✅ **Checklist: Making Repo Private**
 
 - [ ] Netlify is set up and working
-- [ ] Netlify URL tested: `blair-pokemon-tracker.netlify.app`
+- [ ] Netlify URL tested: `blair-tcg-tracker.netlify.app`
 - [ ] Bookmarks updated to Netlify URL (both phones)
 - [ ] Firebase sync tested (check card on one phone, see on other)
 - [ ] Ready to make repo private

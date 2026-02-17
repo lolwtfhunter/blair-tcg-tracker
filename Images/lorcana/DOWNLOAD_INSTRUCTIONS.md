@@ -19,7 +19,7 @@ https://dreamborn.ink/cards
 1. Click on card #1 (Baloo - Friend and Guardian)
 2. Right-click the card image
 3. Select "Save image as..."
-4. Navigate to: `blair-pokemon-tracker/Images/lorcana/whispers-in-the-well/`
+4. Navigate to: `blair-tcg-tracker/Images/lorcana/whispers-in-the-well/`
 5. Save as: `001.jpg`
 
 ### Step 4: Test It!
