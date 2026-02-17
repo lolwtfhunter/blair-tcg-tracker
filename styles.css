@@ -2342,3 +2342,255 @@ h1 {
         height: 300px;
     }
 }
+
+/* ── Custom Set Editor Modal ──────────────────────────────────── */
+.cse-modal {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: rgba(0,0,0,0.7);
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+    padding: 16px;
+}
+.cse-modal.open { opacity: 1; }
+
+.cse-modal-content {
+    background: #1a1a2e;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 720px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.cse-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.cse-modal-header h2 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #fff;
+}
+.cse-close {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 4px;
+}
+.cse-close:hover { color: #fff; }
+
+.cse-modal-body { padding: 20px; }
+
+.cse-step { display: none; }
+.cse-step.active { display: block; }
+
+.cse-form-group {
+    margin-bottom: 14px;
+}
+.cse-form-group label {
+    display: block;
+    font-size: 0.85rem;
+    color: #aaa;
+    margin-bottom: 4px;
+}
+.cse-form-row {
+    display: flex;
+    gap: 12px;
+}
+.cse-form-row .cse-form-group { flex: 1; }
+
+.cse-input {
+    width: 100%;
+    padding: 8px 10px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+}
+.cse-input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+.cse-textarea {
+    min-height: 60px;
+    resize: vertical;
+}
+.cse-color-input {
+    width: 48px;
+    height: 36px;
+    padding: 2px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.cse-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+.cse-btn.primary {
+    background: #2563eb;
+    color: #fff;
+    width: 100%;
+    margin-top: 10px;
+}
+.cse-btn.primary:hover { background: #1d4fd8; }
+.cse-btn.secondary {
+    background: rgba(255,255,255,0.1);
+    color: #ccc;
+}
+.cse-btn.secondary:hover { background: rgba(255,255,255,0.15); }
+
+.cse-card-picker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+.cse-selected-count {
+    color: #00ff88;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.cse-set-selector {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+.cse-set-selector select { flex: 1.5; }
+.cse-picker-search { flex: 1; }
+
+.cse-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 8px;
+    max-height: 45vh;
+    overflow-y: auto;
+    margin-bottom: 12px;
+    padding: 4px;
+}
+
+.cse-picker-card {
+    background: rgba(255,255,255,0.05);
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 4px;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.1s;
+    text-align: center;
+}
+.cse-picker-card:hover {
+    border-color: rgba(255,255,255,0.2);
+    transform: scale(1.03);
+}
+.cse-picker-card.selected {
+    border-color: #00ff88;
+    background: rgba(0,255,136,0.08);
+}
+
+.cse-picker-card-img {
+    aspect-ratio: 63/88;
+    overflow: hidden;
+    border-radius: 4px;
+    margin-bottom: 4px;
+}
+.cse-picker-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cse-picker-card-info {
+    font-size: 0.7rem;
+    color: #ccc;
+    line-height: 1.2;
+}
+.cse-picker-card-name {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.cse-picker-card-num {
+    color: #888;
+    font-size: 0.65rem;
+}
+
+/* ── "+ New Set" button ───────────────────────────────────────── */
+.new-set-btn {
+    border: 2px dashed rgba(255,255,255,0.2) !important;
+    background: transparent !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+    gap: 8px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+.new-set-btn:hover {
+    border-color: rgba(255,255,255,0.4) !important;
+    background: rgba(255,255,255,0.03) !important;
+}
+.new-set-btn-icon {
+    font-size: 2rem;
+    color: rgba(255,255,255,0.4);
+    line-height: 1;
+}
+
+/* ── Edit/Delete action buttons on set buttons ───────────────── */
+.custom-set-actions {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    margin-top: 6px;
+}
+.custom-set-action-btn {
+    background: rgba(255,255,255,0.08);
+    border: none;
+    border-radius: 4px;
+    padding: 4px 6px;
+    cursor: pointer;
+    color: #aaa;
+    transition: color 0.15s, background 0.15s;
+    line-height: 1;
+}
+.custom-set-action-btn:hover {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+}
+.custom-set-action-btn.delete:hover {
+    color: #ff4444;
+    background: rgba(255,68,68,0.1);
+}
+
+/* ── Mobile overrides for editor ─────────────────────────────── */
+@media (max-width: 767px) {
+    .cse-modal { padding: 8px; }
+    .cse-modal-content { max-height: 95vh; }
+    .cse-set-selector { flex-direction: column; }
+    .cse-picker-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        max-height: 40vh;
+    }
+    .cse-form-row { flex-direction: column; gap: 0; }
+}

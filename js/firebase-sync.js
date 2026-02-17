@@ -10,6 +10,9 @@ const FIREBASE_CONFIG = {
     appId: "1:169585887164:web:16d3ff0705153848df8db9"
 };
 
+let firebase_customSets_ref = null;
+let activeCollectionId = null;
+
 // Initialize Firebase app (safe to call multiple times)
 function ensureFirebaseApp() {
     if (!firebase.apps.length) {
@@ -30,6 +33,29 @@ function detachFirebaseListener() {
         firebase_ref.off();
         firebase_ref = null;
     }
+    if (firebase_customSets_ref) {
+        firebase_customSets_ref.off();
+        firebase_customSets_ref = null;
+    }
+}
+
+// Rebuild custom set UI after Firebase customSets data changes
+function rebuildCustomSetsUI() {
+    if (typeof initCustomSetGrids === 'function') {
+        initCustomSetGrids();
+    }
+    if (typeof renderCustomSetButtons === 'function') {
+        renderCustomSetButtons();
+    }
+    // Re-render cards for the currently selected custom set
+    if (currentCustomSet && customCardSets[currentCustomSet]) {
+        if (typeof renderCustomCards === 'function') {
+            renderCustomCards(currentCustomSet);
+        }
+    }
+    if (typeof updateCustomSetButtonProgress === 'function') {
+        updateCustomSetButtonProgress();
+    }
 }
 
 // Initialize Firebase and set up real-time sync on a collection
@@ -37,6 +63,7 @@ function initializeFirebase(collectionId) {
     try {
         ensureFirebaseApp();
         firebase_db = firebase.database();
+        activeCollectionId = collectionId;
 
         // Detach any existing listener before attaching new one
         detachFirebaseListener();
@@ -53,6 +80,29 @@ function initializeFirebase(collectionId) {
 
         updateSyncStatus('Connecting...', 'syncing');
 
+        // Listen for custom set definitions
+        firebase_customSets_ref = firebase_db.ref('collections/' + collectionId + '/customSets');
+        firebase_customSets_ref.on('value', (snapshot) => {
+            const data = snapshot.val();
+            // Clear existing custom sets and rebuild from Firebase
+            customCardSets = {};
+            if (data) {
+                Object.keys(data).forEach(setKey => {
+                    parseCustomSetFromFirebase(setKey, data[setKey]);
+                });
+                console.log(`✓ Loaded ${Object.keys(data).length} custom sets from Firebase`);
+            } else {
+                console.log('No custom sets in this collection.');
+            }
+            rebuildCustomSetsUI();
+
+            // Run legacy migration after custom sets are loaded
+            if (typeof migrateCustomSetDefinitions === 'function') {
+                migrateCustomSetDefinitions(collectionId);
+            }
+        });
+
+        // Listen for collection progress data
         firebase_ref.on('value', (snapshot) => {
             const data = snapshot.val();
             if (data) {

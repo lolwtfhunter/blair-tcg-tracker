@@ -33,6 +33,90 @@ function migrateEditionVariants() {
     localStorage.setItem('edition-migration-v1', 'done');
 }
 
+// Migrate legacy custom set definitions (JSON files) into Firebase customSets/ node
+// Only runs once per collection that has legacy progress data
+async function migrateCustomSetDefinitions(collectionId) {
+    // Don't migrate if custom sets already exist in Firebase for this collection
+    if (Object.keys(customCardSets).length > 0) {
+        return;
+    }
+
+    const migrationKey = 'custom-sets-def-migrated-v2-' + collectionId;
+    if (localStorage.getItem(migrationKey)) return;
+
+    // Read progress data directly from Firebase (the global collectionProgress
+    // may not be populated yet since the data listener fires independently)
+    const db = firebase.database();
+    let progressData;
+    try {
+        const progressSnap = await db.ref('collections/' + collectionId + '/data').once('value');
+        progressData = progressSnap.val() || {};
+    } catch (err) {
+        console.warn('Could not read progress data for migration check:', err);
+        return;
+    }
+
+    // Only migrate if the collection has progress data for one of the legacy custom sets
+    const hasLegacyData = progressData['custom-its-pikachu'] ||
+                          progressData['custom-psyduck'] ||
+                          progressData['custom-togepi'];
+    if (!hasLegacyData) {
+        localStorage.setItem(migrationKey, 'done');
+        return;
+    }
+
+    console.log('Migrating legacy custom set definitions to Firebase...');
+
+    const legacySets = ['its-pikachu', 'psyduck', 'togepi'];
+    const themeColors = {
+        'its-pikachu': '#ffd700',
+        'psyduck': '#4fc3f7',
+        'togepi': '#ef9a9a'
+    };
+    const logoUrls = {
+        'its-pikachu': './Images/header/pikachu.png',
+        'psyduck': './Images/header/psyduck.png',
+        'togepi': './Images/header/togepi.png'
+    };
+
+    try {
+        const customSetsRef = db.ref('collections/' + collectionId + '/customSets');
+
+        for (const setKey of legacySets) {
+            try {
+                const response = await fetch(`./data/pokemon/custom-sets/${setKey}.json`);
+                if (!response.ok) continue;
+                const setInfo = await response.json();
+
+                // Build Firebase-friendly structure with cards as sub-object
+                const fbSet = {
+                    name: setInfo.name,
+                    displayName: setInfo.displayName || setInfo.name,
+                    description: setInfo.description || '',
+                    totalCards: setInfo.totalCards,
+                    singleVariantOnly: setInfo.singleVariantOnly !== false,
+                    themeColor: themeColors[setKey] || '#ff9500',
+                    logoUrl: logoUrls[setKey] || '',
+                    createdAt: firebase.database.ServerValue.TIMESTAMP,
+                    updatedAt: firebase.database.ServerValue.TIMESTAMP,
+                    createdBy: 'migration',
+                    cards: setInfo.cards
+                };
+
+                await customSetsRef.child(setKey).set(fbSet);
+                console.log(`✓ Migrated custom set definition: ${setKey}`);
+            } catch (err) {
+                console.error(`Error migrating custom set ${setKey}:`, err);
+            }
+        }
+
+        localStorage.setItem(migrationKey, 'done');
+        console.log('✓ Legacy custom set migration complete');
+    } catch (err) {
+        console.error('Custom set migration failed:', err);
+    }
+}
+
 // Save progress to localStorage
 function saveProgress() {
     localStorage.setItem('pokemonVariantProgress', JSON.stringify(collectionProgress));

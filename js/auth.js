@@ -8,11 +8,21 @@ function initAuth() {
         // Test mode: skip all Firebase auth, just render cards with localStorage data
         currentUser = window.__TEST_AUTH_USER;
         showUserHeader(currentUser.displayName || 'Test');
-        // Render all cards from localStorage (same as old sync code path)
-        Object.keys(cardSets).forEach(setKey => renderCards(setKey));
-        updateSetButtonProgress();
-        Object.keys(customCardSets).forEach(setKey => renderCustomCards(setKey));
-        updateCustomSetButtonProgress();
+        // Load custom sets from JSON files for tests (no Firebase available)
+        if (typeof loadCustomSetsFromJSON === 'function') {
+            loadCustomSetsFromJSON().then(() => {
+                initCustomSetGrids();
+                renderCustomSetButtons();
+                // Render all cards from localStorage
+                Object.keys(cardSets).forEach(setKey => renderCards(setKey));
+                updateSetButtonProgress();
+                Object.keys(customCardSets).forEach(setKey => renderCustomCards(setKey));
+                updateCustomSetButtonProgress();
+            });
+        } else {
+            Object.keys(cardSets).forEach(setKey => renderCards(setKey));
+            updateSetButtonProgress();
+        }
         return;
     }
 

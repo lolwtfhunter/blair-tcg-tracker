@@ -12,9 +12,6 @@ window.addEventListener('load', async function() {
             return;
         }
 
-        // Load custom sets data
-        await loadCustomSetsData();
-
         // Load Lorcana data
         await loadLorcanaData();
 
@@ -59,16 +56,8 @@ window.addEventListener('load', async function() {
         // Cards are now rendered on-demand when user selects a set
         console.log('Card grids ready - cards will render when sets are selected');
 
-        // Initialize custom set grids and buttons
-        console.log('Initializing custom sets...');
-        try {
-            initCustomSetGrids();
-            renderCustomSetButtons();
-            // Custom set cards will render on-demand when user selects a set
-            console.log('✓ Custom set grids and buttons ready');
-        } catch (e) {
-            console.log('ERROR in custom sets: ' + e.message);
-        }
+        // Custom sets are initialized dynamically when Firebase customSets listener fires
+        console.log('Custom sets will initialize from Firebase.');
 
         // Initialize Lorcana set grids and buttons
         console.log('Initializing Lorcana sets...');

@@ -69,66 +69,101 @@ async function loadCardData() {
     }
 }
 
-// Load custom sets data from modular JSON files
+// Custom sets are now loaded from Firebase per-collection (see firebase-sync.js).
+// This function is kept as a no-op for backward compatibility with the init flow.
 async function loadCustomSetsData() {
-    console.log('Loading custom Pokemon sets...');
-    try {
-        let loadedCount = 0;
+    console.log('Custom sets will load from Firebase when collection is active.');
+    return true;
+}
 
-        // Load each custom set individually
-        for (const setKey of CUSTOM_SETS) {
+// Load custom sets from JSON files (used in test mode only)
+async function loadCustomSetsFromJSON() {
+    const LEGACY_CUSTOM_SETS = ['its-pikachu', 'psyduck', 'togepi'];
+    console.log('Loading custom Pokemon sets from JSON (test mode)...');
+    try {
+        for (const setKey of LEGACY_CUSTOM_SETS) {
             try {
                 const response = await fetch(`./data/pokemon/custom-sets/${setKey}.json`);
-                if (!response.ok) {
-                    console.warn(`Custom set ${setKey} not found, skipping`);
-                    continue;
-                }
+                if (!response.ok) continue;
                 const setInfo = await response.json();
-                const cards = [];
-
-                if (setInfo.cards && typeof setInfo.cards === 'object') {
-                    for (const [cardNum, cardData] of Object.entries(setInfo.cards)) {
-                        const cardObj = {
-                            number: parseInt(cardNum),
-                            name: cardData.name,
-                            rarity: cardData.rarity,
-                            type: cardData.type || 'pokemon',
-                            setOrigin: cardData.setOrigin || '',
-                            apiId: cardData.apiId || '',
-                            releaseDate: cardData.releaseDate || '',
-                            originalNumber: cardData.originalNumber || '',
-                            region: cardData.region || ''
-                        };
-                        // Parse variants array if present (merged cards with multiple rarities)
-                        if (cardData.variants && Array.isArray(cardData.variants)) {
-                            cardObj.variants = cardData.variants;
-                        }
-                        cards.push(cardObj);
-                    }
-                }
-
-                customCardSets[setKey] = {
-                    name: setInfo.name,
-                    displayName: setInfo.displayName,
-                    description: setInfo.description || '',
-                    totalCards: setInfo.totalCards,
-                    singleVariantOnly: setInfo.singleVariantOnly !== false,
-                    cards: cards
-                };
-
-                console.log(`✓ Custom set ${setKey}: ${cards.length} cards`);
-                loadedCount++;
+                parseCustomSetFromJSON(setKey, setInfo);
             } catch (setError) {
                 console.error(`Error loading custom set ${setKey}:`, setError);
             }
         }
-
-        console.log(`✓ Loaded ${loadedCount} custom sets`);
-        return true; // Non-fatal, app continues even if no custom sets loaded
+        return true;
     } catch (error) {
-        console.log('Custom sets load error: ' + error.message);
-        return true; // Non-fatal, app continues without custom sets
+        return true;
     }
+}
+
+// Parse a custom set from a JSON file into customCardSets
+function parseCustomSetFromJSON(setKey, setInfo) {
+    const cards = [];
+    if (setInfo.cards && typeof setInfo.cards === 'object') {
+        for (const [cardNum, cardData] of Object.entries(setInfo.cards)) {
+            const cardObj = {
+                number: parseInt(cardNum),
+                name: cardData.name,
+                rarity: cardData.rarity,
+                type: cardData.type || 'pokemon',
+                setOrigin: cardData.setOrigin || '',
+                apiId: cardData.apiId || '',
+                releaseDate: cardData.releaseDate || '',
+                originalNumber: cardData.originalNumber || '',
+                region: cardData.region || ''
+            };
+            if (cardData.variants && Array.isArray(cardData.variants)) {
+                cardObj.variants = cardData.variants;
+            }
+            cards.push(cardObj);
+        }
+    }
+    customCardSets[setKey] = {
+        name: setInfo.name,
+        displayName: setInfo.displayName || setInfo.name,
+        description: setInfo.description || '',
+        totalCards: setInfo.totalCards,
+        singleVariantOnly: setInfo.singleVariantOnly !== false,
+        themeColor: setInfo.themeColor || '#ff9500',
+        logoUrl: setInfo.logoUrl || '',
+        cards: cards
+    };
+}
+
+// Parse a custom set from Firebase snapshot data into customCardSets
+function parseCustomSetFromFirebase(setKey, fbData) {
+    const cards = [];
+    if (fbData.cards && typeof fbData.cards === 'object') {
+        for (const [cardNum, cardData] of Object.entries(fbData.cards)) {
+            const cardObj = {
+                number: parseInt(cardNum),
+                name: cardData.name || '',
+                rarity: cardData.rarity || 'common',
+                type: cardData.type || 'pokemon',
+                setOrigin: cardData.setOrigin || '',
+                apiId: cardData.apiId || '',
+                releaseDate: cardData.releaseDate || '',
+                originalNumber: cardData.originalNumber || '',
+                region: cardData.region || ''
+            };
+            if (cardData.variants && Array.isArray(cardData.variants)) {
+                cardObj.variants = cardData.variants;
+            }
+            cards.push(cardObj);
+        }
+    }
+    customCardSets[setKey] = {
+        name: fbData.name || setKey,
+        displayName: fbData.displayName || fbData.name || setKey,
+        description: fbData.description || '',
+        totalCards: fbData.totalCards || cards.length,
+        singleVariantOnly: fbData.singleVariantOnly !== false,
+        themeColor: fbData.themeColor || '#ff9500',
+        logoUrl: fbData.logoUrl || '',
+        createdBy: fbData.createdBy || '',
+        cards: cards
+    };
 }
 
 // Get image URL for a custom set card using its apiId

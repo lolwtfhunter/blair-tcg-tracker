@@ -490,13 +490,6 @@ const OFFICIAL_SETS = [
     'legendary-collection'
 ];
 
-// Custom sets to load
-const CUSTOM_SETS = [
-    'its-pikachu',
-    'psyduck',
-    'togepi'
-];
-
 // Lorcast API set codes (for card image fallback via api.lorcast.com)
 const LORCAST_SET_CODES = {
     'first-chapter': '1',

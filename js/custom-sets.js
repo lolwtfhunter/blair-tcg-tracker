@@ -7,7 +7,6 @@ function renderCustomSetButtons() {
     container.innerHTML = '';
 
     const setKeys = Object.keys(customCardSets);
-    if (setKeys.length === 0) return;
 
     setKeys.forEach(setKey => {
         const setData = customCardSets[setKey];
@@ -15,37 +14,13 @@ function renderCustomSetButtons() {
         btn.className = 'set-btn' + (setKey === currentCustomSet ? ' active' : '');
         btn.setAttribute('data-custom-set-key', setKey);
 
-        // Character-specific theme colors and logos for known sets
-        const characterColorMap = {
-            'its-pikachu': '#ffd700',
-            'psyduck': '#4fc3f7',
-            'togepi': '#ef9a9a'
-        };
-        const themeColor = characterColorMap[setKey] || '#ff9500';
+        // Read theme color and logo from set data (populated from Firebase)
+        const themeColor = setData.themeColor || '#ff9500';
         btn.style.setProperty('--set-accent', themeColor + '25');
         btn.style.setProperty('--set-border', themeColor + '55');
 
-        const characterLogoMap = {
-            'its-pikachu': './Images/header/pikachu.png',
-            'psyduck': './Images/header/psyduck.png',
-            'togepi': './Images/header/togepi.png'
-        };
-        const characterIconMap = {
-            'its-pikachu': '⚡',
-            'psyduck': '🦆',
-            'togepi': '🥚'
-        };
-
-        // For unknown sets, use a generic TCG logo based on card type
-        let logoUrl = characterLogoMap[setKey] || './Images/header/pokeball.png';
-        let logoIcon = characterIconMap[setKey] || '⚡';
-        if (!characterLogoMap[setKey] && setData.cards && setData.cards.length > 0) {
-            const origin = (setData.cards[0].setOrigin || '').toLowerCase();
-            if (origin.includes('lorcana') || origin.includes('disney')) {
-                logoUrl = './Images/lorcana/logos/lorcana.png';
-                logoIcon = '🃏';
-            }
-        }
+        let logoUrl = setData.logoUrl || './Images/header/pokeball.png';
+        let logoIcon = '⚡';
 
         // Find earliest card date from cards if available
         let earliestDate = null;
@@ -65,11 +40,25 @@ function renderCustomSetButtons() {
         if (earliestDate) {
             dateStr = earliestDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
         } else {
-            // Fallback to showing card count
-            dateStr = `${setData.totalCards} cards`;
+            dateStr = `${setData.totalCards || setData.cards.length} cards`;
         }
 
         const progress = getCustomSetProgress(setKey);
+
+        // Edit/delete buttons (only shown when logged in)
+        let editDeleteHTML = '';
+        if (typeof currentUser !== 'undefined' && currentUser) {
+            editDeleteHTML = `
+                <div class="custom-set-actions">
+                    <button class="custom-set-action-btn edit" onclick="event.stopPropagation(); openCustomSetEditor('${setKey}')" title="Edit set">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                    </button>
+                    <button class="custom-set-action-btn delete" onclick="event.stopPropagation(); deleteCustomSet('${setKey}')" title="Delete set">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                    </button>
+                </div>
+            `;
+        }
 
         btn.innerHTML = `
             <div class="set-btn-logo-wrapper">
@@ -83,11 +72,28 @@ function renderCustomSetButtons() {
             <div class="set-btn-progress">
                 <div class="set-btn-progress-fill" style="width: ${progress.percentage}%"></div>
             </div>
+            ${editDeleteHTML}
         `;
 
         btn.onclick = () => switchCustomSet(setKey);
         container.appendChild(btn);
     });
+
+    // Add "+ New Set" button (only when logged in)
+    if (typeof currentUser !== 'undefined' && currentUser) {
+        const newBtn = document.createElement('button');
+        newBtn.className = 'set-btn new-set-btn';
+        newBtn.innerHTML = `
+            <div class="new-set-btn-icon">+</div>
+            <div class="set-btn-name">New Set</div>
+        `;
+        newBtn.onclick = () => {
+            if (typeof openCustomSetEditor === 'function') {
+                openCustomSetEditor(null);
+            }
+        };
+        container.appendChild(newBtn);
+    }
 }
 
 // Switch custom set
@@ -197,7 +203,7 @@ function getCustomCardVariants(card) {
 
     const rarity = card.rarity.toLowerCase();
 
-    // Japanese exclusive cards → single
+    // Japanese exclusive cards -> single
     if (card.region === 'JP') {
         return ['single'];
     }
@@ -207,12 +213,12 @@ function getCustomCardVariants(card) {
         return ['single'];
     }
 
-    // Inherently holo rarities → single (non-holo versions are separate entries)
+    // Inherently holo rarities -> single (non-holo versions are separate entries)
     if (rarity === 'rare-holo' || rarity === 'rare-holo-gx') {
         return ['single'];
     }
 
-    // Energy cards → single
+    // Energy cards -> single
     if (rarity === 'energy') {
         return ['single'];
     }
@@ -233,12 +239,12 @@ function getCustomCardVariants(card) {
         return ['single'];
     }
 
-    // Rare → holo + reverse-holo
+    // Rare -> holo + reverse-holo
     if (rarity === 'rare') {
         return ['holo', 'reverse-holo'];
     }
 
-    // Common/Uncommon/Trainer → regular + reverse-holo
+    // Common/Uncommon/Trainer -> regular + reverse-holo
     return ['regular', 'reverse-holo'];
 }
 
@@ -489,7 +495,7 @@ function initCustomSetGrids() {
                 </div>
                 <div class="search-container">
                     <input type="text" class="search-input" placeholder="Search cards..." oninput="searchCards('custom-${setKey}', this.value)" data-set="custom-${setKey}">
-                    <button class="search-clear" onclick="clearSearch('custom-${setKey}')">×</button>
+                    <button class="search-clear" onclick="clearSearch('custom-${setKey}')">x</button>
                 </div>
                 <div class="rarity-filters" id="custom-${setKey}-rarity-filters"></div>
             </div>
