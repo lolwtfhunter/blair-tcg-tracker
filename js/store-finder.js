@@ -1,4 +1,4 @@
-// Store Finder — find local TCG retailers via Google Places or Overpass/OSM fallback
+// Store Hunter — find local TCG retailers via Google Places or Overpass/OSM fallback
 const SF_CONFIG = {
     GOOGLE_API_KEY: '',  // Set to enable Google Places (restrict to your domain in Cloud Console)
     OVERPASS_ENDPOINT: 'https://overpass-api.de/api/interpreter',
@@ -7,7 +7,14 @@ const SF_CONFIG = {
     DEFAULT_CENTER: [39.5, -98.35],  // Continental US center
     DEFAULT_ZOOM: 4,
     SEARCH_ZOOM: 12,
-    OVERPASS_SHOP_TAGS: ['games', 'hobby', 'comic', 'toys'],
+    // High-confidence shop types (almost always sell TCGs)
+    OVERPASS_PRIMARY_TAGS: ['games', 'comic'],
+    // Broad shop types — only included when name matches TCG keywords
+    OVERPASS_SECONDARY_TAGS: ['hobby', 'toys', 'anime'],
+    // Regex for name filtering on secondary tags (case-insensitive in Overpass)
+    OVERPASS_NAME_REGEX: 'card|game|tcg|comic|collect|manga|anime|hobby|pokemon|magic|yugioh|lorcana|digimon',
+    // Post-filter: exclude stores whose names strongly indicate non-TCG businesses
+    EXCLUDE_NAME_PATTERNS: /\b(lego|legoland|craft|knit|sew|quilt|fabric|yarn|bead|scrapbook|model train|slot car|rc car|puzzle only)\b/i,
     KM_PER_MILE: 1.60934,
 };
 
@@ -218,22 +225,24 @@ function sfSearchGooglePlaces(lat, lng, radiusMeters, onSuccess, onError) {
         const request = {
             location: new google.maps.LatLng(lat, lng),
             radius: radiusMeters,
-            keyword: 'trading card game pokemon',
+            keyword: 'trading card game store pokemon magic',
             type: 'store',
         };
         service.nearbySearch(request, (results, status) => {
             if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-                const stores = results.map(p => ({
-                    id: p.place_id,
-                    name: p.name,
-                    address: p.vicinity || '',
-                    lat: p.geometry.location.lat(),
-                    lng: p.geometry.location.lng(),
-                    distance: sfHaversineKm(lat, lng, p.geometry.location.lat(), p.geometry.location.lng()),
-                    hours: p.opening_hours ? (p.opening_hours.isOpen() ? 'Open now' : 'Closed') : '',
-                    website: p.website || '',
-                    source: 'google',
-                }));
+                const stores = results
+                    .filter(p => !SF_CONFIG.EXCLUDE_NAME_PATTERNS.test(p.name || ''))
+                    .map(p => ({
+                        id: p.place_id,
+                        name: p.name,
+                        address: p.vicinity || '',
+                        lat: p.geometry.location.lat(),
+                        lng: p.geometry.location.lng(),
+                        distance: sfHaversineKm(lat, lng, p.geometry.location.lat(), p.geometry.location.lng()),
+                        hours: p.opening_hours ? (p.opening_hours.isOpen() ? 'Open now' : 'Closed') : '',
+                        website: p.website || '',
+                        source: 'google',
+                    }));
                 onSuccess(stores);
             } else {
                 onError();
@@ -248,8 +257,16 @@ function sfSearchGooglePlaces(lat, lng, radiusMeters, onSuccess, onError) {
 
 function sfSearchOverpass(lat, lng, radiusKm, onSuccess, onError) {
     const r = radiusKm * 1000;
-    const tagFilters = SF_CONFIG.OVERPASS_SHOP_TAGS.map(t => `node["shop"="${t}"](around:${r},${lat},${lng});`).join('');
-    const query = `[out:json][timeout:15];(${tagFilters});out body;`;
+    // Primary tags: include all results (high confidence for TCG)
+    const primary = SF_CONFIG.OVERPASS_PRIMARY_TAGS.map(t =>
+        `node["shop"="${t}"](around:${r},${lat},${lng});`
+    ).join('');
+    // Secondary tags: only include if name matches TCG-related keywords
+    const nameRe = SF_CONFIG.OVERPASS_NAME_REGEX;
+    const secondary = SF_CONFIG.OVERPASS_SECONDARY_TAGS.map(t =>
+        `node["shop"="${t}"]["name"~"${nameRe}",i](around:${r},${lat},${lng});`
+    ).join('');
+    const query = `[out:json][timeout:15];(${primary}${secondary});out body;`;
 
     fetch(SF_CONFIG.OVERPASS_ENDPOINT, {
         method: 'POST',
@@ -266,6 +283,8 @@ function sfSearchOverpass(lat, lng, radiusKm, onSuccess, onError) {
         (data.elements || []).forEach(el => {
             const name = (el.tags && el.tags.name) || '';
             if (!name) return;
+            // Exclude obvious non-TCG businesses
+            if (SF_CONFIG.EXCLUDE_NAME_PATTERNS.test(name)) return;
             // Deduplicate by name + rounded coords
             const dedupeKey = name.toLowerCase() + '|' + el.lat.toFixed(3) + '|' + el.lon.toFixed(3);
             if (seen.has(dedupeKey)) return;

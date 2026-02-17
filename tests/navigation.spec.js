@@ -24,7 +24,7 @@ test.describe('Navigation', () => {
     await expect(tabs.nth(0)).toHaveText('Pokemon');
     await expect(tabs.nth(1)).toHaveText('Disney Lorcana');
     await expect(tabs.nth(2)).toHaveText('Custom Sets');
-    await expect(tabs.nth(3)).toHaveText('Store Finder');
+    await expect(tabs.nth(3)).toHaveText('Store Hunter');
 
     await expect(page.locator('.top-tab').first()).toHaveClass(/active/);
     await expect(page.locator('#pokemon-tcg-content')).toHaveClass(/active/);
@@ -236,8 +236,8 @@ test.describe('Navigation', () => {
     }
   });
 
-  test('Store Finder tab switches and shows content', async ({ page }) => {
-    await page.locator('.top-tab', { hasText: 'Store Finder' }).click();
+  test('Store Hunter tab switches and shows content', async ({ page }) => {
+    await page.locator('.top-tab', { hasText: 'Store Hunter' }).click();
     await expect(page.locator('#store-finder-content')).toHaveClass(/active/);
     await expect(page.locator('#pokemon-tcg-content')).not.toHaveClass(/active/);
     await expect(page.locator('#sfMap')).toBeVisible();
