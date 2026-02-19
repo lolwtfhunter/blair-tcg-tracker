@@ -262,7 +262,7 @@ function sfSearchGooglePlaces(lat, lng, radiusMeters, onSuccess, onError) {
 function sfBuildOverpassQuery(lat, lng, radiusKm) {
     const r = Math.round(radiusKm * 1000);
     // Combine all shop tags into a single regex to minimize query statements.
-    // Using separate node/way/rel statements (3 total) instead of 18+ individual
+    // Using separate node/way statements (2 total) instead of 18+ individual
     // tag queries, which caused server-side timeouts on the Overpass API.
     const allTags = SF_CONFIG.OVERPASS_PRIMARY_TAGS.concat(SF_CONFIG.OVERPASS_SECONDARY_TAGS).join('|');
     const shopFilter = `["shop"~"^(${allTags})$"]`;
