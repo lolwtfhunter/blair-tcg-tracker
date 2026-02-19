@@ -261,29 +261,29 @@ function sfSearchGooglePlaces(lat, lng, radiusMeters, onSuccess, onError) {
 
 function sfBuildOverpassQuery(lat, lng, radiusKm) {
     const r = Math.round(radiusKm * 1000);
-    // Use explicit node/way/rel (not nwr shorthand) for maximum API compatibility
-    const types = ['node', 'way', 'rel'];
-    // Primary tags: include all results (high confidence for TCG)
-    const primary = SF_CONFIG.OVERPASS_PRIMARY_TAGS.flatMap(t =>
-        types.map(type => `${type}["shop"="${t}"](around:${r},${lat},${lng});`)
-    ).join('');
-    // Secondary tags: only include if name matches TCG-related keywords
-    const nameRe = SF_CONFIG.OVERPASS_NAME_REGEX;
-    const secondary = SF_CONFIG.OVERPASS_SECONDARY_TAGS.flatMap(t =>
-        types.map(type => `${type}["shop"="${t}"]["name"~"${nameRe}",i](around:${r},${lat},${lng});`)
-    ).join('');
+    // Combine all shop tags into a single regex to minimize query statements.
+    // Using separate node/way/rel statements (3 total) instead of 18+ individual
+    // tag queries, which caused server-side timeouts on the Overpass API.
+    const allTags = SF_CONFIG.OVERPASS_PRIMARY_TAGS.concat(SF_CONFIG.OVERPASS_SECONDARY_TAGS).join('|');
+    const shopFilter = `["shop"~"^(${allTags})$"]`;
+    const area = `(around:${r},${lat},${lng})`;
     // out center provides lat/lng for way and relation elements
-    return `[out:json][timeout:25];(${primary}${secondary});out center;`;
+    return `[out:json][timeout:25];(node${shopFilter}${area};way${shopFilter}${area};);out center;`;
 }
 
 function sfParseOverpassResults(data, lat, lng) {
     const seen = new Set();
     const stores = [];
+    const primarySet = new Set(SF_CONFIG.OVERPASS_PRIMARY_TAGS);
+    const nameRegex = new RegExp(SF_CONFIG.OVERPASS_NAME_REGEX, 'i');
     (data.elements || []).forEach(el => {
         const name = (el.tags && el.tags.name) || '';
         if (!name) return;
         // Exclude obvious non-TCG businesses
         if (SF_CONFIG.EXCLUDE_NAME_PATTERNS.test(name)) return;
+        // Secondary tags (hobby, toys, anime, video_games) must have a TCG-related name
+        const shopTag = (el.tags && el.tags.shop) || '';
+        if (shopTag && !primarySet.has(shopTag) && !nameRegex.test(name)) return;
         // For way/relation elements, coordinates are in el.center; for nodes, directly on el
         const elLat = el.lat != null ? el.lat : (el.center && el.center.lat);
         const elLon = el.lon != null ? el.lon : (el.center && el.center.lon);

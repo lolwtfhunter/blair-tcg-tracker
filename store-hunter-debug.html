@@ -40,18 +40,10 @@ const ENDPOINTS = [
 
 function buildQuery(lat, lng, radiusMiles) {
     const r = Math.round(radiusMiles * 1.60934 * 1000);
-    const types = ['node', 'way', 'rel'];
-    const primaryTags = ['games', 'comic'];
-    const secondaryTags = ['hobby', 'toys', 'anime', 'video_games'];
-    const nameRe = 'card|game|tcg|comic|collect|manga|anime|hobby|pokemon|magic|yugioh|lorcana|digimon';
-
-    const primary = primaryTags.flatMap(t =>
-        types.map(type => `${type}["shop"="${t}"](around:${r},${lat},${lng});`)
-    ).join('');
-    const secondary = secondaryTags.flatMap(t =>
-        types.map(type => `${type}["shop"="${t}"]["name"~"${nameRe}",i](around:${r},${lat},${lng});`)
-    ).join('');
-    return `[out:json][timeout:25];(${primary}${secondary});out center;`;
+    const allTags = ['games', 'comic', 'hobby', 'toys', 'anime', 'video_games'];
+    const shopFilter = '["shop"~"^(' + allTags.join('|') + ')$"]';
+    const area = '(around:' + r + ',' + lat + ',' + lng + ')';
+    return '[out:json][timeout:25];(node' + shopFilter + area + ';way' + shopFilter + area + ';);out center;';
 }
 
 async function testNominatim(query) {
@@ -166,7 +158,7 @@ async function runDiagnostic(lat, lng) {
 
     // Test minimal query first
     log('\n=== STEP 3A: Minimal query (just node + shop=games) ===');
-    const minQuery = '[out:json][timeout:10];node["shop"="games"](around:24140,' + lat + ',' + lng + ');out;';
+    const minQuery = '[out:json][timeout:25];node["shop"="games"](around:24140,' + lat + ',' + lng + ');out;';
     log('Query: ' + minQuery);
     for (const ep of ENDPOINTS) {
         const result = await testOverpassEndpoint(ep, minQuery);
