@@ -116,14 +116,6 @@
 
         <!-- Store Hunter tab content -->
         <div id="store-finder-content" class="top-tab-content">
-            <!-- Sub-navigation within Store Hunter -->
-            <div class="sf-sub-tabs">
-                <button class="sf-sub-tab active" data-view="store-finder" onclick="switchStoreView('store-finder')">Store Finder</button>
-                <button class="sf-sub-tab" data-view="symbol-id" onclick="switchStoreView('symbol-id')">Pokemon Symbol Identifier</button>
-            </div>
-
-            <!-- Store Finder sub-view -->
-            <div id="store-finder-view" class="sf-sub-view active">
                 <div class="sf-search-bar">
                     <button class="sf-locate-btn" id="sfLocateBtn" onclick="sfUseGeolocation()" title="Use my location">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
@@ -159,18 +151,6 @@
                     <div class="sf-store-list" id="sfStoreList"></div>
                 </div>
                 <div class="sf-disclaimer">Results are best estimates based on available map data. Please verify store details, hours, and inventory before visiting.</div>
-            </div>
-
-            <!-- Pokemon Symbol Identifier sub-view -->
-            <div id="symbol-id-view" class="sf-sub-view">
-                <div class="si-search-bar">
-                    <input type="text" id="siSearchInput" class="si-search-input"
-                           placeholder="Search by set name or series..."
-                           oninput="siFilter()">
-                </div>
-                <div class="si-description">Identify Pokemon TCG set symbols found on the bottom-left corner of cards. Match the symbol on your card to find its set.</div>
-                <div id="siContent"></div>
-            </div>
         </div>
 
         <!-- Pokemon Symbol Identifier tab content -->
