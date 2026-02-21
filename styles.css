@@ -504,6 +504,22 @@ h1 {
     display: block;
 }
 
+@media (max-width: 768px) {
+    .top-tabs {
+        gap: 3px;
+        padding: 3px;
+    }
+
+    .top-tab {
+        padding: 8px 6px;
+        font-size: 0.75rem;
+    }
+
+    .top-tab-utility {
+        font-size: 0.7rem;
+    }
+}
+
 .placeholder-content {
     text-align: center;
     padding: 60px 20px;
