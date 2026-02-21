@@ -84,7 +84,8 @@
             <button class="top-tab" data-tab="lorcana" onclick="switchTopTab('lorcana')">Disney Lorcana</button>
             <button class="top-tab" data-tab="custom-sets" onclick="switchTopTab('custom-sets')">Custom Sets</button>
             <div class="top-tab-divider"></div>
-            <button class="top-tab top-tab-utility" data-tab="store-finder" onclick="switchTopTab('store-finder'); sfSubViewActivate();">Store Hunter</button>
+            <button class="top-tab top-tab-utility" data-tab="store-finder" onclick="switchTopTab('store-finder'); sfActivate();">Store Hunter</button>
+            <button class="top-tab top-tab-utility" data-tab="symbol-id" onclick="switchTopTab('symbol-id'); siActivate();">Symbol ID</button>
         </div>
 
         <!-- Pokemon TCG tab content -->
@@ -170,6 +171,17 @@
                 <div class="si-description">Identify Pokemon TCG set symbols found on the bottom-left corner of cards. Match the symbol on your card to find its set.</div>
                 <div id="siContent"></div>
             </div>
+        </div>
+
+        <!-- Pokemon Symbol Identifier tab content -->
+        <div id="symbol-id-content" class="top-tab-content">
+            <div class="si-search-bar">
+                <input type="text" id="siSearchInput" class="si-search-input"
+                       placeholder="Search by set name or series..."
+                       oninput="siFilter()">
+            </div>
+            <div class="si-description">Identify Pokemon TCG set symbols found on the bottom-left corner of cards. Match the symbol on your card to find its set.</div>
+            <div id="siContent"></div>
         </div>
 
     </div>

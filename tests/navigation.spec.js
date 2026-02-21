@@ -9,11 +9,12 @@ test.describe('Navigation', () => {
 
   test('app loads with tabs, block buttons, and Pokemon tab active', async ({ page }) => {
     const tabs = page.locator('.top-tab');
-    await expect(tabs).toHaveCount(4);
+    await expect(tabs).toHaveCount(5);
     await expect(tabs.nth(0)).toHaveText('Pokemon');
     await expect(tabs.nth(1)).toHaveText('Disney Lorcana');
     await expect(tabs.nth(2)).toHaveText('Custom Sets');
     await expect(tabs.nth(3)).toHaveText('Store Hunter');
+    await expect(tabs.nth(4)).toHaveText('Symbol ID');
 
     await expect(page.locator('.top-tab').first()).toHaveClass(/active/);
     await expect(page.locator('#pokemon-tcg-content')).toHaveClass(/active/);

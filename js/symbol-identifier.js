@@ -3,33 +3,7 @@
 let siSets = null;
 let siInitialized = false;
 
-// --- Sub-view switching within Store Hunter tab ---
-
-function sfSubViewActivate() {
-    // Activate whichever sub-view is currently selected
-    const active = document.querySelector('.sf-sub-tab.active');
-    const view = active ? active.getAttribute('data-view') : 'store-finder';
-    if (view === 'store-finder') {
-        sfActivate();
-    } else if (view === 'symbol-id') {
-        siActivate();
-    }
-}
-
-function switchStoreView(view) {
-    document.querySelectorAll('.sf-sub-tab').forEach(t => t.classList.remove('active'));
-    document.querySelector(`.sf-sub-tab[data-view="${view}"]`).classList.add('active');
-    document.querySelectorAll('.sf-sub-view').forEach(v => v.classList.remove('active'));
-    document.getElementById(view + '-view').classList.add('active');
-
-    if (view === 'store-finder') {
-        sfActivate();
-    } else if (view === 'symbol-id') {
-        siActivate();
-    }
-}
-
-// --- Activation ---
+// --- Activation (called when Symbol ID tab is clicked) ---
 
 function siActivate() {
     if (siInitialized) return;
@@ -37,7 +11,7 @@ function siActivate() {
     siFetchSets();
 }
 
-// --- Fetch set data from pokemontcg.io API ---
+// --- Fetch set data from pokemontcg.io API, with local fallback ---
 
 function siFetchSets() {
     const container = document.getElementById('siContent');
@@ -53,8 +27,58 @@ function siFetchSets() {
             siRender(siSets);
         })
         .catch(() => {
-            container.innerHTML = '<div class="si-error">Failed to load set data. Please try again later.</div>';
+            // Fallback: build set list from the local TCG_API_SET_IDS mapping
+            siSets = siBuildLocalSets();
+            siRender(siSets);
         });
+}
+
+// --- Build set data from local config (fallback when API is unreachable) ---
+
+function siBuildLocalSets() {
+    // Era groupings derived from the comments in config.js
+    const ERA_MAP = {
+        'base': 'Base Set', 'gym': 'Gym', 'neo': 'Neo', 'ecard': 'e-Card',
+        'ex': 'EX', 'dp': 'Diamond & Pearl', 'pl': 'Platinum',
+        'hgss': 'HeartGold SoulSilver', 'bw': 'Black & White', 'xy': 'XY',
+        'sm': 'Sun & Moon', 'swsh': 'Sword & Shield', 'sv': 'Scarlet & Violet',
+        'me': 'Mega Evolution'
+    };
+
+    // Map set key prefixes to era keys
+    function getEra(apiId) {
+        if (apiId.startsWith('base') || apiId === 'si1') return 'base';
+        if (apiId.startsWith('gym')) return 'gym';
+        if (apiId.startsWith('neo')) return 'neo';
+        if (apiId.startsWith('ecard')) return 'ecard';
+        if (apiId.startsWith('ex') || apiId === 'np') return 'ex';
+        if (apiId.startsWith('dp')) return 'dp';
+        if (apiId.startsWith('pl') || apiId === 'ru1') return 'pl';
+        if (apiId.startsWith('hgss') || apiId === 'hsp' || apiId === 'col1') return 'hgss';
+        if (apiId.startsWith('bw') || apiId === 'dv1') return 'bw';
+        if (apiId.startsWith('xy') || apiId === 'g1') return 'xy';
+        if (apiId.startsWith('sm') || apiId === 'det1' || apiId === 'smp') return 'sm';
+        if (apiId.startsWith('swsh') || apiId === 'pgo' || apiId === 'cel25') return 'swsh';
+        if (apiId.startsWith('sv')) return 'sv';
+        if (apiId.startsWith('me')) return 'me';
+        return 'other';
+    }
+
+    const sets = [];
+    for (const [setKey, apiId] of Object.entries(TCG_API_SET_IDS)) {
+        const eraKey = getEra(apiId);
+        const displayName = setKey.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        sets.push({
+            id: apiId,
+            name: displayName,
+            series: ERA_MAP[eraKey] || 'Other',
+            releaseDate: '',
+            images: {
+                symbol: 'https://images.pokemontcg.io/' + apiId + '/symbol.png'
+            }
+        });
+    }
+    return sets;
 }
 
 // --- Render symbol grid ---
@@ -81,12 +105,12 @@ function siRender(sets) {
         html += '<div class="si-symbol-grid">';
         seriesSets.forEach(s => {
             const year = s.releaseDate ? s.releaseDate.substring(0, 4) : '';
-            html += '<div class="si-symbol-item" title="' + siEscape(s.name) + ' (' + year + ')">'
+            html += '<div class="si-symbol-item" title="' + siEscape(s.name) + (year ? ' (' + year + ')' : '') + '">'
                 + '<div class="si-symbol-img-wrap">'
                 + '<img class="si-symbol-img" src="' + siEscape(s.images.symbol) + '" alt="' + siEscape(s.name) + '" loading="lazy">'
                 + '</div>'
                 + '<div class="si-symbol-name">' + siEscape(s.name) + '</div>'
-                + '<div class="si-symbol-year">' + year + '</div>'
+                + (year ? '<div class="si-symbol-year">' + year + '</div>' : '')
                 + '</div>';
         });
         html += '</div></div>';
