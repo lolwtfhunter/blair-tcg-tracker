@@ -3,14 +3,18 @@
 let siSets = null;
 let siInitialized = false;
 
-// Sets where pokemontcg.io returns a card image instead of the real set symbol.
-// Map from API set ID to a short code to display as a styled text fallback.
-const SI_BROKEN_SYMBOL_SETS = {
-    'me2pt5': 'ASC',
+// Sets where pokemontcg.io returns incorrect images instead of the real set symbol.
+// Map from API set ID to the correct Scrydex symbol URL.
+const SI_SYMBOL_OVERRIDES = {
+    'me2pt5': 'https://images.scrydex.com/pokemon/me2pt5-symbol/symbol'
+};
+
+// Sets not available on any image CDN — display PTCGO code as text fallback.
+const SI_TEXT_FALLBACK_SETS = {
     'mep': 'MEP'
 };
 
-// --- Activation (called when Symbol ID tab is clicked) ---
+// --- Activation (called when Symbol Dex tab is clicked) ---
 
 function siActivate() {
     if (siInitialized) return;
@@ -31,10 +35,12 @@ function siFetchSets() {
         })
         .then(data => {
             siSets = (data.data || []).map(s => {
-                if (SI_BROKEN_SYMBOL_SETS[s.id]) {
-                    s.images = s.images || {};
+                s.images = s.images || {};
+                if (SI_SYMBOL_OVERRIDES[s.id]) {
+                    s.images.symbol = SI_SYMBOL_OVERRIDES[s.id];
+                } else if (SI_TEXT_FALLBACK_SETS[s.id]) {
                     s.images.symbol = '';
-                    s._symbolCode = SI_BROKEN_SYMBOL_SETS[s.id];
+                    s._symbolCode = SI_TEXT_FALLBACK_SETS[s.id];
                 }
                 return s;
             });
@@ -82,16 +88,17 @@ function siBuildLocalSets() {
     for (const [setKey, apiId] of Object.entries(TCG_API_SET_IDS)) {
         const eraKey = getEra(apiId);
         const displayName = setKey.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-        const isBroken = SI_BROKEN_SYMBOL_SETS[apiId];
+        const overrideUrl = SI_SYMBOL_OVERRIDES[apiId];
+        const textFallback = SI_TEXT_FALLBACK_SETS[apiId];
         sets.push({
             id: apiId,
             name: displayName,
             series: ERA_MAP[eraKey] || 'Other',
             releaseDate: '',
             images: {
-                symbol: isBroken ? '' : 'https://images.pokemontcg.io/' + apiId + '/symbol.png'
+                symbol: overrideUrl || (textFallback ? '' : 'https://images.pokemontcg.io/' + apiId + '/symbol.png')
             },
-            _symbolCode: isBroken || ''
+            _symbolCode: textFallback || ''
         });
     }
     return sets;
