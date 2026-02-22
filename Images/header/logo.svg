@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 140" width="600" height="140">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 600 140" width="600" height="140">
   <defs>
     <!-- Gold gradient for main text -->
     <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -22,9 +22,16 @@
       <stop offset="100%" stop-color="#4a2fbd"/>
     </linearGradient>
 
-    <!-- Text shadow filter -->
+    <!-- Text shadow filter (SVG 1.1 compatible) -->
     <filter id="textShadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.5"/>
+      <feFlood flood-color="#000000" flood-opacity="0.5" result="shadowColor"/>
+      <feComposite in="shadowColor" in2="SourceAlpha" operator="in" result="shadow"/>
+      <feOffset dx="0" dy="2" result="offsetShadow"/>
+      <feGaussianBlur in="offsetShadow" stdDeviation="2" result="blurShadow"/>
+      <feMerge>
+        <feMergeNode in="blurShadow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
     </filter>
 
     <!-- Star sparkle symbol -->
@@ -53,7 +60,7 @@
     <rect x="-22" y="-32" width="44" height="64" rx="4" fill="#1a1a4e" stroke="#ffd700" stroke-width="1.5"/>
     <rect x="-16" y="-26" width="32" height="52" rx="2" fill="none" stroke="#ffd700" stroke-width="0.8" opacity="0.3"/>
     <!-- Mini star on front card -->
-    <use href="#star4" x="-6" y="-6" width="12" height="12" opacity="0.8"/>
+    <use xlink:href="#star4" x="-6" y="-6" width="12" height="12" opacity="0.8"/>
   </g>
 
   <!-- === Main title: BLAIR === -->
@@ -98,12 +105,12 @@
   <g transform="translate(542, 70) rotate(-2)">
     <rect x="-22" y="-32" width="44" height="64" rx="4" fill="#1a1a4e" stroke="#ffd700" stroke-width="1.5"/>
     <rect x="-16" y="-26" width="32" height="52" rx="2" fill="none" stroke="#ffd700" stroke-width="0.8" opacity="0.3"/>
-    <use href="#star4" x="-6" y="-6" width="12" height="12" opacity="0.8"/>
+    <use xlink:href="#star4" x="-6" y="-6" width="12" height="12" opacity="0.8"/>
   </g>
 
   <!-- === Sparkle decorations === -->
-  <use href="#star4" x="105" y="12" width="10" height="10" opacity="0.7"/>
-  <use href="#star4" x="485" y="8" width="8" height="8" opacity="0.6"/>
-  <use href="#star4" x="155" y="105" width="7" height="7" opacity="0.5"/>
-  <use href="#star4" x="430" y="110" width="9" height="9" opacity="0.6"/>
+  <use xlink:href="#star4" x="105" y="12" width="10" height="10" opacity="0.7"/>
+  <use xlink:href="#star4" x="485" y="8" width="8" height="8" opacity="0.6"/>
+  <use xlink:href="#star4" x="155" y="105" width="7" height="7" opacity="0.5"/>
+  <use xlink:href="#star4" x="430" y="110" width="9" height="9" opacity="0.6"/>
 </svg>
