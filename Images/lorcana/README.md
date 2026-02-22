@@ -82,11 +82,11 @@ Card images should be named with **3-digit zero-padded numbers**:
 
 Set logos are loaded automatically using a **6-tier cascading fallback system** (defined in `js/lorcana.js`):
 
-1. **Local file** — `logos/{set-key}.png` (this directory, committed to git)
-2. **Wiki API CDN URL** — Direct CDN URL resolved via Fandom/Mushu Report wiki APIs at runtime
-3. **Fandom CDN (hardcoded)** — Pre-computed `static.wikia.nocookie.net` URLs using MD5-hashed paths (no API or redirect needed)
-4. **Mushu Report wiki redirect** — `Special:FilePath/{SetName}_logo.png`
-5. **Lorcana Fandom wiki redirect** — `Special:FilePath/{SetName}_Logo.png`
+1. **Wiki API CDN URL** — Direct CDN URL resolved via Fandom/Mushu Report wiki APIs at runtime
+2. **Fandom CDN (hardcoded)** — Pre-computed `static.wikia.nocookie.net` URLs using MD5-hashed paths (no API or redirect needed)
+3. **Mushu Report wiki redirect** — `Special:FilePath/{SetName}_logo.png`
+4. **Lorcana Fandom wiki redirect** — `Special:FilePath/{SetName}_Logo.png`
+5. **Local file** — `logos/{set-key}.png` (once downloaded via script)
 6. **Inline SVG** — Generated hexagon with set-specific color and Roman numeral
 
 ### Downloading logos locally (recommended)
