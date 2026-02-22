@@ -80,18 +80,33 @@ Card images should be named with **3-digit zero-padded numbers**:
 
 ## 🎨 Set Logos
 
-Set logos are loaded automatically using a **4-tier cascading fallback system** (defined in `js/lorcana.js`):
+Set logos are loaded automatically using a **5-tier cascading fallback system** (defined in `js/lorcana.js`):
 
-1. **Local file** — `logos/{set-key}.png` (this directory)
-2. **Mushu Report wiki** — Uses `Special:FilePath/{SetName}_logo.png` URL pattern
-3. **Lorcana Fandom wiki** — Uses `Special:FilePath/{SetName}_Logo.png` URL pattern
-4. **Inline SVG** — Generated hexagon with set-specific color and Roman numeral
+1. **Local file** — `logos/{set-key}.png` (this directory, committed to git)
+2. **Wiki API CDN URL** — Direct CDN URL resolved via Fandom/Mushu Report wiki APIs at runtime
+3. **Mushu Report wiki redirect** — `Special:FilePath/{SetName}_logo.png`
+4. **Lorcana Fandom wiki redirect** — `Special:FilePath/{SetName}_Logo.png`
+5. **Inline SVG** — Generated hexagon with set-specific color and Roman numeral
 
-**You don't need to download logos manually** — the wiki CDNs handle it automatically. Local files are only needed if you want to override the CDN logos or use them offline.
+### Downloading logos locally (recommended)
 
-### How the wiki URLs work
+Run the download script to populate the local `logos/` folder:
 
-MediaWiki's `Special:FilePath` redirects to the actual hosted image. The URL is constructed from the set's wiki-style display name (defined in `LORCANA_SET_WIKI_NAMES` in `js/lorcana.js`):
+```bash
+bash scripts/download-lorcana-logos.sh
+```
+
+This downloads PNGs from the Mushu Report and Fandom wikis. Downloaded logos are committed to git so they deploy to GitHub Pages and work offline.
+
+### How the wiki API pre-fetch works
+
+At app startup, `fetchLorcanaSetLogos()` calls the Fandom and Mushu Report wiki APIs to resolve direct CDN URLs for each set logo. This bypasses `Special:FilePath` redirects, which can fail in some browser/wiki configurations.
+
+The APIs are queried with both `_Logo.png` and `_logo.png` filename patterns. Results are cached in `_lorcanaLogoUrlCache` and injected into the fallback chain. The app waits up to 2 seconds for the API before rendering buttons.
+
+### Wiki name mapping
+
+The URL is constructed from the set's wiki-style display name (defined in `LORCANA_SET_WIKI_NAMES` in `js/lorcana.js`):
 
 | Set Key | Wiki Name | Logo Filename |
 |---------|-----------|---------------|
@@ -102,26 +117,20 @@ MediaWiki's `Special:FilePath` redirects to the actual hosted image. The URL is 
 | `shimmering-skies` | `Shimmering_Skies` | `Shimmering_Skies_logo.png` |
 | `azurite-sea` | `Azurite_Sea` | `Azurite_Sea_logo.png` |
 | `archazias-island` | `Archazia's_Island` | `Archazia's_Island_logo.png` |
+| `reign-of-jafar` | `Reign_of_Jafar` | `Reign_of_Jafar_logo.png` |
 | `fabled` | `Fabled` | `Fabled_logo.png` |
-| `winterspell` | `Winterspell` | `Winterspell_logo.png` |
 | `whispers-in-the-well` | `Whispers_in_the_Well` | `Whispers_in_the_Well_logo.png` |
+| `winterspell` | `Winterspell` | `Winterspell_logo.png` |
 
 ### Adding a new set's logo
 
 When a new Lorcana set is released:
 
 1. Add its wiki name to `LORCANA_SET_WIKI_NAMES` in `js/lorcana.js`
-2. Add its color/label to `getLorcanaSetLogoSvg()` in `js/lorcana.js`
-3. The logo will automatically load from the wiki CDNs once the wiki editors upload it
-4. Optionally place a local `logos/{set-key}.png` file to override (200-400px wide, transparent PNG)
-
-### Adding local logo overrides (optional)
-
-Place set logos in the `logos/` folder:
-- `first-chapter.png` - The First Chapter logo
-- `whispers-in-the-well.png` - Whispers in the Well logo
-
-**Recommended:** 200-400px wide, transparent background (PNG)
+2. Add its color/label to `LORCANA_SET_STYLES` in `js/lorcana.js`
+3. Add the set key to the download script (`scripts/download-lorcana-logos.sh`)
+4. Run `bash scripts/download-lorcana-logos.sh` to download the logo
+5. Commit the logo to git so it deploys with the site
 
 ## 🔧 Testing Your Images
 

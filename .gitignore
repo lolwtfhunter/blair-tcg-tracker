@@ -5,8 +5,8 @@ Images/lorcana/first-chapter/*.webp
 Images/lorcana/whispers-in-the-well/*.jpg
 Images/lorcana/whispers-in-the-well/*.png
 Images/lorcana/whispers-in-the-well/*.webp
-Images/lorcana/logos/*.png
-Images/lorcana/logos/*.jpg
+# Logos are small and needed for GitHub Pages — tracked in git
+# To download logos: bash scripts/download-lorcana-logos.sh
 
 # Keep README files
 !Images/lorcana/README.md
