@@ -172,19 +172,16 @@ const LORCANA_FANDOM_CDN_LOGOS = {
 };
 
 // Build ordered list of logo URLs to try for a Lorcana set.
-// Tries: local -> wiki API CDN -> Fandom CDN (hardcoded) -> Mushu Report redirect -> Fandom redirect -> inline SVG
+// Tries: wiki API CDN -> Fandom CDN (hardcoded) -> Mushu Report redirect -> Fandom redirect -> local file -> inline SVG
 function getLorcanaSetLogoUrls(setKey) {
     const urls = [];
 
-    // 1. Local file (user can download logos via scripts/download-lorcana-logos.sh)
-    urls.push('./Images/lorcana/logos/' + setKey + '.png');
-
-    // 2. Wiki API-resolved CDN URL (direct, no redirects — most reliable remote source)
+    // 1. Wiki API-resolved CDN URL (direct, no redirects — most reliable remote source)
     if (_lorcanaLogoUrlCache[setKey]) {
         urls.push(_lorcanaLogoUrlCache[setKey]);
     }
 
-    // 3. Pre-computed Fandom CDN URLs (no API or redirect needed)
+    // 2. Pre-computed Fandom CDN URLs (no API or redirect needed)
     const cdnPaths = LORCANA_FANDOM_CDN_LOGOS[setKey];
     if (cdnPaths) {
         cdnPaths.forEach(p => {
@@ -192,16 +189,19 @@ function getLorcanaSetLogoUrls(setKey) {
         });
     }
 
-    // 4. Mushu Report wiki Special:FilePath (redirect-based, may fail on some configs)
+    // 3. Mushu Report wiki Special:FilePath (redirect-based, may fail on some configs)
     const wikiName = LORCANA_SET_WIKI_NAMES[setKey];
     if (wikiName) {
         urls.push('https://wiki.mushureport.com/wiki/Special:FilePath/' + wikiName + '_logo.png');
     }
 
-    // 5. Lorcana Fandom wiki Special:FilePath (redirect-based)
+    // 4. Lorcana Fandom wiki Special:FilePath (redirect-based)
     if (wikiName) {
         urls.push('https://lorcana.fandom.com/wiki/Special:FilePath/' + wikiName + '_Logo.png');
     }
+
+    // 5. Local file (only useful once downloaded via scripts/download-lorcana-logos.sh)
+    urls.push('./Images/lorcana/logos/' + setKey + '.png');
 
     // 6. Inline SVG fallback (always works, no network needed)
     urls.push(getLorcanaSetLogoSvg(setKey));
