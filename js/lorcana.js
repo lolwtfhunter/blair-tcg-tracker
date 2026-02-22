@@ -171,17 +171,20 @@ const LORCANA_FANDOM_CDN_LOGOS = {
     'winterspell':           ['8/84/Winterspell_Logo.png', 'f/f7/Winterspell_logo.png']
 };
 
-// Build ordered list of logo URLs to try for a Lorcana set.
-// Tries: wiki API CDN -> Fandom CDN (hardcoded) -> Mushu Report redirect -> Fandom redirect -> local file -> inline SVG
-function getLorcanaSetLogoUrls(setKey) {
+// Build ordered list of remote logo URLs to try for upgrading from SVG.
+function getLorcanaRemoteLogoUrls(setKey) {
     const urls = [];
+    const wikiName = LORCANA_SET_WIKI_NAMES[setKey];
 
-    // 1. Wiki API-resolved CDN URL (direct, no redirects — most reliable remote source)
+    // Local file (if user has downloaded logos)
+    urls.push('./Images/lorcana/logos/' + setKey + '.png');
+
+    // Wiki API-resolved CDN URL
     if (_lorcanaLogoUrlCache[setKey]) {
         urls.push(_lorcanaLogoUrlCache[setKey]);
     }
 
-    // 2. Pre-computed Fandom CDN URLs (no API or redirect needed)
+    // Pre-computed Fandom CDN URLs
     const cdnPaths = LORCANA_FANDOM_CDN_LOGOS[setKey];
     if (cdnPaths) {
         cdnPaths.forEach(p => {
@@ -189,42 +192,43 @@ function getLorcanaSetLogoUrls(setKey) {
         });
     }
 
-    // 3. Mushu Report wiki Special:FilePath (redirect-based, may fail on some configs)
-    const wikiName = LORCANA_SET_WIKI_NAMES[setKey];
+    // Mushu Report wiki Special:FilePath
     if (wikiName) {
         urls.push('https://wiki.mushureport.com/wiki/Special:FilePath/' + wikiName + '_logo.png');
     }
 
-    // 4. Lorcana Fandom wiki Special:FilePath (redirect-based)
+    // Lorcana Fandom wiki Special:FilePath
     if (wikiName) {
         urls.push('https://lorcana.fandom.com/wiki/Special:FilePath/' + wikiName + '_Logo.png');
     }
 
-    // 5. Local file (only useful once downloaded via scripts/download-lorcana-logos.sh)
-    urls.push('./Images/lorcana/logos/' + setKey + '.png');
-
-    // 6. Inline SVG fallback (always works, no network needed)
-    urls.push(getLorcanaSetLogoSvg(setKey));
-
     return urls;
 }
 
-// Handle Lorcana set logo loading with cascading fallback.
-// Re-reads the URL list each time to pick up any async-fetched CDN URLs.
-function tryNextLorcanaLogo(img) {
+// Try to upgrade an SVG logo to a real image by testing remote URLs.
+// Loads each URL in a hidden Image(); if one succeeds, swaps the visible img src.
+function tryUpgradeLorcanaLogo(img) {
     const setKey = img.getAttribute('data-logo-set');
-    const idx = parseInt(img.getAttribute('data-logo-idx') || '0') + 1;
-    const urls = getLorcanaSetLogoUrls(setKey);
+    if (!setKey) return;
 
-    if (idx < urls.length) {
-        img.setAttribute('data-logo-idx', idx);
-        img.src = urls[idx];
-    } else {
-        // All sources exhausted - show emoji fallback
-        img.onerror = null;
-        img.style.display = 'none';
-        if (img.nextElementSibling) img.nextElementSibling.style.display = '';
+    const urls = getLorcanaRemoteLogoUrls(setKey);
+    let idx = 0;
+
+    function tryNext() {
+        if (idx >= urls.length) return; // All failed, SVG stays
+        const testImg = new Image();
+        const url = urls[idx++];
+        testImg.onload = function() {
+            // Verify it's a real image (not a 1x1 placeholder)
+            if (testImg.naturalWidth > 10 && testImg.naturalHeight > 10) {
+                img.src = url;
+            }
+        };
+        testImg.onerror = tryNext;
+        testImg.src = url;
     }
+
+    tryNext();
 }
 
 // Set-specific theme colors used for SVG logos and button gradients
@@ -399,15 +403,13 @@ function renderLorcanaSetButtons() {
         // Calculate progress
         const progress = getLorcanaSetProgress(setKey);
 
-        // Lorcana logos - cascading fallback: local -> wiki CDNs -> inline SVG
-        const logoUrls = getLorcanaSetLogoUrls(setKey);
+        // Lorcana logos — start with SVG, upgrade to real logo in background
+        const svgFallback = getLorcanaSetLogoSvg(setKey);
 
         btn.innerHTML = `
             <div class="set-btn-logo-wrapper">
-                <img src="${logoUrls[0]}" alt="${setData.displayName}" class="set-btn-logo"
-                     data-logo-set="${setKey}" data-logo-idx="0"
-                     onerror="tryNextLorcanaLogo(this)">
-                <div class="set-btn-logo-fallback" style="display:none">&#127183;</div>
+                <img src="${svgFallback}" alt="${setData.displayName}" class="set-btn-logo"
+                     data-logo-set="${setKey}">
             </div>
             <div class="set-btn-name">${setData.displayName}</div>
             ${dateStr ? `<div class="set-release-date">${dateStr}</div>` : ''}
@@ -419,6 +421,10 @@ function renderLorcanaSetButtons() {
 
         btn.onclick = () => switchLorcanaSet(setKey);
         container.appendChild(btn);
+
+        // Try to upgrade SVG to real logo in background
+        const logoImg = btn.querySelector('.set-btn-logo');
+        if (logoImg) tryUpgradeLorcanaLogo(logoImg);
     });
 }
 
