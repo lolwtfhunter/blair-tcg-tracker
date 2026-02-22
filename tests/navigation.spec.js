@@ -14,7 +14,7 @@ test.describe('Navigation', () => {
     await expect(tabs.nth(1)).toHaveText('Disney Lorcana');
     await expect(tabs.nth(2)).toHaveText('Custom Sets');
     await expect(tabs.nth(3)).toHaveText('Store Hunter');
-    await expect(tabs.nth(4)).toHaveText('Symbol ID');
+    await expect(tabs.nth(4)).toHaveText('Symbol Dex');
 
     await expect(page.locator('.top-tab').first()).toHaveClass(/active/);
     await expect(page.locator('#pokemon-tcg-content')).toHaveClass(/active/);
