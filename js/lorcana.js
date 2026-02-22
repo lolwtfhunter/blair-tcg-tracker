@@ -43,32 +43,174 @@ const LORCANA_SET_WIKI_NAMES = {
     'winterspell':           'Winterspell'
 };
 
+// ==================== LORCANA LOGO CDN PRE-FETCH ====================
+// Resolves direct CDN URLs for set logos via wiki APIs.
+// MediaWiki Special:FilePath returns 302 redirects, which can fail in <img>
+// tags on some browsers/wiki configurations. The imageinfo API returns the
+// actual static CDN URL directly, bypassing redirect issues.
+
+// Cache: { setKey: directCdnUrl }
+const _lorcanaLogoUrlCache = {};
+let _lorcanaLogosFetched = false;
+
+// Fetch direct CDN URLs for Lorcana set logos from wiki APIs.
+// Tries Fandom wiki first (CORS-enabled), then Mushu Report for any gaps.
+async function fetchLorcanaSetLogos() {
+    if (_lorcanaLogosFetched) return;
+    _lorcanaLogosFetched = true;
+
+    const wikiNames = LORCANA_SET_WIKI_NAMES;
+    const setEntries = Object.entries(wikiNames);
+
+    // --- Fandom wiki API (supports CORS via origin=*) ---
+    try {
+        const titles = [];
+        const setKeysByTitle = {};
+
+        setEntries.forEach(([setKey, wikiName]) => {
+            // Try both capitalization patterns for the logo filename
+            const t1 = 'File:' + wikiName + '_Logo.png';
+            const t2 = 'File:' + wikiName + '_logo.png';
+            titles.push(t1, t2);
+            setKeysByTitle[t1] = setKey;
+            setKeysByTitle[t2] = setKey;
+        });
+
+        const apiUrl = 'https://lorcana.fandom.com/api.php?action=query'
+            + '&titles=' + encodeURIComponent(titles.join('|'))
+            + '&prop=imageinfo&iiprop=url&format=json&origin=*';
+
+        const resp = await fetch(apiUrl);
+        if (resp.ok) {
+            const data = await resp.json();
+            const pages = data?.query?.pages || {};
+
+            // Build normalization map (MediaWiki may normalize underscores/case)
+            const normalizedMap = {};
+            if (data?.query?.normalized) {
+                data.query.normalized.forEach(n => { normalizedMap[n.to] = n.from; });
+            }
+
+            for (const pageId in pages) {
+                const page = pages[pageId];
+                if (page.imageinfo?.[0]?.url) {
+                    const normalizedTitle = page.title;
+                    const originalTitle = normalizedMap[normalizedTitle] || normalizedTitle;
+                    const setKey = setKeysByTitle[originalTitle] || setKeysByTitle[normalizedTitle];
+                    if (setKey && !_lorcanaLogoUrlCache[setKey]) {
+                        _lorcanaLogoUrlCache[setKey] = page.imageinfo[0].url;
+                    }
+                }
+            }
+        }
+    } catch (e) {
+        // Fandom API unavailable — will try Mushu Report next
+    }
+
+    // --- Mushu Report wiki API (for any sets not resolved above) ---
+    const missing = setEntries.filter(([k]) => !_lorcanaLogoUrlCache[k]);
+    if (missing.length === 0) return;
+
+    try {
+        const titles = [];
+        const setKeysByTitle = {};
+
+        missing.forEach(([setKey, wikiName]) => {
+            const t = 'File:' + wikiName + '_logo.png';
+            titles.push(t);
+            setKeysByTitle[t] = setKey;
+        });
+
+        // Standard MediaWiki API path when wiki is at /wiki/
+        const apiUrl = 'https://wiki.mushureport.com/w/api.php?action=query'
+            + '&titles=' + encodeURIComponent(titles.join('|'))
+            + '&prop=imageinfo&iiprop=url&format=json&origin=*';
+
+        const resp = await fetch(apiUrl);
+        if (resp.ok) {
+            const data = await resp.json();
+            const pages = data?.query?.pages || {};
+
+            const normalizedMap = {};
+            if (data?.query?.normalized) {
+                data.query.normalized.forEach(n => { normalizedMap[n.to] = n.from; });
+            }
+
+            for (const pageId in pages) {
+                const page = pages[pageId];
+                if (page.imageinfo?.[0]?.url) {
+                    const normalizedTitle = page.title;
+                    const originalTitle = normalizedMap[normalizedTitle] || normalizedTitle;
+                    const setKey = setKeysByTitle[originalTitle] || setKeysByTitle[normalizedTitle];
+                    if (setKey && !_lorcanaLogoUrlCache[setKey]) {
+                        _lorcanaLogoUrlCache[setKey] = page.imageinfo[0].url;
+                    }
+                }
+            }
+        }
+    } catch (e) {
+        // Mushu Report API unavailable — will use Special:FilePath fallbacks
+    }
+}
+
+// Pre-computed Fandom CDN URLs (MD5-hashed paths).
+// These bypass both the API call and Special:FilePath redirects.
+// Constructed from: MD5(filename) → /images/{hash[0]}/{hash[0:2]}/{filename}/revision/latest
+// Two patterns per set: _Logo.png (uppercase) and _logo.png (lowercase).
+const LORCANA_FANDOM_CDN_LOGOS = {
+    'first-chapter':         ['d/db/The_First_Chapter_Logo.png', 'f/fd/The_First_Chapter_logo.png'],
+    'rise-of-the-floodborn': ['5/5b/Rise_of_the_Floodborn_Logo.png', '3/39/Rise_of_the_Floodborn_logo.png'],
+    'into-the-inklands':     ['6/6d/Into_the_Inklands_Logo.png', '5/59/Into_the_Inklands_logo.png'],
+    'ursulas-return':        ["3/3b/Ursula%27s_Return_Logo.png", "7/7a/Ursula%27s_Return_logo.png"],
+    'shimmering-skies':      ['b/bf/Shimmering_Skies_Logo.png', 'a/ad/Shimmering_Skies_logo.png'],
+    'azurite-sea':           ['6/6c/Azurite_Sea_Logo.png', '9/98/Azurite_Sea_logo.png'],
+    'archazias-island':      ["3/38/Archazia%27s_Island_Logo.png", "3/38/Archazia%27s_Island_logo.png"],
+    'reign-of-jafar':        ['e/e0/Reign_of_Jafar_Logo.png', '1/1c/Reign_of_Jafar_logo.png'],
+    'fabled':                ['c/c4/Fabled_Logo.png', '7/76/Fabled_logo.png'],
+    'whispers-in-the-well':  ['4/4d/Whispers_in_the_Well_Logo.png', '1/1c/Whispers_in_the_Well_logo.png'],
+    'winterspell':           ['8/84/Winterspell_Logo.png', 'f/f7/Winterspell_logo.png']
+};
+
 // Build ordered list of logo URLs to try for a Lorcana set.
-// Tries: local file -> Mushu Report wiki -> Lorcana Fandom wiki -> inline SVG
+// Tries: local -> wiki API CDN -> Fandom CDN (hardcoded) -> Mushu Report redirect -> Fandom redirect -> inline SVG
 function getLorcanaSetLogoUrls(setKey) {
     const urls = [];
 
-    // 1. Local file (user can manually add logos)
-    urls.push(`./Images/lorcana/logos/${setKey}.png`);
+    // 1. Local file (user can download logos via scripts/download-lorcana-logos.sh)
+    urls.push('./Images/lorcana/logos/' + setKey + '.png');
 
-    // 2. Mushu Report wiki (public Lorcana wiki with set logos)
+    // 2. Wiki API-resolved CDN URL (direct, no redirects — most reliable remote source)
+    if (_lorcanaLogoUrlCache[setKey]) {
+        urls.push(_lorcanaLogoUrlCache[setKey]);
+    }
+
+    // 3. Pre-computed Fandom CDN URLs (no API or redirect needed)
+    const cdnPaths = LORCANA_FANDOM_CDN_LOGOS[setKey];
+    if (cdnPaths) {
+        cdnPaths.forEach(p => {
+            urls.push('https://static.wikia.nocookie.net/lorcana/images/' + p + '/revision/latest');
+        });
+    }
+
+    // 4. Mushu Report wiki Special:FilePath (redirect-based, may fail on some configs)
     const wikiName = LORCANA_SET_WIKI_NAMES[setKey];
     if (wikiName) {
-        urls.push(`https://wiki.mushureport.com/wiki/Special:FilePath/${wikiName}_logo.png`);
+        urls.push('https://wiki.mushureport.com/wiki/Special:FilePath/' + wikiName + '_logo.png');
     }
 
-    // 3. Lorcana Fandom wiki
+    // 5. Lorcana Fandom wiki Special:FilePath (redirect-based)
     if (wikiName) {
-        urls.push(`https://lorcana.fandom.com/wiki/Special:FilePath/${wikiName}_Logo.png`);
+        urls.push('https://lorcana.fandom.com/wiki/Special:FilePath/' + wikiName + '_Logo.png');
     }
 
-    // 4. Inline SVG fallback (always works, no network needed)
+    // 6. Inline SVG fallback (always works, no network needed)
     urls.push(getLorcanaSetLogoSvg(setKey));
 
     return urls;
 }
 
-// Handle Lorcana set logo loading with cascading fallback
+// Handle Lorcana set logo loading with cascading fallback.
+// Re-reads the URL list each time to pick up any async-fetched CDN URLs.
 function tryNextLorcanaLogo(img) {
     const setKey = img.getAttribute('data-logo-set');
     const idx = parseInt(img.getAttribute('data-logo-idx') || '0') + 1;
